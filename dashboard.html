@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CryptoDigitalPro – Loan Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/dashboard.css" />
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <div class="brand">
+      <strong>CryptoDigitalPro</strong>
+      <span class="small">Loan Dashboard</span>
+    </div>
+
+    <div class="header-actions">
+      <button id="adminBtn" class="btn">Admin Messages (0)</button>
+      <button id="verifyBtn" class="btn">Not Verified</button>
+      <button id="uploadBtn" class="btn">Upload Documents</button>
+
+      <div class="notify-wrapper">
+        <span class="notify-bell">🔔 <span id="notifyCount" class="badge">0</span></span>
+        <div class="notify-dropdown">
+          <div class="notify-header">Notifications</div>
+          <div class="notify-list"></div>
+          <div class="notify-footer">
+            <button class="notify-clear">Clear</button>
+            <button class="notify-close">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= BALANCES ================= -->
+  <section class="balance-wrap premium">
+
+  <div class="balance-box premium-card">
+    <div class="label">Outstanding</div>
+    <div class="value" id="outstandingBox">$0.00</div>
+  </div>
+
+  <div class="balance-box premium-card">
+    <div class="label">Deposited</div>
+    <div class="value" id="depositedBox">$0.00</div>
+  </div>
+
+  <div class="balance-box premium-card">
+    <div class="label">Withdrawn</div>
+    <div class="value" id="withdrawnBox">$0.00</div>
+  </div>
+
+  <div class="balance-box premium-card highlight">
+    <div class="label">Available to Withdraw</div>
+    <div class="value" id="availableBox">$0.00</div>
+  </div>
+
+</section>
+
+  <!-- ================= MAIN GRID ================= -->
+  <section class="grid">
+
+    <!-- LOANS -->
+    <div class="card">
+      <h3>My Loan Applications</h3>
+      <div id="loanList" class="small">
+        No loan applications yet.
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div>
+      <div class="card">
+        <h3>Select a loan</h3>
+        <div class="actions">
+          <button class="btn" id="withdrawBtn">Withdraw</button>
+          <button class="btn dark">Repay</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Transaction History</h3>
+        <div id="txList" class="small">
+          No transactions available.
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <span>© CryptoDigitalPro</span>
+    <span>Privacy · Terms · Support</span>
+  </footer>
+
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<div id="dashboardModal">
+  <div></div>
+</div>
+
+<!-- ADMIN MESSAGES -->
+<div id="adminModal" class="modal hidden">
+  <div class="card">
+    <h3>Admin Messages</h3>
+    <div id="adminMessages">No messages.</div>
+    <button class="btn closeModal">Close</button>
+  </div>
+</div>
+
+<!-- VERIFY -->
+<div id="verifyModal" class="modal hidden">
+  <div class="card">
+    <h3>Verify Identity</h3>
+    <input type="file" />
+    <button class="btn">Submit</button>
+    <button class="btn dark closeModal">Cancel</button>
+  </div>
+</div>
+
+<!-- UPLOAD -->
+<div id="uploadModal" class="modal hidden">
+  <div class="card">
+    <h3>Upload Documents</h3>
+    <input type="file" />
+    <button class="btn">Upload</button>
+    <button class="btn dark closeModal">Cancel</button>
+  </div>
+</div>
+
+<!-- LIVE CHAT -->
+<button class="live-chat-btn">Live Chat</button>
+
+<script src="dashboard.js"></script>
+
+<script src="dark-lock.js"></script>
+</body>
+</html>

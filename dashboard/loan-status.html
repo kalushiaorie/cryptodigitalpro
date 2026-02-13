@@ -1,0 +1,34 @@
+<h3>Loan Status</h3>
+
+<ul id="timeline"></ul>
+
+<script>
+const API = "https://cryptodigitalpro-api.onrender.com/api";
+const token = localStorage.getItem("token");
+
+async function loadTimeline() {
+  const res = await fetch(API + "/loans/my", {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+
+  const loans = await res.json();
+  const ul = document.getElementById("timeline");
+  ul.innerHTML = "";
+
+  loans.forEach(l => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <b>${l.loan_type}</b><br>
+      Amount: $${l.amount}<br>
+      Status: <b>${l.status}</b><br>
+      ${l.rejection_reason ? "Reason: " + l.rejection_reason : ""}
+      <hr>
+    `;
+    ul.appendChild(li);
+  });
+}
+
+loadTimeline();
+</script>

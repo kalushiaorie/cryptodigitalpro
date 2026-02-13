@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Profile Settings | CryptoDigitalPro</title>
+<link rel="icon" href="assets/logo.png" />
+<style>
+:root{--gold1:#d4af37;--gold2:#f9e7b0;--dark1:#030712;--dark2:#0a0f1e}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+body{margin:0;min-height:100vh;display:flex;background:linear-gradient(160deg,var(--dark1),var(--dark2));color:#fff}
+.sidebar{width:260px;background:rgba(10,10,20,.96);backdrop-filter:blur(8px);padding:28px;display:flex;flex-direction:column;gap:12px}
+.logo{font-weight:800;font-size:1.15rem;color:var(--gold2)}
+.sidebar a{color:#ddd;text-decoration:none;padding:10px;border-radius:8px;font-weight:600;display:block}
+.sidebar a.active{background:linear-gradient(90deg,var(--gold1),var(--gold2));color:#021127}
+.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:18px}
+.h1{font-size:1.4rem;background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.panels{display:flex;gap:12px;flex-wrap:wrap}
+.panel{background:rgba(255,255,255,.03);border-radius:12px;padding:14px;min-width:180px;border:1px solid rgba(255,255,255,.04)}
+.panel .num{font-size:20px;font-weight:800}
+.card{background:rgba(255,255,255,.02);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,.04)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+.avatar-preview{width:140px;height:140px;border-radius:12px;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.label{color:#cfd8e3;font-size:.9rem;margin-bottom:6px}
+.input{width:100%;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,.04);color:#fff}
+.btn{background:linear-gradient(90deg,var(--gold1),var(--gold2));color:#021127;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.06);padding:8px 12px;border-radius:8px;color:#fff}
+.small{color:#cfd8e3}
+.note{font-size:.9rem;color:#cbd5e1;margin-top:8px}
+.footer{color:#9aa4b2;text-align:center;margin-top:20px}
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .panels{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">Crypto<span style="background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">DigitalPro</span></div>
+
+  <nav>
+    <a href="loan-user-dashboard.html">💰 Loan Dashboard</a>
+    <a href="airdrop-user-dashboard.html">🎁 Airdrop Dashboard</a>
+    <a href="recovery-user-dashboard.html">🛠️ Recovery Center</a>
+    <a href="profile-settings.html" class="active">👤 Profile Settings</a>
+    <a href="signin.html" onclick="localStorage.removeItem('cdpUser')">🚪 Logout</a>
+  </nav>
+</aside>
+
+<main class="main" id="main">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div class="h1">Profile Settings</div>
+      <div class="small">Edit your profile, password, and view quick account stats.</div>
+    </div>
+    <div>
+      <button id="saveBtn" class="btn">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- Summary panels -->
+  <div class="panels" id="summaryPanels" aria-hidden="false">
+    <div class="panel">
+      <div class="small">Total Balance</div>
+      <div class="num" id="panelBalance">0.00 CD</div>
+    </div>
+    <div class="panel">
+      <div class="small">Active Loans</div>
+      <div class="num" id="panelLoans">0</div>
+    </div>
+    <div class="panel">
+      <div class="small">Active Airdrops</div>
+      <div class="num" id="panelAirdrops">0</div>
+    </div>
+    <div class="panel">
+      <div class="small">Recovery Cases</div>
+      <div class="num" id="panelRecoveries">0</div>
+    </div>
+  </div>
+
+  <!-- Profile form -->
+  <div class="card grid">
+    <div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div class="avatar-preview" id="avatarPreview">
+          <div class="small">No image</div>
+        </div>
+        <input id="avatarInput" type="file" accept="image/*" class="input" />
+        <div style="display:flex;gap:8px">
+          <button id="applyAvatar" class="btn-ghost">Apply Avatar</button>
+          <button id="removeAvatar" class="btn-ghost">Remove</button>
+        </div>
+        <div class="note small">Avatar stored locally (data URL). Connect to your backend later to save remotely.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div class="label">Full name</div>
+          <input id="fullName" class="input" placeholder="Your full name" />
+        </div>
+
+        <div>
+          <div class="label">Email</div>
+          <input id="email" class="input" placeholder="you@example.com" />
+        </div>
+
+        <div>
+          <div class="label">Wallet address</div>
+          <input id="walletAddr" class="input" placeholder="0x..." />
+        </div>
+
+        <div>
+          <div class="label">Country</div>
+          <input id="country" class="input" placeholder="Country" />
+        </div>
+
+        <div class="card" style="margin-top:6px">
+          <div style="font-weight:800;margin-bottom:8px">Change password</div>
+          <div>
+            <div class="label">Old password</div>
+            <input id="oldPassword" type="password" class="input" placeholder="Old password" />
+          </div>
+          <div style="margin-top:8px">
+            <div class="label">New password</div>
+            <input id="newPassword" type="password" class="input" placeholder="New password" />
+          </div>
+          <div style="margin-top:8px">
+            <div class="label">Confirm new password</div>
+            <input id="confirmPassword" type="password" class="input" placeholder="Confirm new password" />
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+            <input id="showPw" type="checkbox" /><label for="showPw" class="small">Show passwords</label>
+          </div>
+        </div>
+
+        <div class="card sys-info" style="margin-top:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:800">Account Info</div>
+              <div class="small">Quick account meta</div>
+            </div>
+            <div>
+              <button id="refreshBtn" class="btn-ghost">Refresh</button>
+            </div>
+          </div>
+
+          <div style="margin-top:10px">
+            <div class="small">Last login</div>
+            <div id="lastLogin" style="font-weight:700">—</div>
+
+            <div style="margin-top:8px" class="small">Connected wallet</div>
+            <div id="connectedWallet" style="font-weight:700">—</div>
+
+            <div style="margin-top:8px" class="small">Storage key</div>
+            <div style="font-weight:700">cdpUser</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2025 CryptoDigitalPro</div>
+</main>
+
+<script>
+/* ======= STORAGE KEYS ======= */
+const USER_KEY = "cdpUser";
+const LOANS_KEY = "cdp_loans";
+const AIRDROPS_KEY = "cdp_airdrops";
+const RECOVERY_KEY = "cdp_recovery_cases";
+const AIRDROP_BALANCE_KEY = "airdropBalance";
+
+/* ======= UTILITIES ======= */
+function safeParse(v){ try { return JSON.parse(v); } catch(e){ return null; } }
+function getUser(){ return safeParse(localStorage.getItem(USER_KEY)) || {}; }
+function saveUser(u){ localStorage.setItem(USER_KEY, JSON.stringify(u)); }
+function getAirdropBalance(){ return parseFloat(localStorage.getItem(AIRDROP_BALANCE_KEY) || "0"); }
+function formatAmount(n){ return (Number.isFinite(n) ? Number(n).toFixed(2) : "0.00") + " CD"; }
+
+/* ======= QUERY ELEMENTS ======= */
+const avatarInput = document.getElementById("avatarInput");
+const avatarPreview = document.getElementById("avatarPreview");
+const applyAvatarBtn = document.getElementById("applyAvatar");
+const removeAvatarBtn = document.getElementById("removeAvatar");
+const fullNameEl = document.getElementById("fullName");
+const emailEl = document.getElementById("email");
+const walletEl = document.getElementById("walletAddr");
+const countryEl = document.getElementById("country");
+const oldPwEl = document.getElementById("oldPassword");
+const newPwEl = document.getElementById("newPassword");
+const confirmPwEl = document.getElementById("confirmPassword");
+const showPwEl = document.getElementById("showPw");
+const saveBtn = document.getElementById("saveBtn");
+const refreshBtn = document.getElementById("refreshBtn");
+const lastLoginEl = document.getElementById("lastLogin");
+const connectedWalletEl = document.getElementById("connectedWallet");
+const panelBalanceEl = document.getElementById("panelBalance");
+const panelLoansEl = document.getElementById("panelLoans");
+const panelAirdropsEl = document.getElementById("panelAirdrops");
+const panelRecoveriesEl = document.getElementById("panelRecoveries");
+
+/* ======= RENDER / INIT ======= */
+
+function renderSummaryPanels(){
+  // balance
+  panelBalanceEl.textContent = formatAmount(getAirdropBalance());
+  // loans: count loans belonging to this user (match email or wallet)
+  const user = getUser();
+  const loans = safeParse(localStorage.getItem(LOANS_KEY)) || [];
+  const airdrops = safeParse(localStorage.getItem(AIRDROPS_KEY)) || [];
+  const recoveries = safeParse(localStorage.getItem(RECOVERY_KEY)) || [];
+  let loanCount = 0;
+  if(loans && Array.isArray(loans)){
+    loanCount = loans.filter(l => {
+      // match by walletAddr or email or owner field
+      const w = (user.wallet && user.wallet.address) || user.wallet || "";
+      return (l.walletAddr && w && l.walletAddr.toLowerCase() === w.toLowerCase()) ||
+             (l.email && user.email && l.email.toLowerCase() === user.email.toLowerCase()) ||
+             (l.owner && user.email && l.owner.toLowerCase() === user.email.toLowerCase());
+    }).length;
+  }
+  panelLoansEl.textContent = loanCount;
+  // airdrops: active count (admin-managed)
+  const activeA = (airdrops && Array.isArray(airdrops)) ? airdrops.filter(a => a.status === "Active").length : 0;
+  panelAirdropsEl.textContent = activeA;
+  // recoveries for user
+  const userId = user.email || (user.wallet && user.wallet.address) || "";
+  const recCount = (recoveries && Array.isArray(recoveries)) ? recoveries.filter(r => (r.email && r.email === user.email) || (r.walletAddr && r.walletAddr === userId)).length : 0;
+  panelRecoveriesEl.textContent = recCount;
+}
+
+function renderProfile(){
+  const u = getUser();
+  fullNameEl.value = u.name || u.fullName || "";
+  emailEl.value = u.email || "";
+  walletEl.value = (u.wallet && u.wallet.address) || u.wallet || "";
+  countryEl.value = u.country || "";
+  lastLoginEl.textContent = u.lastLogin ? new Date(u.lastLogin).toLocaleString() : "—";
+  connectedWalletEl.textContent = (u.wallet && u.wallet.address) ? (u.wallet.address.substring(0,6) + "…" + u.wallet.address.slice(-4)) : "—";
+  // avatar preview
+  avatarPreview.innerHTML = "";
+  if(u.avatar){
+    const img = document.createElement("img"); img.src = u.avatar; img.alt = "Avatar";
+    avatarPreview.appendChild(img);
+  } else {
+    avatarPreview.innerHTML = '<div class="small">No image</div>';
+  }
+  // panels
+  renderSummaryPanels();
+}
+
+/* ======= AVATAR HANDLING ======= */
+let avatarTempData = ""; // holds dataURL until Apply is clicked
+avatarInput.addEventListener("change", (ev) => {
+  const f = ev.target.files && ev.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    avatarTempData = e.target.result;
+    avatarPreview.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = avatarTempData;
+    avatarPreview.appendChild(img);
+  };
+  reader.readAsDataURL(f);
+});
+
+applyAvatarBtn.addEventListener("click", () => {
+  if(!avatarTempData) return alert("Choose an image first.");
+  const u = getUser();
+  u.avatar = avatarTempData;
+  saveUser(u);
+  avatarTempData = "";
+  avatarInput.value = "";
+  renderProfile();
+  alert("Avatar saved locally.");
+});
+
+removeAvatarBtn.addEventListener("click", () => {
+  const u = getUser();
+  u.avatar = "";
+  saveUser(u);
+  renderProfile();
+});
+
+/* ======= PASSWORD SHOW/HIDE ======= */
+showPwEl.addEventListener("change", () => {
+  const t = showPwEl.checked ? "text" : "password";
+  oldPwEl.type = t; newPwEl.type = t; confirmPwEl.type = t;
+});
+
+/* ======= SAVE PROFILE ======= */
+saveBtn.addEventListener("click", () => {
+  const u = getUser();
+  const oldPw = oldPwEl.value.trim();
+  const newPw = newPwEl.value.trim();
+  const confirmPw = confirmPwEl.value.trim();
+
+  // update basic fields
+  u.name = fullNameEl.value.trim() || u.name || "";
+  u.email = emailEl.value.trim() || u.email || "";
+  const walletVal = walletEl.value.trim();
+  // allow wallet to be saved as string or object
+  try {
+    u.wallet = walletVal || u.wallet || u.wallet; // keep existing if empty
+  } catch(e){
+    u.wallet = walletVal || u.wallet || "";
+  }
+  u.country = countryEl.value.trim() || u.country || "";
+
+  // password change (only if any password field filled)
+  if(oldPw || newPw || confirmPw){
+    if(!oldPw) return alert("Please enter your old password to change it.");
+    if(!u.password) return alert("No existing password found — cannot verify old password.");
+    if(oldPw !== u.password) return alert("Old password is incorrect.");
+    if(!newPw) return alert("Enter a new password.");
+    if(newPw !== confirmPw) return alert("New password and confirm do not match.");
+    u.password = newPw;
+  }
+
+  // update lastLogin timestamp to now (useful UI feedback)
+  u.lastLogin = Date.now();
+
+  saveUser(u);
+
+  // clear password fields
+  oldPwEl.value = ""; newPwEl.value = ""; confirmPwEl.value = "";
+
+  renderProfile();
+  alert("Profile saved locally.");
+});
+
+/* ======= REFRESH BUTTON ======= */
+refreshBtn.addEventListener("click", () => {
+  // refresh panels and profile view
+  renderProfile();
+  alert("Profile refreshed.");
+});
+
+/* ======= STORAGE CHANGE SYNC ======= */
+window.addEventListener("storage", (e) => {
+  if(!e.key) return;
+  if([LOANS_KEY, AIRDROPS_KEY, RECOVERY_KEY, AIRDROP_BALANCE_KEY, USER_KEY].includes(e.key)){
+    renderProfile();
+  }
+});
+
+/* ======= INIT ======= */
+function ensureUserExists(){
+  let u = safeParse(localStorage.getItem(USER_KEY));
+  if(!u){
+    u = { name: "User", email: "", wallet: "", country: "", avatar: "", password: "", lastLogin: Date.now() };
+    saveUser(u);
+  }
+  return u;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  ensureUserExists();
+  renderProfile();
+});
+</script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

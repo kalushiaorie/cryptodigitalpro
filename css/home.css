@@ -1,0 +1,64 @@
+/* ===== RESET ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+  line-height:1.6;
+  background:#f6f8fb;
+  color:#222;
+}
+
+/* ===== NAV ===== */
+header{
+  background:#0d1b2a;
+  padding:18px 40px;
+}
+
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+nav a{
+  color:#fff;
+  margin:0 14px;
+  text-decoration:none;
+}
+
+nav a:last-child{
+  background:#e63946;
+  padding:8px 16px;
+  border-radius:6px;
+}
+
+/* ===== HERO ===== */
+#home{
+  background:linear-gradient(135deg,#0d1b2a,#1b263b);
+  color:#fff;
+  text-align:center;
+  padding:120px 20px;
+}
+
+#home h1{ font-size:48px; margin-bottom:20px; }
+
+button{
+  margin-top:25px;
+  background:#e63946;
+  color:#fff;
+  padding:14px 28px;
+  border-radius:6px;
+  border:none;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  background:#0d1b2a;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+}

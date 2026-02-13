@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admin Dashboard | CryptoDigitalPro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{box-sizing:border-box;font-family:Poppins}
+body{
+  margin:0;
+  background:#020816;
+  color:#fff;
+  padding:16px;
+}
+.container{max-width:1300px;margin:auto}
+
+h2,h3{color:#d4af37;margin-bottom:14px}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:20px;
+}
+
+.loan-card,.withdraw-card{
+  background:#0b1220;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:14px;
+}
+
+.status{
+  font-weight:600;
+}
+.status.pending{color:#facc15}
+.status.approved{color:#4ade80}
+.status.credited{color:#60a5fa}
+.status.rejected{color:#ef4444}
+
+.btn{
+  padding:8px 14px;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+.green{background:#22c55e;color:#021127}
+.red{background:#ef4444;color:#fff}
+.gray{background:#555;color:#fff}
+.danger{background:#dc2626;color:#fff}
+
+.actions{
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.toast{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#0f172a;
+  padding:14px 20px;
+  border-radius:10px;
+  border-left:4px solid #d4af37;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+  opacity:0;
+  transform:translateY(-20px);
+  transition:.3s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+</style>
+
+<script>
+/* 🔐 ADMIN GUARD */
+const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("cdpUser"));
+
+if(!token || !user || !user.is_admin){
+  window.location.href="signin.html";
+}
+</script>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Admin Control Panel</h2>
+
+<div class="card">
+  <h3>Loan Analytics</h3>
+  <canvas id="loanChart" height="100"></canvas>
+</div>
+
+<div class="card">
+  <h3>Withdrawal Requests</h3>
+  <div id="withdrawList"></div>
+</div>
+
+<div class="card">
+  <h3>Loan Applications</h3>
+  <div id="loanList"></div>
+</div>
+
+<div class="card">
+  <h3>Audit Logs</h3>
+  <div id="auditLogs"></div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module" src="admin-dashboard.js"></script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

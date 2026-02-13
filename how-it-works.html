@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works — Cryptodigitalpro</title>
+  <meta name="description" content="Learn how our secure wallet recovery, dispute, and callback process works."/>
+  <link rel="icon" href="assets/explorer_favicon.png"/>
+
+  <style>
+    :root{
+      --bg:#f6f7f9;--card:#fff;--muted:#6b7280;--text:#0f1724;
+      --gold-1:#caa64a;--gold-2:#f0d78a;--border:rgba(15,23,42,0.06);
+      --radius:12px;--shadow:0 12px 36px rgba(2,6,23,0.06);
+      --max-width:1200px;
+    }
+    body[data-theme="dark"]{
+      --bg:#070708;--card:#0f1724;--muted:#9aa4b2;
+      --text:#e9f0f7;--border:rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,'Segoe UI',Roboto,Arial;}
+    body{background:var(--bg);color:var(--text);line-height:1.45;padding-bottom:60px;}
+    a{text-decoration:none;color:inherit}
+
+    header{position:sticky;top:0;z-index:99;background:rgba(255,255,255,0.7);
+      backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+    body[data-theme="dark"] header{background:rgba(6,8,12,0.6)}
+    .nav{max-width:var(--max-width);margin:0 auto;padding:12px 20px;
+      display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;color:var(--gold-1);font-weight:700}
+    .brand img{height:36px}
+    nav.links{display:flex;gap:14px}
+    nav.links a{padding:8px;border-radius:8px;color:var(--muted);font-weight:600}
+    nav.links a.active,nav.links a:hover{color:var(--text)}
+    .auth{display:flex;gap:8px}
+    .signin{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:transparent;font-weight:700}
+    .signup{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));color:#021127;padding:8px 12px;border-radius:10px;font-weight:700}
+
+    .container{max-width:var(--max-width);margin:32px auto;padding:0 20px}
+    h1{margin-bottom:8px}
+    p.lead{color:var(--muted);margin-bottom:24px}
+
+    /* Timeline */
+    .timeline{position:relative;margin:40px 0}
+    .timeline::before{content:"";position:absolute;left:24px;top:0;width:3px;height:100%;background:linear-gradient(var(--gold-1),var(--gold-2));border-radius:3px}
+    .step{display:flex;gap:16px;margin-bottom:32px;position:relative}
+    .step-icon{flex-shrink:0;width:50px;height:50px;border-radius:50%;
+      background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
+      display:flex;align-items:center;justify-content:center;color:#021127;font-weight:700;font-size:18px}
+    .step-content{background:var(--card);padding:16px;border-radius:var(--radius);
+      border:1px solid var(--border);box-shadow:var(--shadow);flex:1}
+    .step-title{font-weight:700;color:var(--gold-1);margin-bottom:6px}
+    .step-desc{color:var(--muted);font-size:15px}
+
+    footer{margin-top:40px;background:var(--card);border-top:1px solid var(--border);
+      padding:28px 20px;color:var(--muted);font-size:14px;text-align:center}
+  </style>
+
+<style>
+/* Unified responsive dropdown menu (slide-down) */
+:root{ --nav-breakpoint: 900px; }
+@media (max-width: var(--nav-breakpoint)) {
+  .nav, .navbar, header {flex-wrap: wrap; align-items: flex-start; position: relative;}
+  .menu-toggle {
+    display: block;
+    background: transparent;
+    border: 1px solid var(--border, rgba(255,255,255,0.06));
+    border-radius: 8px;
+    font-size: 26px;
+    color: var(--text, #fff);
+    cursor: pointer;
+    margin-left: auto;
+    padding: 4px 10px;
+  }
+  nav.links, .nav-links, .links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    background: rgba(0,0,0,0.7);
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px 0;
+  }
+  nav.links.open, .nav-links.open, .links.open { display:flex !important; }
+  nav.links a, .nav-links a, .links a {
+    padding: 10px 16px;
+    display: block;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  img {max-width:100%;height:auto;}
+  html,body{overflow-x:hidden;}
+}
+@media (min-width: calc(var(--nav-breakpoint) + 1px)) {
+  .menu-toggle{display:none;}
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  // unified selector for different header structures
+  const headerEl = document.querySelector('.nav, .navbar, header');
+  const links = document.querySelector('nav.links, .nav-links, .links');
+  if(headerEl && links && !headerEl.querySelector('.menu-toggle')){
+    const btn = document.createElement('button');
+    btn.className = 'menu-toggle';
+    btn.setAttribute('aria-label','Toggle menu');
+    btn.innerHTML = '☰';
+    // insert before links if possible
+    if(links.parentElement === headerEl || headerEl.contains(links)){
+      headerEl.insertBefore(btn, links);
+    } else {
+      headerEl.appendChild(btn);
+    }
+    btn.addEventListener('click', ()=> links.classList.toggle('open'));
+  }
+});
+</script>
+
+</head>
+<body data-theme="light">
+  <header>
+    <div class="nav">
+      <div class="brand"><img src="assets/explorer_logo.svg" alt="Logo"><span>Cryptodigitalpro</span></div>
+      <nav class="links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="airdrop.html">Airdrop</a>
+        <a href="how-it-works.html" class="active">How It Works</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="auth">
+        <a href="signin.html" class="signin">Sign In</a>
+        <a href="signup.html" class="signup">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <h1>How It Works</h1>
+      <p class="lead">Our structured 4-step recovery process ensures secure, transparent, and efficient case handling for wallet recovery, disputes, and lost funds.</p>
+
+      <div class="timeline">
+
+        <div class="step">
+          <div class="step-icon">1</div>
+          <div class="step-content">
+            <div class="step-title">Submit Your Case</div>
+            <div class="step-desc">Begin by submitting your recovery or dispute application through our secure form. Provide accurate details, transaction links, and contact information. No private keys or seeds are ever requested.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">2</div>
+          <div class="step-content">
+            <div class="step-title">Assessment & Verification</div>
+            <div class="step-desc">Our engineers analyze your submission within 24–48 hours. We verify the case, confirm wallet ownership, and design a custom technical or legal recovery plan based on blockchain data.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">3</div>
+          <div class="step-content">
+            <div class="step-title">Recovery or Dispute Process</div>
+            <div class="step-desc">Once approved, the recovery begins. We coordinate with exchanges, perform blockchain tracing, or execute secure wallet repair operations. Updates are shared through your dashboard.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">4</div>
+          <div class="step-content">
+            <div class="step-title">Result & Report Delivery</div>
+            <div class="step-desc">When complete, you’ll receive a detailed forensic report and access to recovered assets. If funds are unrecoverable, you still receive full documentation and technical proof of attempt.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:30px;text-align:center">
+        <a href="main-recovery-case-application.html" class="signup" style="padding:12px 20px;display:inline-block;">Start Recovery</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2010–2025 Cryptodigitalpro — Secure, Transparent, Professional.</footer>
+
+  <script>
+    (function(){
+      const init=s||'light';
+      document.body.setAttribute('data-theme',init);
+      t.textContent=init==='light'?'🌙':'🌞';
+      t.onclick=()=>{
+        const next=document.body.getAttribute('data-theme')==='light'?'dark':'light';
+        document.body.setAttribute('data-theme',next);
+        t.textContent=next==='light'?'🌙':'🌞';
+      };
+    })();
+  </script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

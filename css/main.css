@@ -1,0 +1,170 @@
+/* ================= ROOT ================= */
+:root{
+  --panel:rgba(255,255,255,.06);
+  --gold:#d4af37;
+  --green:#2fd573;
+  --amber:#f0d78a;
+  --blue:#9ec5ff;
+  --muted:#9aa4b2;
+}
+
+/* ================= RESET ================= */
+*{
+  box-sizing:border-box;
+  font-family:Inter,Poppins,system-ui;
+}
+
+body{
+  margin:0;
+  background:radial-gradient(1200px 400px at top,#041c2c,#020816);
+  color:#e9f2fb;
+  padding:14px;
+}
+
+a{ color:#00ffa2; text-decoration:none; }
+
+button{
+  cursor:pointer;
+  border:none;
+  border-radius:10px;
+}
+
+input,textarea,select{
+  width:100%;
+  background:#06131f;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:10px;
+  color:#fff;
+}
+
+/* ================= LAYOUT ================= */
+.container{ max-width:1200px; margin:auto; }
+
+.card{
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+}
+
+/* ================= STATUS BADGES ================= */
+.status{
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.status.pending{ background:rgba(240,215,138,.15); color:var(--amber); }
+.status.approved{ background:rgba(120,220,160,.15); color:var(--green); }
+.status.rejected{ background:rgba(255,107,107,.2); color:#ff6b6b; }
+
+/* ================= BUTTONS ================= */
+.btn{
+  background:linear-gradient(90deg,#d4af37,#f6e2a7);
+  color:#021127;
+  padding:11px 18px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.btn.dark{ background:#444; color:#fff; }
+.btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+/* ================= WITHDRAW PROGRESS ================= */
+.withdraw-progress{ margin-top:14px; }
+
+.progress-label{
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.progress-bar{
+  width:100%;
+  height:10px;
+  background:#1f2933;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+#progressFill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#d4af37,#2fd573);
+  transition:width .7s ease;
+}
+
+/* ================= MODALS / POPUPS ================= */
+.popup,
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+}
+
+.hidden{ display:none; }
+
+.popup-card,
+.modal-box{
+  background:#0b1220;
+  color:#fff;
+  width:90%;
+  max-width:360px;
+  padding:20px;
+  border-radius:16px;
+  text-align:center;
+}
+
+.modal-box h3{ color:#d4af37; }
+
+/* ================= SUCCESS / ERROR ANIMATIONS ================= */
+.success{ animation:pulseGreen 1.2s infinite; }
+.error{ animation:shakeRed .5s; }
+
+@keyframes pulseGreen{
+  0%{ box-shadow:0 0 0 rgba(47,213,115,.5); }
+  70%{ box-shadow:0 0 20px rgba(47,213,115,.9); }
+  100%{ box-shadow:0 0 0 rgba(47,213,115,.5); }
+}
+
+@keyframes shakeRed{
+  0%{ transform:translateX(0); }
+  25%{ transform:translateX(-4px); }
+  50%{ transform:translateX(4px); }
+  75%{ transform:translateX(-4px); }
+  100%{ transform:translateX(0); }
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  body{ padding:10px; }
+}
+
+.progress-box {
+  margin-top: 15px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#progressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,#2fd573,#00c6ff);
+  transition: width 0.6s ease;
+}
+
+@media (max-width:600px){
+  .progress-label { font-size: 14px; }
+}

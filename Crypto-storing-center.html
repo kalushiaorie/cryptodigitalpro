@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Crypto Recovery Center | CryptoDigitalPro</title>
+<link rel="icon" href="assets/logo.png" />
+<script src="js/auth-pro.js"></script>
+<style>
+:root{
+  --bg:#050505;--text:#f3f3f3;--gold1:#d4af37;--gold2:#f9e7b0;
+  --muted:#bfc7cd;--border:rgba(255,255,255,0.05);--shadow:0 12px 40px rgba(0,0,0,0.65);
+}
+*{box-sizing:border-box;font-family:Poppins,Inter,sans-serif;}
+body{margin:0;background:var(--bg);color:var(--text);}
+
+/* ------------ HERO SECTION (Matches Airdrop Style) -------------- */
+.hero-section{
+  width:100%;
+  padding:100px 20px 80px;
+  background:linear-gradient(135deg,#090909,#1b1b1b,#242424);
+  border-bottom:2px solid rgba(255,215,100,0.15);
+  text-align:center;
+}
+.hero-inner{
+  max-width:800px;
+  margin:auto;
+}
+.hero-title{
+  font-size:2.4rem;
+  font-weight:900;
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-subtitle{
+  margin-top:10px;
+  font-size:1.1rem;
+  color:#d1d1d1;
+}
+
+/* Mobile hero */
+@media(max-width:480px){
+  .hero-title{font-size:1.8rem;}
+  .hero-subtitle{font-size:0.9rem;}
+}
+
+/* ====== Perfected Airdrop-Style Footer ====== */
+.lux-footer{
+  width:100%;
+  padding:60px 20px 70px;
+  margin-top:80px;
+  background:linear-gradient(180deg,#0a0a0a,#070707,#050505);
+  border-top:1px solid rgba(255,215,100,0.15);
+  box-shadow:0 -10px 40px rgba(0,0,0,0.5);
+  text-align:center;
+  backdrop-filter:blur(8px);
+}
+
+.footer-content{
+  max-width:900px;
+  margin:auto;
+}
+
+.footer-logo{
+  height:70px;
+  margin-bottom:15px;
+  filter:drop-shadow(0 0 8px rgba(255,215,150,0.35));
+}
+
+.footer-text{
+  color:var(--gold2);
+  font-size:1.2rem;
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+.footer-social{
+  display:flex;
+  justify-content:center;
+  gap:22px;
+  margin:22px 0;
+}
+
+.footer-social a{
+  font-size:1.5rem;
+  text-decoration:none;
+  color:var(--gold2);
+  opacity:.8;
+  transition:.3s;
+}
+.footer-social a:hover{
+  opacity:1;
+  transform:translateY(-4px);
+}
+
+.footer-copy{
+  font-size:.9rem;
+  color:#aaa;
+  margin-top:15px;
+}
+
+/* Mobile Footer */
+@media(max-width:480px){
+  .footer-logo{height:55px;}
+  .footer-text{font-size:1rem;}
+  .footer-copy{font-size:.85rem;}
+}
+
+/* ---------------- HEADER ---------------- */
+header{
+  position:sticky;top:0;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 20px;z-index:1000;
+}
+.brand{display:flex;align-items:center;gap:10px;color:var(--gold1);
+  font-weight:800;font-size:1.2rem;}
+.brand img{height:40px;}
+
+.auth{display:flex;align-items:center;gap:10px;}
+.auth a{color:white;text-decoration:none;}
+
+.btn-primary{
+  background:linear-gradient(90deg,var(--gold2),var(--gold1));color:#021127;
+  border:none;padding:10px 18px;border-radius:10px;cursor:pointer;
+  font-weight:700;transition:.3s;white-space:nowrap;
+}
+.btn-primary:hover{opacity:.9;transform:translateY(-2px);}
+.footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px;padding:20px 10px;border-top:1px solid var(--border)}
+#userStatus{margin-left:10px;}
+[data-cdp-user-widget]{transform:scale(.85);}
+
+/* ---------------- MAIN CONTENT ---------------- */
+main{
+  padding:20px;
+  max-width:1200px;
+  margin:auto;
+}
+.card{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;margin-bottom:24px;
+  box-shadow:var(--shadow);
+}
+h1,h2,h3{
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* ---------------- SERVICE GRID ---------------- */
+.service-grid{
+  display:grid;gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  margin-top:16px;
+}
+
+.service-card{
+  padding:18px;border-radius:12px;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  box-shadow:0 6px 16px rgba(0,0,0,.4);
+  cursor:pointer;transition:.3s;
+}
+.service-card:hover{transform:translateY(-6px);
+  box-shadow:0 20px 50px rgba(0,0,0,.6);}
+
+/* ---------------- FOOTER ---------------- */
+footer{
+  margin-top:40px;padding:20px;
+  background:rgba(255,255,255,.02);
+  border-top:1px solid var(--border);
+  text-align:center;color:var(--muted);
+  font-size:.9rem;
+}
+
+/* ---------------- MODAL ---------------- */
+#recoveryModal{
+  display:none;position:fixed;inset:0;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,.8);
+  backdrop-filter:blur(6px);z-index:9999;
+  animation:fadeIn .3s ease;
+}
+#recoveryModal.show{display:flex;}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.modal-box{
+  width:95%;max-width:840px;height:90%;
+  background:rgba(18,18,22,.98);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 0 40px rgba(255,215,128,.25);
+  border:1px solid rgba(255,255,255,.08);
+}
+#recoveryModal iframe{width:100%;height:100%;border:none;}
+
+.close{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,.08);
+  color:var(--gold1);
+  border:none;border-radius:8px;
+  padding:6px 12px;cursor:pointer;
+  font-weight:700;
+}
+.close:hover{opacity:.8;}
+
+/* ---------------- SIGN-IN NOTICE ---------------- */
+.signin-notice{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(8px);
+  z-index:99999;animation:fadeIn .4s ease;
+}
+.signin-notice.hidden{display:none;}
+
+.signin-box{
+  background:rgba(20,25,40,0.95);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  box-shadow:0 0 40px rgba(255,215,128,0.18);
+  max-width:420px;width:90%;
+  padding:28px;text-align:center;
+}
+.signin-box p{color:var(--muted);margin-bottom:20px;}
+
+.btn-area button{
+  border:none;border-radius:10px;
+  font-weight:700;padding:10px 16px;
+  margin:0 6px;cursor:pointer;transition:.3s;
+}
+#signinBtn{
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  color:#021127;
+}
+#cancelBtn{
+  background:rgba(255,255,255,0.08);
+  color:var(--gold2);
+}
+#cancelBtn:hover,#signinBtn:hover{
+  transform:translateY(-2px);opacity:.9;
+}
+
+/* ---------------- RESPONSIVENESS ---------------- */
+
+/* Small Phones (360px – 480px) */
+@media(max-width:480px){
+  header{
+    flex-direction:column;
+    gap:10px;
+    text-align:center;
+  }
+  .brand img{height:32px;}
+  .brand span{font-size:1rem;}
+
+  .auth{
+    flex-direction:row;
+    gap:8px;
+  }
+
+  main{padding:14px;}
+  .card{padding:18px;}
+
+  .service-card{padding:16px;}
+  .service-grid{
+    grid-template-columns:1fr;
+  }
+
+  footer{font-size:0.75rem;}
+}
+
+/* Tablets (600px – 900px) */
+@media(max-width:900px){
+  .modal-box{max-width:95%;height:85%;}
+}
+
+/* Very Small Phones (320px – 360px) */
+@media(max-width:360px){
+  .btn-primary{padding:8px 14px;font-size:.82rem;}
+  .service-card h3{font-size:1rem;}
+}
+</style>
+
+
+</head>
+
+<body>
+<header>
+  <div class="brand"><img src="assets/logo.png" alt="logo"/><span></span></div>
+  <div class="auth">
+    <button id="authToggleBtn" class="btn-primary"><
+    <a class="btn-primary" href="index.html">Home Page</a>
+  </div>
+    <div id="userStatus"></div>
+    <div data-cdp-user-widget style="position:absolute;top:16px;right:18px;z-index:999;"></div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+  <section class="hero-section">
+  <div class="hero-inner">
+    <h1 class="hero-title">Crypto Digital Pro — Secure Crypto Storing Center</h1>
+    <p class="hero-subtitle">Protect, recover, and manage your digital assets with military-grade security.</p>
+  </div>
+</section>
+
+  <section class="card">
+    <h2>Available Services</h2>
+    <div class="service-grid" id="serviceGrid"></div>
+  </section>
+
+  <section class="card">
+    <h3>Important Notice</h3>
+    <p>⚠️ We never request your seed phrase or private keys. Verification happens only via wallet connection.</p>
+  </section>
+</main>
+
+
+<!-- Modal -->
+<div id="recoveryModal">
+  <div class="modal-box">
+    <iframe id="recoveryFrame"></iframe>
+    <button class="close" onclick="closeRecoveryModal()">✕ Close</button>
+  </div>
+</div>
+
+<!-- 🔹 CryptoDigitalPro Footer -->
+<footer class="cdp-footer">
+  <div class="cdp-footer-top">
+    <div class="cdp-footer-company">
+      <h2>CryptoDigitalPro</h2>
+      <p>Since 2010 — Secure Crypto Recovery & Digital Finance Solutions</p>
+      <p>Contact: <a href="mailto:admin@cryptodigitalpro.com">admin@cryptodigitalpro.com</a> •
+        <a href="#">Privacy</a> • <a href="#">Terms</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <section class="cdp-newsletter">
+    <h3>Subscribe to our newsletter</h3>
+    <p>Get weekly updates on crypto recovery, loans, and airdrops directly to your inbox.</p>
+
+    <form id="newsletterForm" onsubmit="return false;">
+      <input type="email" placeholder="Your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+
+    <small>I have read the <a href="#">Privacy Policy</a> and understand that I can unsubscribe anytime.</small>
+  </section>
+
+    <div class="footer-social">
+      <a href="https://x.com/cryptodigitalpro" target="_blank">𝕏</a>
+      <a href="https://t.me/cryptodigitalpro25" target="_blank">💬</a>
+      <a href="#" target="_blank">📸</a>
+      <a href="#" target="_blank">▶️</a>
+    </div>
+
+    <p class="footer-copy">© <span id="year"></span> CryptoDigitalPro — All Rights Reserved</p>
+  </div>
+</footer>
+
+<script>
+  // Auto-update year
+  document.getElementById("year").innerText = new Date().getFullYear();
+</script>
+
+
+<script>
+/* ---------- Auth check ---------- */
+const session = window.cdpAuth?.getSession?.();
+if (session && session.email){
+  document.getElementById("authToggleBtn").innerText="Dashboard";
+  document.getElementById("authToggleBtn").onclick=()=>window.location.href="user-dashboard.html";
+}else{
+  document.getElementById("authToggleBtn").onclick=()=>window.location.href="signin.html";
+}
+
+/* ---------- Service Cards ---------- */
+const services = [
+  {title:"Wallet Recovery",desc:"Recover lost access to wallets and accounts."},
+  {title:"Wallet Repair",desc:"Fix broken or corrupted wallet connections securely."},
+  {title:"Dispute",desc:"Resolve disputed transactions and callbacks for lost crypto."}
+];
+const grid = document.getElementById("serviceGrid");
+services.forEach(s=>{
+  const div = document.createElement("div");
+  div.className = "service-card";
+  div.innerHTML = `<h3>${s.title}</h3>
+                   <p style="color:var(--muted)">${s.desc}</p>
+                   <button class="btn-primary">Start Process</button>`;
+  div.querySelector("button").addEventListener("click",e=>{
+    e.stopPropagation();
+    openRecoveryForm(s.title);
+  });
+  grid.appendChild(div);
+});
+
+/* ---------- Modal logic ---------- */
+function openRecoveryForm(serviceType){
+  // No sign-in check here anymore
+  window.location.href = `support-form.html?type=${encodeURIComponent(serviceType)}`;
+}
+
+
+/* --- Optional Modal version if you prefer pop-up form
+function openRecoveryForm(serviceType){
+  const sess = window.cdpAuth?.getSession?.();
+  if(!sess || !sess.email){
+    showSigninNotice();
+    return;
+  }
+  const m = document.getElementById("recoveryModal");
+  const f = document.getElementById("recoveryFrame");
+  f.src = `general-recovery-form.html?type=${encodeURIComponent(serviceType)}`;
+  m.classList.add("show");
+}
+*/
+
+/* --- Custom Sign-in Notice Logic --- */
+function showSigninNotice(){
+  const box = document.getElementById("signinNotice");
+  box.classList.remove("hidden");
+  document.getElementById("signinBtn").onclick = () => {
+    window.location.href = "signin.html";
+  };
+  document.getElementById("cancelBtn").onclick = () => {
+    box.classList.add("hidden");
+  };
+}
+
+/* ---------- Close Modal ---------- */
+function closeRecoveryModal(){
+  document.getElementById("recoveryModal").classList.remove("show");
+}
+
+/* ---------- Listen for completed submissions ---------- */
+window.addEventListener("message",e=>{
+  if(e.data && e.data.type==="recovery-submitted"){
+    closeRecoveryModal();
+    alert("✅ Your recovery request has been submitted successfully!");
+  }
+});
+</script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Success Stories & Testimonials — Cryptodigitalpro</title>
+  <meta name="description" content="Explore verified recovery success stories and real testimonials from Cryptodigitalpro clients around the world."/>
+<link rel="icon" href="assets/logo.png" />
+
+  <style>
+    :root{
+      --bg:#f6f7f9;--card:#fff;--muted:#6b7280;--text:#0f1724;
+      --gold-1:#caa64a;--gold-2:#f0d78a;--border:rgba(15,23,42,0.06);
+      --radius:12px;--shadow:0 12px 36px rgba(2,6,23,0.06);
+      --max-width:1200px;
+    }
+    body[data-theme="dark"]{
+      --bg:#070708;--card:#0f1724;--muted:#9aa4b2;
+      --text:#e9f0f7;--border:rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,'Segoe UI',Roboto,Arial;}
+    body{background:var(--bg);color:var(--text);line-height:1.45;padding-bottom:60px;}
+    a{text-decoration:none;color:inherit}
+
+    header{position:sticky;top:0;z-index:99;background:rgba(255,255,255,0.7);
+      backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+    body[data-theme="dark"] header{background:rgba(6,8,12,0.6)}
+    .nav{max-width:var(--max-width);margin:0 auto;padding:12px 20px;
+      display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;color:var(--gold-1);font-weight:700}
+    .brand img{height:36px}
+    nav.links{display:flex;gap:14px}
+    nav.links a{padding:8px;border-radius:8px;color:var(--muted);font-weight:600}
+    nav.links a.active,nav.links a:hover{color:var(--text)}
+    .auth{display:flex;gap:8px}
+    .signin{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:transparent;font-weight:700}
+    .signup{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));color:#021127;padding:8px 12px;border-radius:10px;font-weight:700}
+
+    .container{max-width:var(--max-width);margin:32px auto;padding:0 20px}
+    h1{margin-bottom:8px}
+    p.lead{color:var(--muted);margin-bottom:24px}
+
+    /* Success Stories Grid */
+    .stories{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
+    .story-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:transform .25s}
+    .story-card:hover{transform:translateY(-6px)}
+    .story-flag{font-size:28px}
+    .story-title{font-weight:700;color:var(--gold-1);margin:6px 0}
+    .story-desc{color:var(--muted);font-size:14px;line-height:1.5}
+
+    /* Carousel */
+    .carousel{position:relative;overflow:hidden;margin-top:40px}
+    .slides{display:flex;transition:transform .7s ease-in-out}
+    .testimonial{min-width:100%;background:var(--card);border:1px solid var(--border);
+      border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;text-align:center}
+    .testimonial p{color:var(--muted);font-style:italic;margin-bottom:12px}
+    .testimonial .name{font-weight:700;color:var(--gold-1)}
+    .carousel-dots{text-align:center;margin-top:14px}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px;background:var(--border);cursor:pointer}
+    .dot.active{background:linear-gradient(90deg,var(--gold-1),var(--gold-2))}
+
+    .cta{text-align:center;margin-top:50px}
+    .cta a{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
+      color:#021127;padding:12px 20px;border-radius:10px;font-weight:700;display:inline-block}
+
+    footer{margin-top:40px;background:var(--card);border-top:1px solid var(--border);
+      padding:28px 20px;color:var(--muted);font-size:14px;text-align:center}
+  
+    /* Responsive Navigation */
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--gold-1);
+    }
+    @media (max-width: 768px) {
+      nav.links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--card);
+        border-top: 1px solid var(--border);
+        position: absolute;
+        top: 60px;
+        left: 0;
+        padding: 12px 0;
+        animation: slideDown 0.3s ease forwards;
+      }
+      nav.links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .auth { display: none; }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body data-theme="light">
+  <header>
+    <div class="nav">
+      <div class="brand"><img src="assets/explorer_logo.svg" alt="Logo"><span>Cryptodigitalpro</span></div>
+      <nav class="links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="airdrop.html">Airdrop</a>
+        <a href="success-stories.html" class="active">Success</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="auth">
+        <a href="signin.html" class="signin">Sign In</a>
+
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <h1>Success Stories & Testimonials</h1>
+      <p class="lead">Real recoveries. Real users. See how Cryptodigitalpro has helped clients from all over the world recover their lost assets.</p>
+
+      <div class="stories">
+        <div class="story-card"><div class="story-flag">🇺🇸</div><div class="story-title">Wallet Recovered — $28,000 ETH</div><div class="story-desc">A client lost access to MetaMask after a system crash. We recovered full access in 4 days using forensic trace and signature match.</div></div>
+        <div class="story-card"><div class="story-flag">🇬🇧</div><div class="story-title">Exchange Dispute Resolved</div><div class="story-desc">Assisted a UK client in retrieving stuck BTC funds through verified compliance mediation with the exchange.</div></div>
+        <div class="story-card"><div class="story-flag">🇨🇦</div><div class="story-title">Lost NFT Collection Restored</div><div class="story-desc">Recovered stolen NFTs via contract tracing and collaboration with marketplace custodians.</div></div>
+        <div class="story-card"><div class="story-flag">🇩🇪</div><div class="story-title">Crypto Loan Approved — $15,000</div><div class="story-desc">Verified client received a secured loan within 48 hours after collateral validation.</div></div>
+        <div class="story-card"><div class="story-flag">🇳🇬</div><div class="story-title">Scam Recovery Assistance</div><div class="story-desc">Recovered partial funds through blockchain forensics and wallet callback coordination with exchange support.</div></div>
+        <div class="story-card"><div class="story-flag">🇸🇬</div><div class="story-title">DeFi Asset Restoration</div><div class="story-desc">Recovered trapped LP tokens from expired smart contracts using analytical DeFi forensics.</div></div>
+        <div class="story-card"><div class="story-flag">🇫🇷</div><div class="story-title">Stolen Ledger Access Fixed</div><div class="story-desc">Recovered access to hardware wallet after firmware corruption; assets secured and restored to new address.</div></div>
+        <div class="story-card"><div class="story-flag">🇮🇳</div><div class="story-title">Blocked Binance Account Recovered</div><div class="story-desc">Coordinated with Binance compliance to unlock verified account and recover suspended assets safely.</div></div>
+        <div class="story-card"><div class="story-flag">🇦🇺</div><div class="story-title">Forgotten Seed Phrase Rebuild</div><div class="story-desc">Reconstructed lost seed phrase segments with partial mnemonic matching — full wallet recovery achieved.</div></div>
+        <div class="story-card"><div class="story-flag">🇧🇷</div><div class="story-title">Cross-Chain Transfer Issue Fixed</div><div class="story-desc">Recovered mistakenly sent USDT from BSC to Polygon chain via wrapped bridge contract trace.</div></div>
+        <div class="story-card"><div class="story-flag">🇿🇦</div><div class="story-title">Hacked Wallet Restored</div><div class="story-desc">Recovered wallet access and froze unauthorized transfers through partner alerts and on-chain monitoring.</div></div>
+      </div>
+
+      <h2 style="margin-top:50px;text-align:center;color:var(--gold-1)">What Our Clients Say</h2>
+      <div class="carousel" id="testimonialCarousel">
+        <div class="slides">
+          <div class="testimonial"><p>“Incredible service! My ETH wallet was fully recovered in less than a week. Honest and professional from start to finish.”</p><div class="name">— Maria P. (Spain)</div></div>
+          <div class="testimonial"><p>“I was scammed on Telegram and thought it was over. The Cryptodigitalpro team traced and returned my tokens safely.”</p><div class="name">— Daniel O. (Nigeria)</div></div>
+          <div class="testimonial"><p>“Best recovery experience! Their updates and communication made me feel secure during the process.”</p><div class="name">— Linda K. (Germany)</div></div>
+          <div class="testimonial"><p>“They retrieved my lost BTC from a 2017 wallet — unbelievable expertise and fast results.”</p><div class="name">— Steven M. (USA)</div></div>
+          <div class="testimonial"><p>“Quick, transparent, and secure. My blocked exchange account was resolved in just 3 days.”</p><div class="name">— Priya R. (India)</div></div>
+          <div class="testimonial"><p>“A lifesaver! They recovered my NFT collection after a phishing attack. Highly recommended.”</p><div class="name">— Alex J. (UK)</div></div>
+          <div class="testimonial"><p>“The loan approval was smooth and immediate after verification. I trust them completely.”</p><div class="name">— Markus F. (Austria)</div></div>
+          <div class="testimonial"><p>“Even though only 70% of my funds were recovered, their transparency was commendable.”</p><div class="name">— Irene C. (Philippines)</div></div>
+          <div class="testimonial"><p>“Cryptodigitalpro handled my case with full confidentiality and professionalism.”</p><div class="name">— Omar S. (UAE)</div></div>
+          <div class="testimonial"><p>“I recovered a $9,500 loss from a failed DeFi pool. The engineers are truly experts.”</p><div class="name">— Emma W. (Canada)</div></div>
+          <div class="testimonial"><p>“Best customer experience — honest timelines, real people, real results.”</p><div class="name">— Pablo G. (Mexico)</div></div>
+          <div class="testimonial"><p>“Professional and fast — got my wallet back within 48 hours.”</p><div class="name">— Natalia V. (Russia)</div></div>
+          <div class="testimonial"><p>“They’re simply the best. The process was smooth, secure, and highly reliable.”</p><div class="name">— Anthony B. (Australia)</div></div>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="cta">
+        <p style="margin-bottom:12px;color:var(--muted)">Join over <strong>8,000+</strong> users who’ve successfully recovered their digital assets with us.</p>
+        <a href="Crypto-storing-center.html">Start Your Recovery</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2010–2025 Cryptodigitalpro — Trusted Global Recovery Network.</footer>
+
+  <script>
+    // Theme toggle
+    (function(){
+      const init=s||'light';
+      document.body.setAttribute('data-theme',init);
+      t.textContent=init==='light'?'🌙':'🌞';
+      t.onclick=()=>{
+        const next=document.body.getAttribute('data-theme')==='light'?'dark':'light';
+        document.body.setAttribute('data-theme',next);
+        t.textContent=next==='light'?'🌙':'🌞';
+      };
+    })();
+
+    // Carousel logic
+    const slides=document.querySelector('.slides');
+    const total=slides.children.length;
+    const dotBox=document.querySelector('.carousel-dots');
+    for(let i=0;i<total;i++){
+      const dot=document.createElement('span');
+      dot.classList.add('dot');
+      if(i===0)dot.classList.add('active');
+      dotBox.appendChild(dot);
+    }
+    const dots=document.querySelectorAll('.dot');
+    let index=0;
+    function showSlide(i){
+      slides.style.transform=`translateX(-${i*100}%)`;
+      dots.forEach((d,idx)=>d.classList.toggle('active',idx===i));
+    }
+    function nextSlide(){
+      index=(index+1)%total;
+      showSlide(index);
+    }
+    dots.forEach((d,i)=>d.addEventListener('click',()=>{index=i;showSlide(i)}));
+    setInterval(nextSlide,5000);
+  
+    // Responsive nav toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.querySelector('nav.links');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) navLinks.classList.remove('show');
+    });
+
+</script>
+<script src="auth.js"></script>
+  </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("authToggleBtn");
+
+    function updateButton() {
+      if (window._auth && window._auth.isLoggedIn()) {
+        btn.textContent = "Sign Out";
+      } else {
+        btn.textContent = "Sign In";
+      }
+    }
+
+    btn.addEventListener("click", () => {
+      if (!window._auth) return;
+      if (window._auth.isLoggedIn()) {
+        window._auth.signOut();
+        updateButton();
+      } else {
+        window._auth.openAuth("signin");
+      }
+    });
+
+    window.addEventListener("load", updateButton);
+    window.addEventListener("storage", updateButton);
+  });
+</script>
+  </script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

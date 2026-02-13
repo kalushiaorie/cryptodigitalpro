@@ -1,0 +1,2 @@
+submitLoan()
+renderReview()

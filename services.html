@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Services — Cryptodigitalpro</title>
+  <meta name="description" content="ExplorerRestoringDigital — Wallet recovery, dispute filing, lost-crypto callbacks, loans and security consulting."/>
+<link rel="icon" href="assets/logo.png" />>
+<script src="js/auth-pro.js"></script>
+  <!-- Keep same look & feel as index (embedded CSS for single-file deploy) -->
+  <style>
+    :root{
+      --bg: #f6f7f9;
+      --panel: #fff;
+      --card: #fff;
+      --muted: #6b7280;
+      --text: #0f1724;
+      --gold-1: #caa64a;
+      --gold-2: #f0d78a;
+      --accent1: #caa64a;
+      --accent2: #f0d78a;
+      --border: rgba(15,23,42,0.06);
+      --radius: 12px;
+      --shadow-strong: 0 12px 36px rgba(2,6,23,0.06);
+      --max-width: 1200px;
+      --gap: 18px;
+    }
+    body[data-theme="dark"]{
+      --bg: #070708; --card: #0f1724; --muted: #9aa4b2; --text: #e9f0f7; --border: rgba(255,255,255,0.04);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial; -webkit-font-smoothing:antialiased;}
+    body{background: radial-gradient(1000px 420px at 6% 8%, rgba(202,166,74,0.03), transparent 10%), var(--bg); color:var(--text); line-height:1.45; padding-bottom:60px;}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block;height:auto}
+
+    /* Header copied from index */
+    header{position:sticky;top:0;z-index:120;background:rgba(255,255,255,0.7);backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+    body[data-theme="dark"] header{background:rgba(6,8,12,0.6)}
+    .nav{max-width:var(--max-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;color:var(--gold-1)}
+    .brand img{height:36px}
+    nav.links{display:flex;gap:14px;align-items:center}
+    nav.links a{font-weight:600;color:var(--muted);padding:8px;border-radius:8px}
+    nav.links a:hover{color:var(--text)}
+    .auth{display:flex;gap:8px;align-items:center}
+    .signin{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:10px;font-weight:700}
+    .signup{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021127;padding:8px 12px;border-radius:10px;font-weight:700}
+    .btn-primary{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:10px 16px;border-radius:20px;color:#021127;font-weight:700;cursor:pointer}
+    .btn-ghost{display:inline-flex;align-items:center;padding:9px 14px;border-radius:15px;border:1px solid var(--border);color:var(--text);background:transparent;cursor:pointer}
+
+    /* Layout containers */
+    .container{max-width:var(--max-width);margin:28px auto;padding:0 20px}
+    .page-hero{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}
+    .hero-left{flex:1;min-width:260px}
+    .hero-right{width:360px;min-width:220px}
+
+    .card{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:var(--shadow-strong);border:1px solid var(--border);position:relative;overflow:hidden}
+    .stack{display:grid;gap:16px}
+    .grid{display:grid;gap:var(--gap)}
+    .services-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));align-items:stretch}
+
+    .service-card{padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(250,250,248,0.7));border:1px solid rgba(202,166,74,0.06);display:flex;flex-direction:column;gap:12px;min-height:220px;transition:transform .22s}
+    body[data-theme="dark"] .service-card{background:var(--card)}
+    .service-card:hover{transform:translateY(-6px)}
+    .service-title{font-weight:800;color:var(--gold-1);font-size:18px}
+    .service-desc{color:var(--muted);font-size:14px}
+    .service-cta{margin-top:auto;display:flex;gap:10px;align-items:center}
+
+    /* Feature list */
+    .feature-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+    .feature-item{display:flex;gap:12px;align-items:flex-start}
+
+    /* Contact panel */
+    .contact-panel{display:flex;flex-direction:column;gap:12px}
+
+    footer{margin-top:36px;background:var(--card);border-top:1px solid var(--border);padding:28px 20px;color:var(--muted)}
+
+    @media (max-width:980px){
+      .hero-right{width:100%;order:2}
+      .hero-left{order:1}
+    }
+  
+    /* Responsive Navigation */
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--gold-1);
+    }
+    @media (max-width: 768px) {
+      nav.links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--card);
+        border-top: 1px solid var(--border);
+        position: absolute;
+        top: 60px;
+        left: 0;
+        padding: 12px 0;
+        animation: slideDown 0.3s ease forwards;
+      }
+      nav.links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .auth { display: none; }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 600px) {
+      h1, h2, h3 { font-size: 1.3rem; }
+      p, .service-desc { font-size: 14px; }
+      .hero-right { width: 100%; }
+      .service-card { min-height: auto; }
+    }
+
+  </style>
+</head>
+<body data-theme="light">
+  <!-- Header (matches index) -->
+  <header role="banner">
+    <div class="nav" role="navigation" aria-label="Main navigation">
+      <div class="brand" aria-label="ExplorerRestoringDigital">
+        <img alt="Explorer logo" src="assets/explorer_logo.svg"/>
+        <span style="font-size:16px"></span>
+      </div>
+
+      <nav class="links" aria-label="Primary navigation">
+        <a href="index.html">Home</a>
+        <a href="services.html" class="active">Services</a>
+        <a href="airdrop.html">Airdrop</a>
+        <a href="loan.html">Crypto Loan</a>
+        <a href="about-awards.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+<div id="userStatus"></div>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="auth" aria-hidden="false">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <div class="page-hero">
+        <div class="hero-left">
+          <h1 style="margin:0 0 8px 0">Professional Services</h1>
+          <p style="color:var(--muted);margin:0 0 12px 0;max-width:720px">Comprehensive crypto services: secure wallet recovery, lost-crypto callbacks, dispute filing, wallet repair, and short-term bridge loans. We combine technical forensics, legal coordination and secure operations to recover funds and protect your assets.</p>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+
+            
+          </div>
+        </div>
+
+        <aside class="hero-right card">
+          <strong style="display:block;color:var(--gold-1)">Why choose us</strong>
+          <p class="muted" style="margin:8px 0 12px 0">Years of experience, careful forensic methods, and proven success recovering crypto and resolving disputes with exchanges and counterparties.</p>
+
+          <div class="feature-list">
+            <div class="feature-item"><div style="width:44px;height:44;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127;font-weight:800">🔑</div><div><strong>Secure process</strong><div class="muted" style="font-size:13px">We never ask for private keys</div></div></div>
+
+            <div class="feature-item"><div style="width:44px;height:44;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127;font-weight:800">⏱️</div><div><strong>Fast triage</strong><div class="muted" style="font-size:13px">Initial assessment within 48 hours</div></div></div>
+
+            <div class="feature-item"><div style="width:44px;height:44;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127;font-weight:800">🤝</div><div><strong>Legal coordination</strong><div class="muted" style="font-size:13px">We work with exchanges and legal partners</div></div></div>
+
+            <div class="feature-item"><div style="width:44px;height:44;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127;font-weight:800">🔧</div><div><strong>Wallet repair</strong><div class="muted" style="font-size:13px">Fix corrupted or partially damaged wallets</div></div></div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Services grid -->
+      <section style="margin-top:18px">
+        <div class="card">
+          <h2 style="margin:0 0 10px 0">Our Core Services</h2>
+          <p class="muted" style="margin:0 0 14px 0">Tailored solutions for individuals and institutions — secure, transparent and outcome-driven.</p>
+
+          <div class="grid services-grid" style="margin-top:12px">
+            <article class="service-card">
+              <div class="service-title">Wallet Recovery</div>
+              <div class="service-desc">Recover access to locked or lost wallets using safe forensic methods. No private key requests — we use secure verification and recovery tooling.</div>
+              <div class="service-cta">
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-title">Lost Crypto Dispute</div>
+              <div class="service-desc">Investigations and callbacks for funds sent to wrong addresses, including tracing and exchange liaison to recover transmissions.</div>
+              <div class="service-cta">
+            </article>
+
+            <article class="service-card">
+              <div class="service-title">Wallet Repair & Maintenance</div>
+              <div class="service-desc">Repair corrupted wallet files, restore keystore issues and ensure your wallet is safely exportable after repair.</div>
+              <div class="service-cta">
+            </article>
+
+            <article class="service-card">
+			      <a class="btn-primary" href="general recovery form.html">State Case</a>
+                 <div class="service-cta">
+				
+            </article>
+
+            <article class="service-card">
+              <div class="service-title">Crypto Loans (Bridge Funding)</div>
+              <div class="service-desc">Short-term loans provided to verified clients pending recovery — flexible terms, transparent rates and rapid approvals for qualifying cases.</div>
+              <div class="service-cta">
+                <a class="btn-primary" href="general-loan-form.html">Crypto Loan</a>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-title">Token Airdrop Management</div>
+              <div class="service-desc">We design and operate verified airdrops and distribution campaigns — from whitelist to claim flows and fraud prevention.</div>
+              <div class="service-cta">
+                <a class="btn-primary" href="general-airdrop-form.html">Airdrops</a>
+              </div>
+            </article>
+
+            <article class="service-card">
+              <div class="service-title">Enterprise Support</div>
+              <div class="service-desc">Dedicated account managers, SLAs, and enterprise-grade recovery and dispute services for businesses and funds.</div>
+              <div class="service-cta">
+                <a class="btn-primary" href="contact.html">Enterprise</a>
+                <a class="btn-ghost" href="services.html">Case studies</a>
+      </section>
+
+      <!-- Process & guarantees -->
+      <section style="margin-top:18px">
+        <div class="card">
+          <h2 style="margin:0 0 10px 0">Our Process & Guarantees</h2>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px">
+            <div style="flex:1;min-width:240px">
+              <strong>Step 1 — Secure Intake</strong>
+              <p class="muted" style="margin:6px 0 12px 0">Submit case details through our secure form — never share your seed phrases.</p>
+
+              <strong>Step 2 — Forensic Assessment</strong>
+              <p class="muted" style="margin:6px 0 12px 0">We analyze transactions, wallet data and provide a clear plan and quote.</p>
+            </div>
+
+            <div style="flex:1;min-width:240px">
+              <strong>Step 3 — Recovery Execution</strong>
+              <p class="muted" style="margin:6px 0 12px 0">Our team executes the approved plan, liaising with exchanges when required.</p>
+
+              <strong>Step 4 — Results & Prevention</strong>
+              <p class="muted" style="margin:6px 0 12px 0">We deliver recovered funds (if possible) and implement security recommendations.</p>
+            </div>
+
+            <div style="flex:320px;min-width:220px">
+              <strong style="display:block;color:var(--gold-1)">Our guarantees</strong>
+              <ul class="muted" style="margin-top:8px;padding-left:18px">
+                <li>No requests for private keys or seed phrases</li>
+                <li>Transparent pricing after assessment</li>
+                <li>Professional legal coordination when necessary</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact / CTA -->
+      <section style="margin-top:18px">
+        <div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <h3 style="margin:0 0 8px 0">Need help now?</h3>
+            <p class="muted" style="margin:0 0 12px 0">Start a recovery or contact our support team for immediate assistance.</p>
+            <div style="display:flex;gap:10px">
+              
+              <a class="btn-ghost" href="contact.html">Contact Support</a>
+            </div>
+          </div>
+          <div style="width:320px" class="contact-panel">
+            <div style="font-weight:700">Office</div>
+            <div class="muted" style="font-size:14px">Email: <a href="mailto:admin@cryptodigitalpro.com">admin@cryptodigitalpro.com</a></div>
+            <div class="muted" style="font-size:14px">Support: <a href="mailto:dbaltovick@gmail.com">dbaltovick@gmail.com</a></div>
+            <div class="muted" style="font-size:13px">Available: Mon–Fri, 09:00–18:00 UTC</div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Footer (kept from index) -->
+  <footer class="main-footer themed-footer">
+    <section class="newsletter" style="padding-bottom:18px">
+      <div style="max-width:var(--max-width);margin:0 auto;padding:0 20px">
+        <h3 style="margin:0 0 6px 0">Subscribe to updates</h3>
+        <p class="muted" style="margin:0 0 10px 0">Get updates on recoveries, security tips and airdrops.</p>
+        <form class="newsletter-form" action="#" method="POST" style="display:flex;gap:8px;max-width:560px">
+          <input type="email" placeholder="Your email" required style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border)"/>
+          <button class="btn-primary" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <div style="max-width:var(--max-width);margin:18px auto 0;padding:0 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="assets/explorer_logo.svg" alt="Explorer logo" style="height:44px"/>
+        <div><strong>Cryptodigitalpro</strong><div class="muted" style="font-size:13px">Since 2010 — Secure crypto recovery</div></div>
+      </div>
+
+      <div class="muted" style="font-size:13px">Contact: <a href="mailto:admin@cryptodigitalpro.com">admin@cryptodigitalpro.com</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a></div>
+    </div>
+
+    <div style="max-width:var(--max-width);margin:16px auto 28px;padding:0 20px;text-align:center;color:var(--muted);font-size:13px">
+      © 2010–2025 Cryptodigitalpro.com — All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Minimal JS: theme toggle + small interactions (copied behavior from index) -->
+  <script>
+    (function(){
+      const initial = saved || 'light';
+      document.body.setAttribute('data-theme', initial === 'light' ? 'light' : 'dark');
+      toggle.textContent = initial === 'light' ? '🌙' : '🌞';
+      toggle.addEventListener('click', () => {
+        const next = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', next);
+        toggle.textContent = next === 'light' ? '🌙' : '🌞';
+      });
+    })();
+  
+    // Responsive nav toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.querySelector('nav.links');
+    if(menuToggle){
+      menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('show');
+      });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) navLinks.classList.remove('show');
+      });
+    }
+
+  </script>
+</script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

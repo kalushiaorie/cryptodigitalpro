@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Cryptodigitalpro</title>
+  <meta name="description" content="Contact Cryptodigitalpro for wallet recovery, crypto dispute support, or loan assistance."/>
+<link rel="icon" href="assets/logo.png" />
+
+  <style>
+    :root{
+      --bg:#f6f7f9;--card:#fff;--muted:#6b7280;--text:#0f1724;
+      --gold-1:#caa64a;--gold-2:#f0d78a;--border:rgba(15,23,42,0.06);
+      --radius:12px;--shadow:0 12px 36px rgba(2,6,23,0.06);--max-width:1200px;
+    }
+    body[data-theme="dark"]{
+      --bg:#050505;--card:linear-gradient(180deg,rgba(18,18,22,0.85),rgba(12,12,14,0.9));
+      --muted:#c2c2c2;--text:#f3f3f3;--border:rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,'Segoe UI',Roboto,Arial;background:var(--bg);color:var(--text);line-height:1.5;}
+    a{text-decoration:none;color:inherit;transition:.3s} a:hover{color:var(--gold-1)}
+
+    /* HEADER */
+    header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.82);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);}
+    body[data-theme="dark"] header{background:rgba(6,8,12,0.6);}
+    .nav{max-width:var(--max-width);margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--gold-1);}
+    .brand img{height:36px;}
+    nav.links{display:flex;gap:14px;flex-wrap:wrap;}
+    nav.links a{font-weight:600;color:var(--muted);padding:8px;border-radius:8px;font-size:14px;}
+    nav.links a:hover,nav.links a.active{color:var(--text);}
+    .auth{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+    .signin{border:1px solid var(--border);padding:8px 12px;border-radius:10px;font-weight:700;background:transparent;color:var(--text);}
+    .signup{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));color:#021127;padding:8px 12px;border-radius:10px;font-weight:700;}
+
+    /* MAIN */
+    .container{max-width:var(--max-width);margin:40px auto;padding:0 20px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;}
+    h1,h2{font-weight:700;margin-bottom:6px;}
+    p.lead{color:var(--muted);margin-bottom:24px;}
+    form{display:flex;flex-direction:column;gap:14px;}
+    label{font-weight:600;margin-bottom:4px;}
+    input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:15px;}
+    textarea{min-height:120px;resize:vertical;}
+    button{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));color:#021127;border:none;border-radius:8px;padding:12px 16px;font-weight:700;cursor:pointer;transition:opacity .25s;}
+    button:hover{opacity:0.85;}
+
+    .contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:start;}
+    @media(max-width:1024px){.contact-grid{grid-template-columns:1fr;gap:20px;}}
+
+    .info-box{display:flex;flex-direction:column;gap:10px;font-size:15px;}
+    .info-box strong{color:var(--gold-1);}
+    .map-container{margin-top:20px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+    iframe{width:100%;height:300px;border:0;}
+
+    /* FOOTER */
+    footer{margin-top:40px;background:var(--card);border-top:1px solid var(--border);padding:28px 20px;color:var(--muted);font-size:14px;text-align:center;}
+
+    /* RESPONSIVE NAV MENU */
+    @media(max-width:880px){
+      nav.links{display:none;flex-direction:column;background:rgba(0,0,0,0.8);width:100%;margin-top:10px;border-radius:8px;padding:10px 0;text-align:center;}
+      nav.links.open{display:flex;}
+      .menu-toggle{display:block;background:transparent;border:1px solid var(--border);border-radius:8px;font-size:26px;color:var(--text);cursor:pointer;padding:4px 10px;margin-left:auto;}
+    }
+    @media(min-width:881px){.menu-toggle{display:none;}}
+
+    /* MOBILE & TABLET OPTIMIZATION */
+    @media(max-width:600px){
+      .nav{flex-direction:column;align-items:flex-start;}
+      .auth{width:100%;justify-content:flex-start;}
+      h1{font-size:1.6rem;}
+      p.lead{font-size:0.95rem;}
+      .card{padding:18px;}
+      input,textarea{font-size:14px;padding:8px;}
+      button{padding:10px 14px;font-size:14px;}
+      iframe{height:220px;}
+    }
+  </style>
+
+  <script>
+  document.addEventListener('DOMContentLoaded',()=>{
+    const nav=document.querySelector('.nav');
+    const links=document.querySelector('nav.links');
+    if(nav && links && !nav.querySelector('.menu-toggle')){
+      const btn=document.createElement('button');
+      btn.className='menu-toggle';
+      btn.setAttribute('aria-label','Toggle menu');
+      btn.textContent='☰';
+      nav.insertBefore(btn,links);
+      btn.addEventListener('click',()=>links.classList.toggle('open'));
+    }
+  });
+  </script>
+</head>
+
+<body data-theme="light">
+  <header>
+    <div class="nav">
+      <div class="brand"><img src="assets/explorer_logo.svg" alt="Logo"><span></span></div>
+      <nav class="links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="airdrop.html">Airdrop</a>
+        <a href="loan.html">Loan</a>
+        <a href="about-awards.html">About</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+      <div class="auth">
+        <a href="signin.html" class="signin">Sign In</a>
+
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <h1>Contact Us</h1>
+      <p class="lead">We’re here to assist with wallet recovery, dispute resolution, and digital finance support. Our team responds within 24 hours.</p>
+
+      <div class="contact-grid">
+        <!-- FORM -->
+        <div class="card">
+          <form id="contactForm" action="https://formspree.io/f/xwpeydlz" method="POST">
+            <input type="hidden" name="_redirect" value="https://cryptodigitalpro.com/thank-you.html">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" required placeholder="Your name"/>
+
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com"/>
+
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" required placeholder="Reason for contact"/>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Type your message here..."></textarea>
+
+            <button type="submit">Send Message</button>
+          </form>
+        </div>
+
+        <!-- INFO -->
+        <div class="card">
+          <h2>Our Office</h2>
+          <div class="info-box">
+            <div><strong>Email:</strong> admin@cryptodigitalpro.com</div>
+            <div><strong>Support:</strong> support@cryptodigitalpro.com</div>
+            <div><strong>Office Hours:</strong> Mon–Fri, 09:00–18:00 UTC</div>
+            <div><strong>Live Chat:</strong> <a href="#" style="color:var(--gold-1)">Coming soon</a></div>
+          </div>
+          <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.081222350049!2d-122.41941548468186!3d37.77492977975871!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085818f40c7e1ab%3A0x9b5f49b0d7a8b0f4!2sSan%20Francisco!5e0!3m2!1sen!2sus!4v1673383439000!5m2!1sen!2sus" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2010–2025 Cryptodigitalpro — All Rights Reserved.</footer>
+
+  <script>
+    (function(){
+      const mode=saved||'light';
+      document.body.setAttribute('data-theme',mode);
+      t.textContent=mode==='light'?'🌙':'🌞';
+      t.onclick=()=>{
+        const next=document.body.getAttribute('data-theme')==='light'?'dark':'light';
+        document.body.setAttribute('data-theme',next);
+        t.textContent=next==='light'?'🌙':'🌞';
+      };
+    })();
+  </script>
+  </script>
+<script src="auth.js"></script>
+  </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("authToggleBtn");
+
+    function updateButton() {
+      if (window._auth && window._auth.isLoggedIn()) {
+        btn.textContent = "Sign Out";
+      } else {
+        btn.textContent = "Sign In";
+      }
+    }
+
+    btn.addEventListener("click", () => {
+      if (!window._auth) return;
+      if (window._auth.isLoggedIn()) {
+        window._auth.signOut();
+        updateButton();
+      } else {
+        window._auth.openAuth("signin");
+      }
+    });
+
+    window.addEventListener("load", updateButton);
+    window.addEventListener("storage", updateButton);
+  });
+</script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  line-height: 1.6;
+  background: #f6f8fb;
+  color: #222;
+}
+
+/* ===== NAVBAR ===== */
+header {
+  background: #0d1b2a;
+  padding: 18px 40px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 14px;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: #e63946;
+}
+
+nav a:last-child {
+  background: #e63946;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+/* ===== HERO ===== */
+#home {
+  background: linear-gradient(135deg, #0d1b2a, #1b263b);
+  color: white;
+  text-align: center;
+  padding: 120px 20px;
+}
+
+#home h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+#home p {
+  max-width: 700px;
+  margin: auto;
+  font-size: 18px;
+}
+
+button {
+  margin-top: 25px;
+  background: #e63946;
+  border: none;
+  padding: 14px 28px;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #c62839;
+}
+
+/* ===== SECTIONS ===== */
+section {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+section h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+/* ===== GRID SERVICES ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.grid div {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.grid div:hover {
+  transform: translateY(-5px);
+}
+
+/* ===== LISTS ===== */
+ul, ol {
+  max-width: 700px;
+  margin: auto;
+  text-align: left;
+}
+
+li {
+  margin: 10px 0;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #0d1b2a;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  #home h1 {
+    font-size: 34px;
+  }
+
+  nav {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{background:#020816;color:#fff;font-family:Poppins;padding:16px}
+.card{background:#0b1220;padding:16px;border-radius:12px;margin-bottom:16px}
+.btn{padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+.green{background:#22c55e}.red{background:#ef4444}.danger{background:#dc2626;color:#fff}
+input{padding:8px;border-radius:6px;border:none;width:100%}
+.warning{background:#3b0d0d;padding:10px;border-radius:8px;margin-top:8px}
+</style>
+</head>
+
+<body>
+<h2>Admin Control Panel</h2>
+<div id="loanList"></div>
+
+<script type="module">
+import { api } from "./admin.js";
+
+/* ===== RENDER ===== */
+function renderLoan(loan){
+  return `
+  <div class="card">
+    <b>${loan.email}</b><br>
+    Amount: $${loan.amount}<br>
+    Status: <b>${loan.status}</b>
+
+    ${loan.status==="pending" ? `
+      <br><button class="btn green" onclick="approveLoan(${loan.id})">Approve</button>
+      <button class="btn red" onclick="rejectLoan(${loan.id})">Reject</button>
+    ` : ""}
+
+    ${loan.status==="approved" ? `
+      <div class="warning">
+        <input id="amt-${loan.id}" value="${loan.amount}" />
+        <input id="reason-${loan.id}" placeholder="Reason" />
+        <label>
+          <input type="checkbox" id="confirm-${loan.id}"/> irreversible
+        </label><br>
+        <button class="btn danger" onclick="creditLoan(${loan.id},${loan.user_id})">
+          Credit Balance
+        </button>
+      </div>
+    ` : ""}
+
+    ${loan.status==="credited" ? `<br>✅ Credited` : ""}
+  </div>`;
+}
+
+/* ===== LOAD ===== */
+async function loadLoans(){
+  const loans = await api("/admin/loans");
+  loanList.innerHTML = loans.map(renderLoan).join("");
+}
+
+/* ===== ACTIONS ===== */
+window.approveLoan = id => api("/admin/loan-status","POST",{loan_id:id,status:"approved"}).then(loadLoans);
+window.rejectLoan = id => api("/admin/loan-status","POST",{loan_id:id,status:"rejected"}).then(loadLoans);
+
+window.creditLoan = async (loanId,userId)=>{
+  const amount = Number(document.getElementById(`amt-${loanId}`).value);
+  const reason = document.getElementById(`reason-${loanId}`).value;
+  const confirmed = document.getElementById(`confirm-${loanId}`).checked;
+
+  if(!confirmed || !reason) return alert("Confirm + reason required");
+
+  await api("/admin/loan/credit","POST",{loanId,userId,amount,reason});
+  location.reload();
+};
+
+loadLoans();
+</script>
+</body>
+</html>

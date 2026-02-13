@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CryptoDigitalPro — Home</title>
+  <link rel="icon" href="assets/explorer_favicon.png" />
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="js/auth-pro.js"></script>
+
+  <style>
+    /* ============= THEME VARS ============= */
+    :root{
+      --bg: #f6f7f9;
+      --panel: #fff;
+      --card: #fff;
+      --muted: #6b7280;
+      --text: #0f1724;
+      --gold-1: #caa64a;
+      --gold-2: #f0d78a;
+      --accent1: #caa64a;
+      --accent2: #f0d78a;
+      --border: rgba(15,23,42,0.06);
+      --radius: 12px;
+      --shadow-strong: 0 12px 36px rgba(2,6,23,0.06);
+      --max-width: 1200px;
+      --gap: 18px;
+    }
+    body[data-theme="dark"]{
+      --bg: #070708; --card: #0f1724; --muted: #9aa4b2; --text: #e9f0f7; --border: rgba(255,255,255,0.04);
+    }
+
+    
+    /* ticker */
+    .crypto-ticker{width:100%;overflow:hidden;background:linear-gradient(90deg,#0f1724,#1a2940);border-bottom:1px solid rgba(255,255,255,0.08);white-space:nowrap;color:#fff;font-size:14px;font-weight:600;letter-spacing:0.3px;position:relative;height:38px;display:flex;align-items:center}
+    .ticker-track{display:inline-block;padding-left:100%;animation:tickerScroll 40s linear infinite}
+    .ticker-item{display:inline-block;margin-right:48px}
+    .ticker-item span.price{color:#f0d78a}
+    .ticker-item span.change.positive{color:#0b7a16}
+    .ticker-item span.change.negative{color:#b71c1c}
+    @keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
+    /* ============= RESET ============= */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+    body{background: radial-gradient(1000px 420px at 6% 8%, rgba(202,166,74,0.03), transparent 10%), var(--bg); color:var(--text); line-height:1.45; transition:background .35s, color .35s; -webkit-font-smoothing:antialiased;}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block;height:auto}
+
+    /* ============= LAYOUT SCALE ============= */
+    .wrap{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;z-index:120;background:rgba(255,255,255,0.82);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);transition:background .35s}
+    body[data-theme="dark"] header{background:rgba(6,8,12,0.6)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 10px;gap:12px;max-width:var(--max-width);margin:0 auto}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;color:var(--gold-1)}
+    .brand img{height:36px}
+    nav.links{display:flex;gap:12px;align-items:center;flex:1;justify-content:center}
+    nav.links a{font-weight:600;color:var(--muted);padding:8px;border-radius:8px;font-size:14px}
+    nav.links a:hover{color:var(--text)}
+    .auth{display:flex;gap:8px;align-items:center}
+    .signin{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+    .signup{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021127;padding:8px 12px;border-radius:10px;font-weight:700}
+    .btn-primary{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:10px 16px;border-radius:20px;color:#021127;font-weight:700;cursor:pointer}
+    .btn-ghost{display:inline-flex;align-items:center;padding:9px 14px;border-radius:15px;border:1px solid var(--border);color:var(--text);background:transparent;cursor:pointer}
+    #themeToggle{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;font-size:18px;cursor:pointer}
+
+    /* ============= HERO ============= */
+    .hero{padding:18px;border-radius:var(--radius);overflow:visible;margin-top:18px}
+    .hero-inner{display:flex;gap:28px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+    .hero-left{flex:1;min-width:220px}
+    .hero-left h1{font-size:28px;margin-bottom:8px}
+    .hero-left p{color:var(--muted)}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .hero-right{flex:1;min-width:260px;max-width:680px}
+
+    /* hero cards inside right area */
+    .hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .hero-card{background: linear-gradient(180deg, rgba(250,246,238,0.6), rgba(255,255,255,0.45)); padding:14px;border-radius:12px;border:1px solid rgba(202,166,74,0.08);box-shadow:0 14px 40px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:10px;min-height:120px}
+    .hero-card .card-title{font-weight:800}
+    .hero-card .card-desc{color:var(--muted);font-size:13px}
+    .card-cta{margin-top:auto;display:flex;gap:8px;align-items:center}
+	
+  h2, h3, h4{
+    color:var(--text);
+    font-weight:700;
+  }
+    /* ============= AIRDROP GRID ============= */
+    .airdrop-wrap{border-radius:14px;padding:18px;background:linear-gradient(180deg, rgba(255,244,220,0.6), rgba(255,250,240,0.6));border:1px solid rgba(202,166,74,0.06);margin:18px 0}
+    .airdrop-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+    .airdrop-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;align-items:flex-start;gap:12px;transition:transform .28s}
+    .airdrop-card:hover{transform:translateY(-6px)}
+    .token-meta{color:var(--muted);font-size:13px;margin-top:6px}
+    .airdrop-actions{display:flex;gap:8px;align-items:center;margin-left:auto}
+
+    /* ============= CARDS ============= */
+    .card, .unified-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-strong);
+    padding:16px;
+    transition:background .35s,transform .3s,box-shadow .3s;
+  }
+  .unified-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 10px 40px rgba(212,175,55,0.25);
+  }
+
+
+    /* ============= FOOTER ============= */
+    .themed-footer{background:var(--card);color:var(--muted);padding:28px 20px 20px;border-top:1px solid var(--border);box-shadow:0 -6px 24px rgba(0,0,0,0.04);margin-top:28px}
+    .footer-sections{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;max-width:var(--max-width);margin:0 auto 20px}
+    .footer-brand img{height:44px;margin-bottom:8px}
+
+    /* ============= TICKER ============= */
+    .crypto-ticker { width:100%; overflow:hidden; background: linear-gradient(90deg,#0f1724,#1a2940); border-radius:12px; color: #fff; font-size:14px; font-weight:600; display:flex; align-items:center; padding:8px 12px; margin-top:12px }
+    .ticker-inner { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100% }
+
+    /* ============= CHAT BUBBLE ============= */
+    .chat-bubble{position:fixed;right:20px;bottom:24px;width:64px;height:64px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;z-index:2000;cursor:pointer;box-shadow:0 12px 40px rgba(2,6,23,0.12)}
+    .chat-modal{position:fixed;right:20px;bottom:96px;width:360px;max-width:calc(100% - 40px);border-radius:12px;background:var(--card);box-shadow:0 20px 60px rgba(2,6,23,0.12);z-index:2001;display:none;flex-direction:column;overflow:hidden}
+    .chat-modal.open{display:flex}
+
+    /* ============= LOADER ============= */
+    .loader-wrap { position: fixed; inset: 0; background: linear-gradient(180deg, #05060a, #0a0c10); display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s; }
+    .loader-ring { width: 90px; height: 90px; border: 4px solid rgba(255,255,255,0.08); border-top:4px solid #caa64a; border-radius:50%; animation:spin 1.2s linear infinite; display:flex;align-items:center;justify-content:center }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============= REVEAL ============= */
+    .reveal { opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease }
+    .reveal.visible { opacity:1; transform:none }
+
+    /* ============= FAQ ============= */
+    .faq-card .faq-question{width:100%;text-align:left;background:transparent;border:none;padding:12px 8px;font-weight:700;cursor:pointer;border-radius:8px}
+    .faq-answer{padding:6px 8px;color:var(--text);;display:none}
+    .faq-item.active .faq-answer{display:block}
+
+    /* === Our Projects Scrolling Gallery === */
+        body {
+      margin: 0;
+      background: linear-gradient(180deg, #04121a, #021018);
+      color: #e9f2fb;
+      font-family: "Poppins", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* === Hero Section === */
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: radial-gradient(circle at center, #062332 0%, #020f17 100%);
+    }
+    .hero h1 {
+      color: #d4af37;
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      color: #9aa3b2;
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+    }
+
+    /* === Our Projects Carousel Section === */
+    .projects-section {
+      position: relative;
+      overflow: hidden;
+      padding: 50px 0 60px;
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .projects-section h2 {
+      text-align: center;
+      color: #d4af37;
+      font-size: 2rem;
+      margin-bottom: 35px;
+    }
+
+    .carousel {
+      position: relative;
+      width: 95%;
+      max-width: 1000px;
+      height: 300px; /* reduced height */
+      margin: 0 auto;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+    .carousel img {
+      width: 100%;
+      height: 300px; /* match reduced height */
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 100%;
+      opacity: 0;
+      transition: all 1s ease-in-out;
+    }
+    .carousel img.active {
+      left: 0;
+      opacity: 1;
+      z-index: 2;
+    }
+    .carousel img.prev {
+      left: -100%;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* Hover pause */
+    .carousel:hover img {
+      animation-play-state: paused;
+    }
+
+    /* Dots */
+    .dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+      gap: 8px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .dot.active {
+      background: #d4af37;
+    }
+
+    @media (max-width: 768px) {
+      .carousel {
+        height: 200px;
+      }
+      .carousel img {
+        height: 200px;
+      }
+    }
+
+
+    /* ============= RESPONSIVE RULES ============= */
+    @media (max-width:1100px){
+      .hero-cards{grid-template-columns:repeat(2,1fr)}
+      nav.links{display:none}
+      .nav{padding:10px}
+    }
+
+    @media (max-width:880px){
+      .hero-cards{grid-template-columns:1fr;gap:12px}
+      .hero-inner{flex-direction:column;align-items:flex-start}
+      .hero-left h1{font-size:22px}
+      .hero-right{width:100%}
+      .wrap{padding:0 16px}
+    }
+
+    @media (max-width:640px){
+      .brand img{height:30px}
+      .auth .signin, .auth .signup { padding:7px 10px; font-size:13px }
+      .hero-left h1{font-size:20px}
+      .hero-left p{font-size:14px}
+      .hero-actions{flex-direction:column}
+      .crypto-ticker{font-size:13px}
+      .airdrop-grid{grid-template-columns:1fr}
+      .footer-sections{flex-direction:column}
+      .chat-modal{right:12px;left:12px;width:auto}
+    }
+
+    /* small helpers */
+    .muted { color:var(--muted) }
+    .small { font-size:13px }
+    .avatar { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:999px; margin-right:8px }
+    input, textarea, select { border:1px solid var(--border); padding:10px; border-radius:8px; background:transparent; color:var(--text); width:100% }
+    button { cursor:pointer; }
+	
+	    /* responsive polish */
+    @media (max-width: 1024px){
+      .nav{padding:12px 16px}
+      main{margin:22px auto;padding:0 16px}
+      .hero{padding:48px 16px}
+    }
+    @media (max-width: 768px){
+      /* header adjustments */
+      nav.links{display:none}
+      .auth{display:none}
+      .mobile-actions{display:flex}
+      .brand img{height:30px}
+      .mobile-menu{top:58px}
+      /* layouts */
+      body{font-size:15px}
+      .hero{padding:28px 14px}
+      .hero h1{margin-bottom:10px}
+      .grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+      .card{padding:14px}
+      .filters{flex-direction:column;align-items:stretch}
+      .filters input,.filters select{width:100%}
+      .btn-gold,.btn-ghost{width:100%}
+      .modal{margin:16px}
+    }
+    @media (max-width: 480px){
+      .hero h1{font-size:22px}
+      .hero p{font-size:14px}
+      .card h3{font-size:15px}
+      .grid{gap:12px}
+    }
+
+    .claim-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center; align-items: center;
+      z-index: 9999;
+    }
+    .claim-modal {
+      width: 90%; max-width: 600px;
+      background: linear-gradient(180deg,#0b101c 0%,#05080d 100%);
+      border: 1px solid var(--gold1,#caa64a);
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(202,166,74,0.35);
+      color: #fff; padding: 24px;
+      position: relative;
+      animation: fadeIn .35s ease;
+    }
+    .claim-modal h2 {color: var(--gold1,#caa64a);margin-bottom: 10px;}
+    .claim-close {
+      position: absolute; top: 12px; right: 16px;
+      font-size: 20px; color: var(--gold1,#caa64a);
+      cursor: pointer; border: none; background: none;
+    }
+    .claim-step {display: none;}
+    .claim-step.active {display: block;}
+    .step-buttons {
+      margin-top: 20px; display: flex; justify-content: space-between;
+    }
+    .gold-btn {
+      background: linear-gradient(90deg,var(--gold2,#e6c46a),var(--gold1,#caa64a));
+      border: none; color: #021127; font-weight: 700;
+      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+    }
+    .gold-btn:hover {opacity: 0.9;}
+    input,textarea {
+      width: 100%; padding: 10px; margin: 8px 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px; color: #fff;
+    }
+    .group-card {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 10px 14px; margin: 8px 0;
+      background: rgba(255,255,255,0.02);
+    }
+    @keyframes fadeIn {from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+	
+  </style>
+
+</head>
+<body data-theme="light">
+  <!-- Fade overlay for theme transitions -->
+  <div aria-hidden="true" id="fadeOverlay" style="position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .3s"></div>
+
+  <!-- HEADER -->
+  <header role="banner">
+    <div class="nav wrap" role="navigation" aria-label="Main navigation">
+      <div class="brand" aria-label="ExplorerRestoringDigital">
+        <div class="brand"><img src="assets/logo.png" alt="logo"/><span></span></div>
+        <span style="font-size:16px"></span>
+      </div>
+
+      <nav class="links" aria-label="Primary navigation">
+        <a href="index.html">Home</a>
+        <a href="Crypto-storing-center.html">Dispute & Recovery</a>
+         <a href="loan.html">Crypto Loan</a>
+		<a href="about-awards.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="success-stories.html">Success</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+ 
+
+      <div class="auth" aria-hidden="false">
+        
+      </div>
+	    <div id="userStatus"></div>
+<div data-cdp-user-widget style="position:absolute;top:16px;right:18px;z-index:999;"></div>
+    </div>
+  </header>
+		
+
+  <main>
+    <div class="wrap">
+
+      <!-- HERO -->
+      <section class="hero reveal" aria-labelledby="heroHeading">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <h1 id="heroHeading">CRYPTO DIGITAL PRO</h1>
+		</a>The best in Crypto Loans and Crypto Dispute.</a>
+         <p style="color:var(--muted);margin-top:8px"> Empowering users to achieve blockchain success through trust, transparency, and technology innovation..</p>  
+		   <div class="hero-actions">
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="hero-cards" role="region" aria-label="Quick actions">
+              <div class="hero-card card">
+                <div class="card-title" style="font-size:15px; color:var(--gold-1)">Apply for Unlimited Loan</div>
+                <div class="card-desc">Fast forensic, very reliable, safe handling, no fee Request needed to Approved Loan.</div>
+                <div class="card-cta">
+                  <a class="btn-primary" href="loan.html">Apply loan</a>
+                </div>
+              </div>
+
+              <div class="hero-card card">
+                <div class="card-title" style="font-size:15px; color:var(--gold-1)">Callbacks and Wallet Solutions</div>
+                <div class="card-desc">Wallet recovery · Lost crypto callbacks · Dispute resolution · Wallet repair.</div>
+                <div class="card-cta">
+                  <a class="btn-primary" href="Crypto-storing-center.html">Start Case</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+       <!-- ===== New Our Projects Scrolling Section ===== -->
+<section class="projects-section">
+    <h2> SERVICES and TESTIMONIES </h2>
+
+    <div class="carousel" id="projectCarousel">
+      <img src="assets/images/scroll1.jpg" class="active" alt="Project 1" />
+      <img src="assets/images/scroll2.jpg" alt="Project 2" />
+      <img src="assets/images/scroll3.jpg" alt="Project 3" />
+      <img src="assets/images/scroll4.jpg" alt="Project 4" />
+      <img src="assets/images/scroll5.jpg" alt="Project 5" />
+      <img src="assets/images/scroll6.jpg" alt="Project 6" />
+    </div>
+
+    <div class="dots" id="carouselDots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+      
+      <!-- SERVICES -->
+      <section id="services" class="reveal" style="margin-top:22px">
+        <h2>Our Services</h2>
+        <div class="grid services-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px">
+          <div class="unified-card">
+            <div class="icon-wrap" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127">🔑</div>
+            <h3>Wallet Recovery</h3>
+            <p style="color:var(--muted)">Regain access to locked or lost wallets securely and professionally.</p>
+          </div>
+                    <div class="unified-card">
+            <div class="icon-wrap" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127">⚖️</div>
+            <h3>Dispute Filing</h3>
+            <p style="color:var(--muted)">Preparation and submission of crypto dispute cases.</p>
+          </div>
+          <div class="unified-card">
+            <div class="icon-wrap" style="width:56px;height:56px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#021127">🛠️</div>
+            <h3>Wallet Repair</h3>
+            <p style="color:var(--muted)">Fix corrupted wallets and restore functionality.</p>
+          </div>
+          <div style="margin-top:12px"><a class="btn-primary" href="Crypto-storing-center.html">Apply for Services</a></div>
+        </div>
+      </section>
+
+
+      <!-- LOAN / IMAGE ROW -->
+      <section class="reveal" id="loanSection" style="margin-top:18px">
+        <div class="card" style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <img alt="Journey image" src="assets/Journey.jpg" style="width:100%;border-radius:10px;box-shadow:var(--shadow-strong)"/>
+            <img alt="Section_loan image" src="assets/section_loan.jpg" style="width:100%;border-radius:10px;box-shadow:var(--shadow-strong);margin-top:10px"/>
+          </div>
+          <div style="flex:2;min-width:240px">
+            <div class="unified-card">
+              <h2 style="margin:0 0 8px 0">💰 Crypto Loan Solutions</h2>
+              <p style="color:var(--muted)">Fast, flexible bridge funding for verified users — short-term support while awaiting recovered funds. Choose from multiple loan products and apply in minutes.</p>
+              <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                <a class="btn-primary" href="loan.html">Apply for Loan</a>
+                <a class="btn-ghost" href="loan/loan.html">Other Loan Types</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GLOBAL REACH -->
+      <section class="reveal" style="margin-top:22px">
+        <div class="card unified-card" style="display:grid;grid-template-columns:1fr;gap:20px;align-items:center">
+          <div><img alt="Global reach" src="assets/dashboard_image.jpg" style="width:100%;border-radius:8px"/></div>
+          <div>
+            <h2>The Future of Digital Finance</h2>
+            <p style="color:var(--muted)">Cryptodigitalpro Dashboard delivers an unmatched fusion of elegance and performance. With its deep black-gold theme, real-time tracking, and smooth 3D visuals, it transforms complex financial data into a clear, premium experience. From crypto loans to airdrops and wallet recovery, every action is displayed with precision, progress, and confidence — redefining what a modern fintech interface should look like.</p>
+            <a class="btn-primary" href="Services.html" style="margin-top:8px;display:inline-block">Read More</a>
+          </div>
+        </div>
+      </section>
+	  
+      <!-- SECOND GLOBAL REACH -->
+      <section class="reveal" style="margin-top:22px">
+        <div class="card unified-card" style="display:grid;grid-template-columns:1fr;gap:20px;align-items:center">
+          <div><img alt="Global reach" src="assets/global_image.jpg" style="width:100%;border-radius:8px"/></div>
+          <div>
+            <h2>Fast, Reliable, and Trusted Worldwide</h2>
+            <p style="color:var(--muted)">With strong global reach and deep technical know-how, we've supported thousands worldwide with reliable recovery services and proactive security guidance.</p>
+            <a class="btn-primary" href="services.html" style="margin-top:8px;display:inline-block">Read More</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- JOURNEY & AWARDS -->
+      <section class="reveal" style="margin-top:22px">
+        <div style="display:grid;grid-template-columns:1fr;gap:20px;align-items:center">
+		          <div class="card">
+            <img alt="Journey image" src="assets/story_image.jpg" style="width:100%;border-radius:8px"/>
+          <div class="card unified-card">
+            <h2>Our Journey Since 2010</h2>
+            <p style="color:var(--muted)">ExplorerRestoringDigital was founded in 2010 to build trust in digital assets. We recover wallets, retrieve lost funds, and manage dispute filings with care and transparency.</p>
+            <a class="btn-primary" href="about-awards.html" style="margin-top:8px;display:inline-block">Read more about us</a>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CRYPTO TICKER -->
+      <section class="reveal" style="margin-top:22px">
+        <div aria-live="polite" class="card" style="padding:12px;border-radius:12px" id="cryptoTicker">
+          <div class="crypto-ticker" id="tickerInner">Loading rates...</div>
+        </div>
+      </section>
+
+      <!-- CRYPTO ICONS -->
+      <section aria-hidden="true" class="reveal" style="margin-top:22px">
+        <div class="card" style="display:flex;justify-content:center;gap:20px;align-items:center">
+          <img alt="BTC" src="assets/bitcoin.png" title="Bitcoin" style="width:48px;height:48px" />
+          <img alt="ETH" src="assets/ethereum.png" title="Ethereum" style="width:48px;height:48px" />
+          <img alt="BNB" src="assets/binance.png" title="Binance" style="width:48px;height:48px" />
+          <img alt="SOL" src="assets/solana.png" title="Solana" style="width:48px;height:48px" />
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="testimonials" class="reveal" style="margin-top:22px">
+        <h2>What Our Clients Say</h2>
+        <div class="testimonials-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+          <div class="unified-card testimonial-card"><strong><span class="avatar" style="background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021127;padding:8px;border-radius:999px">M</span> Michael R.</strong><p style="color:var(--muted)">“Explorer Digital helped me recover my lost wallet in just 48 hours. Absolute lifesaver!”</p></div>
+          <div class="unified-card testimonial-card"><strong><span class="avatar" style="background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021127;padding:8px;border-radius:999px">S</span> Sarah K.</strong><p style="color:var(--muted)">“Professional, secure, and fast. I felt supported every step of the way.”</p></div>
+          <div class="unified-card testimonial-card"><strong><span class="avatar" style="background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021127;padding:8px;border-radius:999px">D</span> Daniel P.</strong><p style="color:var(--muted)">“Over 10 BTC recovered with their expert assistance. Highly recommended.”</p></div>
+          <div class="unified-card testimonial-card"><strong><span class="avatar" style="background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021127;padding:8px;border-radius:999px">W</span> Walker B.</strong><p style="color:var(--muted)">“Helped recover our joint wallet in 24 hours. Outstanding service.”</p></div>
+        </div>
+        <div style="margin-top:12px"><a class="btn-ghost" href="success-stories.html">Read more success stories</a></div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how" class="reveal" style="margin-top:22px">
+        <h2>How It Works</h2>
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px">
+          <div class="unified-card"><div class="icon-wrap">1</div><h4>Submit your case securely</h4><p style="color:var(--muted)">Provide case details — never share private keys.</p></div>
+          <div class="unified-card"><div class="icon-wrap">2</div><h4>We assess & propose a plan</h4><p style="color:var(--muted)">Our experts evaluate and suggest the best recovery approach.</p></div>
+          <div class="unified-card"><div class="icon-wrap">3</div><h4>Approve & we begin recovery</h4><p style="color:var(--muted)">You approve the plan — then we execute securely.</p></div>
+          <div class="unified-card"><div class="icon-wrap">4</div><h4>Receive results + prevention advice</h4><p style="color:var(--muted)">We deliver results and guidance to protect your assets.</p></div>
+        </div>
+        <a class="btn-primary" href="sub-dashboard.html">Get Stated</a>
+      </section>
+
+      <!-- FAQ -->
+      <section class="reveal" style="margin-top:22px">
+        <div class="faq-card card">
+          <h2>Common Questions</h2>
+          <div class="faq-list" id="faqList" style="margin-top:12px">
+            <div class="faq-item">
+              <button class="faq-question" style="color:var(--muted)">What information do you need to start a recovery?<span aria-hidden="true">+</span></button>
+              <div class="faq-answer" aria-hidden="true"><p style="margin:0;color:var(--muted)">We need transaction IDs, wallet addresses, timestamps, and any error messages or screenshots you can share. Never send seed phrases or private keys.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" style="color:var(--muted)">How long does a recovery take?</h4> <span aria-hidden="true">+</span></button>
+              <div class="faq-answer" </h4><p style="margin:0;color:var(--muted)">Recovery times vary by complexity. Simple cases may be resolved in days; more complex forensic investigations can take weeks. We keep clients updated at every step.</h4></p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" style="color:var(--muted)">Will you ever ask for my seed phrase or private keys?<span aria-hidden="true">+</span></button>
+              <div class="faq-answer" aria-hidden="true"><p style="margin:0;color:var(--muted)">Never. We operate without requesting full private keys or seed phrases. Report any such request as phishing immediately.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" style="color:var(--muted)">Do you work with exchanges for dispute filing?<span aria-hidden="true">+</span></button>
+              <div class="faq-answer" aria-hidden="true"><p style="margin:0;color:var(--muted)">Yes — we prepare and submit documented dispute cases to exchanges when appropriate, and coordinate with legal partners when necessary.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" style="color:var(--muted)">Are there fees for an initial case review?<span aria-hidden="true">+</span></button>
+              <div class="faq-answer" aria-hidden="true"><p style="margin:0;color:var(--muted)">We offer an initial assessment free of charge. After assessment we provide a transparent fee quote for recovery work if applicable.</p></div>
+            </div>
+          </div>
+          <div class="faq-meta" style="margin-top:8px;display:inline-block">Still have questions? <a href="contact.html" style="color:var(--gold-1)">Contact our support team</a></div>
+        </div>
+        <a class="btn-primary" href="faq.html" style="margin-top:8px;display:inline-block">More Questions? Read FAQ</a>
+      </section>
+
+      <!-- COMPANY DETAILS -->
+      <section class="reveal" style="margin-top:22px">
+        <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap">
+          <div style="display:flex;gap:12px;align-items:center">
+            <img alt="company" src="assets/company_logo.png" style="height:56px"/>
+            <div><strong>Cryptodigitalpro</strong><div style="color:var(--muted)">Since 2010 — Secure crypto recovery</div></div>
+          </div>
+          <div style="color:var(--muted);font-size:14px">
+            Contact: <a href="mailto:admin@cryptodigitalpro.com">admin@cryptodigitalpro.com</a> • <a href="privacy.html">Privacy</a> • <a href="terms.html">Terms</a>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <img alt="award1" src="assets/awards/award1.png" style="height:36px"/>
+            <img alt="award2" src="assets/awards/award2.png" style="height:36px"/>
+            <img alt="award3" src="assets/awards/award3.png" style="height:36px"/>
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- end wrap -->
+
+    <!-- FOOTER -->
+    <footer class="main-footer themed-footer">
+      <div class="wrap">
+        <section class="newsletter" style="margin-bottom:16px">
+          <div class="newsletter-content card" style="padding:14px">
+            <h3>Subscribe to our newsletter</h3>
+            <p>Get weekly updates on crypto recovery, loans, and airdrops directly to your inbox.</p>
+            <form class="newsletter-form" action="#" method="POST" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <input type="email" placeholder="Your email" required style="flex:1;min-width:200px"/>
+              <button type="submit" class="btn-primary">Subscribe</button>
+            </form>
+            <small style="display:block;margin-top:8px">I have read the <a href="privacy.html">Privacy Policy</a> and I understand that I can unsubscribe anytime.</small>
+          </div>
+        </section>
+
+        <div class="footer-sections">
+          <div class="footer-brand">
+            <img src="assets/explorer_logo.svg" alt="ExplorerRestoringDigital Logo" />
+            <p>The World’s Crypto Recovery & Airdrop Hub</p>
+            <div class="socials" style="display:flex;gap:8px;margin-top:8px">
+              <a href="#" aria-label="X (Twitter)">𝕏</a>
+              <a href="#" aria-label="Facebook">📘</a>
+              <a href="#" aria-label="Telegram">💬</a>
+              <a href="#" aria-label="Instagram">📸</a>
+              <a href="#" aria-label="YouTube">▶️</a>
+            </div>
+          </div>
+
+          <div class="footer-links" style="display:flex;gap:16px;flex-wrap:wrap">
+            <div>
+              <h4>Products</h4>
+              <a href="airdrop-pro-hybrid.html">Airdrops</a><br/>
+              <a href="loan/loan.html">Crypto Loans</a><br/>
+              <a href="services.html">Recovery Services</a><br/>
+              <a href="success-stories.html">Success Stories</a>
+            </div>
+            <div>
+              <h4>Company</h4>
+              <a href="about-awards.html">About us</a><br/>
+              <a href="contact.html">Contact</a><br/>
+              <a href="privacy.html">Privacy policy</a><br/>
+              <a href="terms.html">Terms of use</a>
+            </div>
+            <div>
+              <h4>Resources</h4>
+              <a href="blog1.html">Blog</a><br/>
+              <a href="#">Reports</a><br/>
+              <a href="faq.html">FAQ</a><br/>
+              <a href="#">Boosting</a>
+            </div>
+            <div>
+              <h4>Contributors</h4>
+              <a href="case-form-sign up.html">Submit a case</a><br/>
+              <a href="about-awards.html">Advertise</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px">
+          <p>© 2010–2025 Cryptodigitalpro.com</p>
+          <p>Powered by <a href="https://coingecko.com" target="_blank" rel="noopener">CoinGecko</a> &amp; <a href="https://cryptocompare.com" target="_blank" rel="noopener">CryptoCompare</a></p>
+        </div>
+      </div>
+    </footer>
+
+
+    
+  <!-- Remind Modal (used for upcoming airdrops) -->
+  <div id="remindModal" aria-hidden="true" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999">
+    <div style="background:var(--card);padding:18px;border-radius:12px;max-width:480px;width:92%">
+      <h3>Set reminder</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="remindEmail" type="email" placeholder="your@email.com" />
+        <input id="remindDate" type="datetime-local" />
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button id="cancelRemind" class="btn-ghost" type="button">Cancel</button>
+          <button id="saveRemind" class="btn-primary" type="button">Save Reminder</button>
+        </div>
+        <div id="remindStatus" style="color:var(--muted);font-size:13px"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Chat bubble + modal creation via JS (kept) -->
+
+  <!-- Firebase SDKs (preserved) -->
+  <script>
+    /* ---------- INITIAL DATA ---------- */
+    const airdrops=[
+      {symbol:'EXD',name:'ExplorerDrop',desc:'Claim 100 EXD tokens free — ends in 5 days.'},
+      {symbol:'SKY',name:'SkyChain',desc:'Earn SKY tokens for early supporters — limited supply!'},
+      {symbol:'DNT',name:'DynaToken',desc:'DeFi utility token for the DynaSwap project.'},
+      {symbol:'OBT',name:'OrbitBridge',desc:'Cross-chain bridge token reward for active users.'},
+      {symbol:'MVLT',name:'MetaVault',desc:'Metaverse ecosystem token — claim up to 50 MVLT free.'},
+      {symbol:'NEWT',name:'NewTokenX',desc:'Brand new DeFi token — be among the first to claim.'}
+    ];
+	
+
+  <script>
+    (function(){
+      const toggle = document.getElementById('themeToggle');
+      const saved = localStorage.getItem('erd_theme');
+      const initial = saved || 'dark';
+      document.body.setAttribute('data-theme', initial === 'dark' ? 'dark' : 'dark');
+      toggle.textContent = initial === 'dark' ? '🌙' : '🌞';
+      toggle.addEventListener('click', () => {
+        const next = document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'dark';
+        document.body.setAttribute('data-theme', next);
+        localStorage.setItem('erd_theme', next);
+        toggle.textContent = next === 'dark' ? '🌙' : '🌞';
+      });
+    })();
+  
+    // Responsive nav toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.querySelector('nav.links');
+    if(menuToggle){
+      menuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('show');
+      });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) navLinks.classList.remove('show');
+      });
+    }
+
+
+    // render featured airdrops
+    (function renderFeatured(){
+      const grid=document.getElementById('airdropGrid');
+      if(!grid) return;
+      airdrops.forEach(t=>{
+        const card=document.createElement('div');
+        card.className='airdrop-card';
+        card.innerHTML=`
+          <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div class="token-badge">${t.symbol}</div>
+            <div class="token-info">
+              <strong>${t.name}</strong>
+              <div class="token-meta">${t.desc}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center">
+            <button class="claim-btn btn-primary">Claim Free</button>
+          </div>
+        `;
+        card.querySelector('.claim-btn').addEventListener('click',()=>{
+          // mimic original: check auth simulation or open claim modal
+          if(!isLoggedIn()){ openAuthModal(); return; }
+          openClaimModal(t.name, t.symbol);
+        });
+        grid.appendChild(card);
+      });
+    })();
+  </script>
+<script>
+    // Auto-sync fallback to ensure seamless scroll even after tab inactivity
+const images = document.querySelectorAll("#projectCarousel img");
+    const dots = document.querySelectorAll("#carouselDots .dot");
+    let current = 0;
+    let interval;
+
+    function showSlide(index) {
+      images.forEach((img, i) => {
+        img.classList.remove("active", "prev");
+        if (i === index) img.classList.add("active");
+        else if (i === (index - 1 + images.length) % images.length)
+          img.classList.add("prev");
+      });
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+    }
+
+    function nextSlide() {
+      current = (current + 1) % images.length;
+      showSlide(current);
+    }
+
+    function startCarousel() {
+      interval = setInterval(nextSlide, 3000);
+    }
+
+    function stopCarousel() {
+      clearInterval(interval);
+    }
+
+    // Hover pause
+    const carousel = document.getElementById("projectCarousel");
+    carousel.addEventListener("mouseenter", stopCarousel);
+    carousel.addEventListener("mouseleave", startCarousel);
+
+    // Dot click
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        current = index;
+        showSlide(current);
+      });
+    });
+
+    // Init
+    showSlide(current);
+    startCarousel();
+  </script>
+  <script>
+    /* ---------- Auth simulation & handlers ---------- */
+    function isLoggedIn(){ return localStorage.getItem('erd_logged_in')==='true'; }
+    const authModal=document.getElementById('authModal');
+    function openAuthModal(){ if(authModal){ authModal.style.display='flex'; authModal.setAttribute('aria-hidden','false'); } }
+    function closeAuthModal(){ if(authModal){ authModal.style.display='none'; authModal.setAttribute('aria-hidden','true'); } }
+    document.getElementById('closeAuth').addEventListener('click', closeAuthModal);
+    document.getElementById('authCancel').addEventListener('click', closeAuthModal);
+    document.getElementById('authForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const em = document.getElementById('authEmail').value || '';
+      localStorage.setItem('erd_logged_in','true');
+      localStorage.setItem('erd_user_email', em );
+      closeAuthModal();
+      alert('✅ Signed in successfully!');
+    });
+
+
+    /* ---------- Reminder modal flow ---------- */
+    const remindModal = document.getElementById('remindModal');
+    const heroRemindBtn = document.getElementById('heroRemindBtn');
+    const cancelRemind = document.getElementById('cancelRemind');
+    const saveRemind = document.getElementById('saveRemind');
+    const remindEmail = document.getElementById('remindEmail');
+    const remindDate = document.getElementById('remindDate');
+    const remindStatus = document.getElementById('remindStatus');
+
+    function openRemindModal(name, isoStart){
+      if(!remindModal) return;
+      remindModal.style.display = 'flex';
+      remindModal.setAttribute('aria-hidden','false');
+      if(isoStart){
+        const d = new Date(isoStart);
+        const localISO = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,16);
+        if(remindDate) remindDate.value = localISO;
+      }
+    }
+    function closeRemindModal(){ if(remindModal){ remindModal.style.display='none'; remindModal.setAttribute('aria-hidden','true'); } }
+    if(heroRemindBtn) heroRemindBtn.addEventListener('click', ()=> openRemindModal());
+    if(cancelRemind) cancelRemind.addEventListener('click', closeRemindModal);
+    if(saveRemind){
+      saveRemind.addEventListener('click', async ()=>{
+        if(!remindEmail || !remindDate) return;
+        const email = (remindEmail.value||'').trim();
+        const dateVal = (remindDate.value||'').trim();
+        if(!email || !dateVal){ if(remindStatus) remindStatus.textContent='Please provide an email and date/time.'; return; }
+        alert('✅ Reminder set (simulated).');
+        closeRemindModal();
+      });
+    }
+  </script>
+
+  <script>
+    /* ---------- Reveal on scroll ---------- */
+    (function(){
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal, .unified-card, .card').forEach(el => io.observe(el));
+    })();
+  </script>
+
+  <script>
+    /* ---------- Crypto ticker using CoinGecko (kept) ---------- */
+    async function loadTicker(){
+      const inner = document.getElementById('tickerInner');
+      if (!inner) return;
+      inner.textContent = 'Loading rates...';
+      try{
+        const resp = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,usd-coin&vs_currencies=usd&include_24hr_change=true');
+        if(!resp.ok) throw new Error('Network response not ok');
+        const data = await resp.json();
+        const map = {bitcoin:'BTC',ethereum:'ETH',tether:'USDT','usd-coin':'USDC'};
+        const parts = [];
+        for(const id of Object.keys(data)){
+          const p = data[id];
+          const name = map[id]||id;
+          const usd = (Math.round((p.usd + Number.EPSILON)*100)/100).toLocaleString();
+          const change = p.usd_24h_change ? p.usd_24h_change.toFixed(2) : '0.00';
+          parts.push(`${name}: $${usd} (${change}% 24h)`);
+        }
+        inner.textContent = parts.join('  •  ') + '  •  ' + parts.join('  •  ');
+      } catch(e){
+        inner.textContent = 'Rates unavailable';
+        console.warn('Ticker error', e);
+      }
+    }
+    loadTicker();
+    setInterval(loadTicker, 60000);
+  </script>
+
+  <script>
+    /* ---------- FAQ toggles ---------- */
+    document.addEventListener('click', (e) => {
+      const q = e.target.closest('.faq-question');
+      if (q) {
+        const item = q.parentElement;
+        const expanded = item.classList.toggle('active');
+        q.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      }
+    });
+  </script>
+
+ 
+
+  <script>
+    /* ---------- THEME TOGGLE (light <-> dark) ---------- */
+    (function(){
+      const toggle = document.getElementById('themeToggle');
+      const overlay = document.getElementById('fadeOverlay');
+      const saved = localStorage.getItem('erd_theme');
+      const initial = saved || 'light';
+      document.body.setAttribute('data-theme', initial === 'light' ? 'light' : 'dark');
+      toggle.textContent = initial === 'light' ? '🌙' : '🌞';
+
+      toggle.addEventListener('click', () => {
+        overlay.style.opacity = '0.06';
+        setTimeout(() => {
+          const next = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+          document.body.setAttribute('data-theme', next);
+          localStorage.setItem('erd_theme', next);
+          toggle.textContent = next === 'light' ? '🌙' : '🌞';
+          setTimeout(()=> overlay.style.opacity = '0', 380);
+        }, 180);
+      });
+    })();
+
+
+	
+/* Telegram Live Chat Integration */
+(function(){
+  const BOT_TOKEN = "8312992253:AAFydijjN1PCF3JJPgXHj5sHdMsRyEJb1PQ"; // from BotFather
+  const ADMIN_ID = "7501195576"; // your Telegram ID
+  const BOT_USERNAME = "https://t.me/Cryptodigitalprobot"; // without @
+
+  // --- UI Setup ---
+  const chatBox = document.createElement("div");
+  Object.assign(chatBox.style, {
+    position: "fixed", bottom: "90px", right: "20px", width: "320px",
+    maxHeight: "400px", background: "rgba(15,15,20,0.95)", borderRadius: "12px",
+    boxShadow: "0 8px 30px rgba(0,0,0,0.5)", color: "#fff", padding: "10px",
+    display: "none", flexDirection: "column", zIndex: "999999"
+  });
+
+  chatBox.innerHTML = `
+    <div style="font-weight:700;margin-bottom:8px;text-align:center;color:#f9e7b0;">💬 CryptoDigitalPro Live Chat</div>
+    <div id="chatMessages" style="flex:1;overflow-y:auto;background:#0c0c14;border-radius:8px;padding:8px;margin-bottom:8px;"></div>
+    <input id="chatInput" type="text" placeholder="Type your message..." style="padding:8px;border-radius:8px;border:none;width:100%;margin-bottom:6px;">
+    <button id="chatSend" style="background:linear-gradient(90deg,#f9e7b0,#d4af37);border:none;color:#021127;font-weight:700;border-radius:8px;padding:8px;cursor:pointer;width:100%;">Send</button>
+  `;
+
+  const chatBtn = document.createElement("div");
+  chatBtn.textContent = "💬 Chat Support";
+  Object.assign(chatBtn.style, {
+    position:"fixed",bottom:"20px",right:"20px",background:"linear-gradient(90deg,#f9e7b0,#d4af37)",
+    color:"#021127",padding:"10px 16px",borderRadius:"12px",fontWeight:"700",
+    cursor:"pointer",boxShadow:"0 8px 20px rgba(0,0,0,0.4)",zIndex:"999999"
+  });
+
+  document.body.appendChild(chatBtn);
+  document.body.appendChild(chatBox);
+
+  chatBtn.onclick = () => {
+    chatBox.style.display = chatBox.style.display === "none" ? "flex" : "none";
+  };
+
+  const chatMessages = chatBox.querySelector("#chatMessages");
+  const chatInput = chatBox.querySelector("#chatInput");
+  const chatSend = chatBox.querySelector("#chatSend");
+
+  // --- Messaging Logic ---
+  function appendMsg(sender, text){
+    const div = document.createElement("div");
+    div.innerHTML = `<b style="color:${sender==='You'?'#f9e7b0':'#9fd6ff'}">${sender}:</b> ${text}`;
+    div.style.marginBottom = "4px";
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  async function sendToTelegram(msg){
+    if(!msg.trim()) return;
+    appendMsg("You", msg);
+    chatInput.value = "";
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        chat_id: ADMIN_ID,
+        text: `💬 New message from website:\n\n${msg}\n\nReply directly here to send back.`
+      })
+    });
+  }
+
+  chatSend.onclick = () => sendToTelegram(chatInput.value);
+  chatInput.addEventListener("keypress", e => { if(e.key==="Enter") sendToTelegram(chatInput.value); });
+})();
+
+function openRecoveryForm(serviceType){
+  const sess = window.cdpAuth?.getSession?.();
+  if(!sess || !sess.email){
+    showSigninNotice();
+    return;
+  }
+  const m = document.getElementById("recoveryModal");
+  const f = document.getElementById("recoveryFrame");
+  f.src = `general-recovery-form.html?type=${encodeURIComponent(serviceType)}`;
+  m.classList.add("show");
+}
+
+/* --- Custom Sign-in Notice Logic --- */
+function showSigninNotice(){
+  const box = document.getElementById("signinNotice");
+  box.classList.remove("hidden");
+  document.getElementById("signinBtn").onclick = () => {
+    window.location.href = "signin.html";
+  };
+  document.getElementById("cancelBtn").onclick = () => {
+    box.classList.add("hidden");
+  };
+}
+
+
+
+</script>
+

@@ -1,0 +1,31 @@
+body {
+  font-family: Inter, system-ui;
+  background: #0b0f1a;
+  color: #fff;
+  padding: 20px;
+}
+
+.kyc-card {
+  background: #12182b;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.kyc-card img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.actions button {
+  margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.approve { background: #2fd573 }
+.reject { background: #ff6b6b }

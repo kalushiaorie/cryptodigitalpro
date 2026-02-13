@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Cryptodigitalpro</title>
+  <meta name="description" content="Frequently Asked Questions — learn about recovery, dispute, wallet repair and loans."/>
+<link rel="icon" href="assets/logo.png" />
+
+  <style>
+    :root{
+      --bg:#f6f7f9;--card:#fff;--muted:#6b7280;--text:#0f1724;
+      --gold-1:#caa64a;--gold-2:#f0d78a;--border:rgba(15,23,42,0.06);
+      --radius:12px;--shadow:0 12px 36px rgba(2,6,23,0.06);
+      --max-width:1200px;
+    }
+    body[data-theme="dark"]{
+      --bg:#070708;--card:#0f1724;--muted:#9aa4b2;
+      --text:#e9f0f7;--border:rgba(255,255,255,0.06);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,'Segoe UI',Roboto,Arial;}
+    body{background:var(--bg);color:var(--text);line-height:1.45;padding-bottom:60px;}
+    a{text-decoration:none;color:inherit}
+
+    header{position:sticky;top:0;z-index:99;background:rgba(255,255,255,0.7);
+      backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+    body[data-theme="dark"] header{background:rgba(6,8,12,0.6)}
+    .nav{max-width:var(--max-width);margin:0 auto;padding:12px 20px;
+      display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;color:var(--gold-1);font-weight:700}
+    .brand img{height:36px}
+    nav.links{display:flex;gap:14px}
+    nav.links a{padding:8px;border-radius:8px;color:var(--muted);font-weight:600}
+    nav.links a.active,nav.links a:hover{color:var(--text)}
+    .auth{display:flex;gap:8px}
+    .signin{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:transparent;font-weight:700}
+    .signup{background:linear-gradient(90deg,var(--gold-1),var(--gold-2));color:#021127;padding:8px 12px;border-radius:10px;font-weight:700}
+
+    .container{max-width:var(--max-width);margin:32px auto;padding:0 20px}
+    h1{margin-bottom:8px}
+    p.lead{color:var(--muted);margin-bottom:20px}
+
+    .faq-grid{display:grid;gap:14px}
+    .faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);overflow:hidden;transition:all .3s}
+    .faq-question{padding:16px;font-weight:700;color:var(--gold-1);cursor:pointer;
+      display:flex;justify-content:space-between;align-items:center}
+    .faq-answer{max-height:0;overflow:hidden;padding:0 16px;color:var(--muted);
+      font-size:15px;line-height:1.5;transition:max-height .3s ease,padding .3s ease}
+    .faq-item.open .faq-answer{max-height:300px;padding:0 16px 16px 16px}
+    .faq-icon{transition:transform .3s}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+
+    footer{margin-top:40px;background:var(--card);border-top:1px solid var(--border);
+      padding:28px 20px;color:var(--muted);font-size:14px;text-align:center}
+  </style>
+
+<style>
+/* Unified responsive dropdown menu (slide-down) */
+:root{ --nav-breakpoint: 900px; }
+@media (max-width: var(--nav-breakpoint)) {
+  .nav, .navbar, header {flex-wrap: wrap; align-items: flex-start; position: relative;}
+  .menu-toggle {
+    display: block;
+    background: transparent;
+    border: 1px solid var(--border, rgba(255,255,255,0.06));
+    border-radius: 8px;
+    font-size: 26px;
+    color: var(--text, #fff);
+    cursor: pointer;
+    margin-left: auto;
+    padding: 4px 10px;
+  }
+  nav.links, .nav-links, .links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    background: rgba(0,0,0,0.7);
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px 0;
+  }
+  nav.links.open, .nav-links.open, .links.open { display:flex !important; }
+  nav.links a, .nav-links a, .links a {
+    padding: 10px 16px;
+    display: block;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  img {max-width:100%;height:auto;}
+  html,body{overflow-x:hidden;}
+}
+@media (min-width: calc(var(--nav-breakpoint) + 1px)) {
+  .menu-toggle{display:none;}
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  // unified selector for different header structures
+  const headerEl = document.querySelector('.nav, .navbar, header');
+  const links = document.querySelector('nav.links, .nav-links, .links');
+  if(headerEl && links && !headerEl.querySelector('.menu-toggle')){
+    const btn = document.createElement('button');
+    btn.className = 'menu-toggle';
+    btn.setAttribute('aria-label','Toggle menu');
+    btn.innerHTML = '☰';
+    // insert before links if possible
+    if(links.parentElement === headerEl || headerEl.contains(links)){
+      headerEl.insertBefore(btn, links);
+    } else {
+      headerEl.appendChild(btn);
+    }
+    btn.addEventListener('click', ()=> links.classList.toggle('open'));
+  }
+});
+</script>
+
+</head>
+<body data-theme="light">
+  <header>
+    <div class="nav">
+      <div class="brand"><img src="assets/explorer_logo.svg" alt="Logo"><span>Cryptodigitalpro</span></div>
+      <nav class="links">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="airdrop.html">Airdrop</a>
+        <a href="faq.html" class="active">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="auth">
+        <a href="signin.html" class="signin">Sign In</a>
+        <a href="signup.html" class="signup">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <h1>Frequently Asked Questions</h1>
+      <p class="lead">Answers to the most common questions about wallet recovery, disputes, loans and security.</p>
+
+      <div class="faq-grid">
+
+        <div class="faq-item">
+          <div class="faq-question">How do I start a recovery case?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">You can start by filling our secure recovery form. Our team reviews your submission within 24–48 hours and contacts you for verification. We never request your private keys or seed phrases.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">How long does the recovery process take?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">It depends on the case complexity. Basic wallet repairs can complete within 3–5 days, while advanced recovery or legal disputes can take up to several weeks.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Do you charge upfront fees?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">No, initial assessments are free. Only after verifying case feasibility do we outline transparent costs and possible success fees, agreed upon before work begins.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Can I recover funds sent to the wrong address?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">In certain cases, yes. If the receiving address belongs to an exchange or known custodian, we coordinate dispute filings or callbacks to retrieve funds. Purely decentralized errors are usually irreversible.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Do you support all blockchains?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">Our specialists handle BTC, ETH, BNB, SOL, TRX and many EVM-compatible chains. We also work with NFT, DeFi and wrapped asset recoveries.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Is my information confidential?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">Absolutely. All cases are processed under strict confidentiality agreements. Data is encrypted and stored securely, with access limited to assigned recovery engineers.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Do you provide crypto loans?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">Yes, short-term bridge loans are available for verified clients awaiting recovery outcomes, subject to approval and collateral verification.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">What happens if recovery fails?<span class="faq-icon">＋</span></div>
+          <div class="faq-answer">If the recovery attempt does not yield results, we provide a full technical report. In many cases, partial refunds apply, and you retain all forensic documentation for reference.</div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2010–2025 Cryptodigitalpro — All rights reserved.</footer>
+
+  <script>
+    // Theme toggle
+    (function(){
+      const init=s||'light';
+      document.body.setAttribute('data-theme',init);
+      t.textContent=init==='light'?'🌙':'🌞';
+      t.onclick=()=>{
+        const next=document.body.getAttribute('data-theme')==='light'?'dark':'light';
+        document.body.setAttribute('data-theme',next);
+        t.textContent=next==='light'?'🌙':'🌞';
+      };
+    })();
+
+    // Accordion
+    document.querySelectorAll('.faq-question').forEach(q=>{
+      q.addEventListener('click',()=>{
+        const item=q.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+  </script>
+<script src="dark-lock.js"></script>
+</body>
+</html>

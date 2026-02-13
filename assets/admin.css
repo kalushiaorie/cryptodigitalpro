@@ -1,0 +1,138 @@
+/* ================= BASE ================= */
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #0b1220;
+  color: #e9f2ff;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ================= HEADER ================= */
+.admin-header {
+  background: #060c18;
+  padding: 16px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+#logoutBtn {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* ================= LAYOUT ================= */
+.admin-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ================= ANALYTICS ================= */
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.card {
+  background: #0f172a;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.card h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #9aa4b2;
+}
+
+.card span {
+  font-size: 22px;
+  font-weight: 800;
+  color: #d4af37;
+}
+
+/* ================= PANELS ================= */
+.panel {
+  background: #0f172a;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+/* ================= LIST ITEMS ================= */
+.item {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  margin-bottom: 10px;
+}
+
+.item strong {
+  color: #d4af37;
+}
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+}
+
+/* ================= BUTTON COLORS ================= */
+.approve {
+  background: linear-gradient(90deg,#2fd573,#6be8a3);
+  color: #012;
+}
+
+.reject {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+.lock {
+  background: #9ec5ff;
+  color: #021127;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

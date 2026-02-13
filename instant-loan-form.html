@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — Instant Crypto Loan</title>
+
+<style>
+:root{
+  --gold:#f5c96a;
+  --gold-soft:#ffe6a7;
+  --bg:#070e1a;
+  --card:#0f1c2e;
+  --muted:#9fb0c7;
+  --success:#16c784;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Poppins,system-ui;
+  background:var(--bg);
+  color:#fff;
+  padding:40px;
+  overflow-x:hidden;
+}
+
+/* Background Glow */
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(245,201,106,.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(245,201,106,.08), transparent 40%);
+  animation:glowMove 10s infinite alternate ease-in-out;
+}
+@keyframes glowMove{
+  from{transform:translateY(-20px)}
+  to{transform:translateY(20px)}
+}
+
+/* Container */
+.container{
+  max-width:900px;
+  margin:auto;
+  background:linear-gradient(145deg,#0f1c2e,#0b1626);
+  padding:35px;
+  border-radius:24px;
+  box-shadow:0 30px 80px rgba(0,0,0,.65);
+  border:1px solid rgba(255,255,255,.05);
+}
+
+h1{
+  color:var(--gold);
+  margin-bottom:25px;
+  font-size:26px;
+}
+
+/* Step Indicators */
+.step-indicators{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:30px;
+  position:relative;
+}
+.step-indicators::before{
+  content:"";
+  position:absolute;
+  top:20px;
+  left:0;
+  right:0;
+  height:4px;
+  background:rgba(255,255,255,.08);
+  z-index:0;
+}
+.step-circle{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#0f1c2e;
+  border:2px solid rgba(255,255,255,.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:600;
+  position:relative;
+  z-index:1;
+  transition:.3s;
+}
+.step-circle.active{
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  color:#111;
+  border:none;
+  box-shadow:0 0 15px rgba(245,201,106,.6);
+}
+
+/* Progress */
+.progress-wrap{margin-bottom:30px}
+.progress-bar{
+  height:6px;
+  background:rgba(255,255,255,.08);
+  border-radius:20px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--gold),#fff3c4);
+  transition:width .4s ease;
+}
+.progress-text{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:6px;
+  text-align:right;
+}
+
+/* Steps */
+.step{display:none;animation:slide .35s ease}
+.step.active{display:block}
+@keyframes slide{
+  from{opacity:0;transform:translateX(25px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* Floating Fields */
+.field{
+  position:relative;
+  margin-top:20px;
+}
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  color:#fff;
+}
+.field label{
+  position:absolute;
+  top:14px;
+  left:14px;
+  color:var(--muted);
+  transition:.2s;
+  pointer-events:none;
+}
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label,
+.field textarea:focus+label,
+.field textarea:not(:placeholder-shown)+label{
+  top:-8px;
+  left:10px;
+  font-size:11px;
+  background:#0f1c2e;
+  padding:0 6px;
+  color:var(--gold);
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+@media(max-width:700px){
+  .grid-2{grid-template-columns:1fr}
+}
+
+/* Buttons */
+.actions{
+  display:flex;
+  justify-content:space-between;
+  margin-top:30px;
+}
+button{
+  padding:12px 26px;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  color:#111;
+}
+.btn-back{
+  background:transparent;
+  border:1px solid rgba(255,255,255,.25);
+  color:var(--muted);
+}
+
+/* Review Card */
+.review-card{
+  background:linear-gradient(145deg,#13243a,#0f1c2e);
+  padding:25px;
+  border-radius:18px;
+  margin-bottom:20px;
+  border:1px solid rgba(245,201,106,.15);
+}
+
+/* Success Animation */
+.success-icon{
+  width:90px;
+  height:90px;
+  margin:0 auto 25px;
+}
+.success-icon svg{
+  width:100%;
+  height:100%;
+}
+.success-icon circle{
+  stroke:var(--success);
+  stroke-width:5;
+  fill:none;
+  stroke-dasharray:283;
+  stroke-dashoffset:283;
+  animation:drawCircle 1s forwards ease;
+}
+.success-icon path{
+  stroke:var(--success);
+  stroke-width:5;
+  fill:none;
+  stroke-dasharray:100;
+  stroke-dashoffset:100;
+  animation:drawCheck .8s .8s forwards ease;
+}
+@keyframes drawCircle{to{stroke-dashoffset:0}}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+
+.thank{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(5,10,20,.8);
+  backdrop-filter:blur(12px);
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.thank-card{
+  background:#0f1c2e;
+  padding:50px 40px;
+  border-radius:24px;
+  max-width:480px;
+  text-align:center;
+}
+.banner{
+  width:100%;
+  height:200px;           /* Smaller size */
+  object-fit:cover;
+  border-radius:18px;
+  margin-bottom:25px;
+  box-shadow:0 12px 35px rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.06);
+  transition:transform .3s ease;
+}
+
+.banner:hover{
+  transform:scale(1.01);
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles"></div>
+
+<div class="container">
+<img src="assets/loans/instant-loan.jpg" class="banner">
+<h1>Apply — Instant Crypto Loan</h1>
+
+<div class="step-indicators">
+  <div class="step-circle active">1</div>
+  <div class="step-circle">2</div>
+  <div class="step-circle">3</div>
+  <div class="step-circle">4</div>
+  <div class="step-circle">5</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-text" id="progressText">Step 1 of 5</div>
+</div>
+
+<form id="loanContainer"
+      name="instant-loan"
+      method="POST"
+      data-netlify="true"
+      enctype="multipart/form-data">
+
+<input type="hidden" name="form-name" value="instant-loan">
+
+<!-- STEP 1 -->
+<div class="step active">
+<div class="field"><input name="fullName" required placeholder=" "><label>Full Name *</label></div>
+<div class="field"><input type="email" name="email" required placeholder=" "><label>Email *</label></div>
+<div class="field"><input type="date" name="dob" required placeholder=" "><label>Date of Birth *</label></div>
+<div class="field"><input name="street" required placeholder=" "><label>Street Address *</label></div>
+
+<div class="grid-2">
+<div class="field"><input name="city" required placeholder=" "><label>City *</label></div>
+<div class="field"><input name="state" required placeholder=" "><label>State *</label></div>
+</div>
+<div class="grid-2">
+<div class="field"><input name="zip" required placeholder=" "><label>ZIP *</label></div>
+<div class="field"><input name="country" required placeholder=" "><label>Country *</label></div>
+</div>
+
+<div class="actions">
+<div></div>
+<button type="button" class="btn-primary next">Next →</button>
+</div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step">
+<div class="field">
+<select name="employment" required>
+<option value=""></option>
+<option>Employed</option>
+<option>Self-employed</option>
+<option>Unemployed</option>
+</select>
+<label>Employment Status *</label>
+</div>
+
+<div class="field"><input name="occupation" required placeholder=" "><label>Occupation *</label></div>
+<div class="field"><input name="employerName" required placeholder=" "><label>Employer Name *</label></div>
+<div class="field"><input name="employerStreet" required placeholder=" "><label>Employer Street *</label></div>
+
+<div class="grid-2">
+<div class="field"><input name="employerCity" required placeholder=" "><label>Employer City *</label></div>
+<div class="field"><input name="employerState" required placeholder=" "><label>Employer State *</label></div>
+</div>
+
+<div class="grid-2">
+<div class="field"><input name="employerZip" required placeholder=" "><label>Employer ZIP *</label></div>
+<div class="field"><input type="number" name="income" required placeholder=" "><label>Monthly Income *</label></div>
+</div>
+
+<div class="actions">
+<button type="button" class="btn-back prev">← Back</button>
+<button type="button" class="btn-primary next">Next →</button>
+</div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step">
+<div class="field"><input type="number" name="amount" required min="100" placeholder=" "><label>Loan Amount *</label></div>
+<div class="field"><input type="number" name="duration" required min="1" placeholder=" "><label>Duration *</label></div>
+<div class="field"><textarea name="purpose" placeholder=" "></textarea><label>Purpose</label></div>
+
+<div class="actions">
+<button type="button" class="btn-back prev">← Back</button>
+<button type="button" class="btn-primary next">Next →</button>
+</div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step">
+<label>ID Document *</label>
+<input type="file" name="idDocument" required>
+<label>Proof of Address *</label>
+<input type="file" name="proofOfAddress" required>
+
+<div class="actions">
+<button type="button" class="btn-back prev">← Back</button>
+<button type="button" class="btn-primary next">Next →</button>
+</div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step">
+<div class="review-card">
+<div class="review-title">Loan Application Summary</div>
+<div id="loanReview"></div>
+</div>
+
+<label style="margin-top:20px;">
+<input type="checkbox" id="loanAgree"> I confirm all details are correct
+</label>
+
+<div class="actions">
+<button type="button" class="btn-back prev">← Back</button>
+<button type="submit" class="btn-primary">Submit</button>
+</div>
+</div>
+
+</form>
+</div>
+
+<div class="thank" id="loan_thank">
+<div class="thank-card">
+<div class="success-icon">
+<svg viewBox="0 0 100 100">
+<circle cx="50" cy="50" r="45"/>
+<path d="M30 52 L45 65 L70 35"/>
+</svg>
+</div>
+<h2>Application Submitted</h2>
+<p>Your loan application has been successfully submitted and is under review.</p>
+<button id="thank_next" class="btn-primary">Go to Dashboard →</button>
+</div>
+</div>
+
+<script src="loan-apply.js"></script>
+
+</body>
+</html>
