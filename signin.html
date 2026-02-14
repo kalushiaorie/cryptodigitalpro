@@ -7,6 +7,7 @@
 <link rel="icon" href="assets/logo.png" />
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="js/login.js"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
 
@@ -188,7 +189,7 @@ button.primary{
 </div>
 
 <script>
-const API = "https://cryptodigitalpro-api.onrender.com";
+const API = "http://127.0.0.1:5000";
 const $ = id => document.getElementById(id);
 
 /* TAB SWITCH */
@@ -235,8 +236,8 @@ $("btnSignIn").onclick = async () => {
 
     localStorage.setItem("token", data.token);
     location.href = data.is_admin
-      ? "loan-admin-dashboard.html"
-      : "loan-user-dashboard.html";
+      ? "dashboard.html"
+      : "dashboard.html";
 
   } catch(err){
     alert("Server not reachable");
