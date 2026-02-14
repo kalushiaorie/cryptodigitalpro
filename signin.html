@@ -7,17 +7,14 @@
 <link rel="icon" href="assets/logo.png" />
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
 
 <style>
-/* (Your existing signin styles preserved exactly) */
 :root{--gold1:#d4af37;--gold2:#f8e5a8;--muted:#bbb;--text:#fff}
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto;
   background:#000 url('assets/images/signin-bg.jpg') center/cover no-repeat fixed;
   color:var(--text);
   display:flex;
@@ -42,32 +39,74 @@ body::before{
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.05);
   box-shadow:0 8px 40px rgba(0,0,0,0.6);
-  animation:fadeIn .45s ease-out;
 }
-@keyframes fadeIn{ from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-.logo{ text-align:center;margin-bottom:14px;font-weight:700;font-size:1.35rem;color:var(--gold2); }
-.tabs{ display:flex;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08); }
-.tab{ flex:1;text-align:center;padding:8px 6px;cursor:pointer;color:var(--muted);font-weight:600;font-size:.92rem; }
-.tab.active{ color:var(--gold2); border-bottom:2px solid var(--gold2); }
-form{ display:none; flex-direction:column; gap:12px; }
-form.active{ display:flex; }
-.input-group{ position:relative }
-.input-group input{ width:100%; padding:12px 42px 12px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.03); color:#fff; font-size:.92rem; }
-.input-group input:focus{ outline:none; border-color:var(--gold1); background:rgba(255,255,255,0.07); }
-.toggle-pass{ position:absolute; right:10px; top:50%; transform:translateY(-50%); width:22px; height:22px; cursor:pointer; color:var(--gold1); opacity:0.9; }
-.toggle-pass:hover{ opacity:1 }
-button.primary{ width:100%; background:linear-gradient(90deg,var(--gold1),var(--gold2)); border:none; border-radius:8px; padding:11px; font-weight:700; color:#021127; cursor:pointer; font-size:.95rem; }
-.social{ display:flex; flex-direction:column; gap:10px; }
-.social button{ display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.02); color:#fff; font-weight:600; cursor:pointer; font-size:.9rem; }
-.social img{ height:16px }
-.actions{ display:flex; justify-content:space-between; align-items:center; font-size:.85rem; color:var(--muted); }
-.actions label{ display:flex; align-items:center; gap:6px }
-.small{ color:var(--muted); text-decoration:none }
-.footer{ margin-top:18px; text-align:center; font-size:.78rem; color:var(--muted); }
-@media(max-width:420px){ .container{ padding:16px; max-width:100%; } .logo{ font-size:1.2rem; } }
+.logo{text-align:center;margin-bottom:14px;font-weight:700;font-size:1.35rem;color:var(--gold2)}
+.tabs{display:flex;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.tab{flex:1;text-align:center;padding:8px;cursor:pointer;color:var(--muted);font-weight:600}
+.tab.active{color:var(--gold2);border-bottom:2px solid var(--gold2)}
+form{display:none;flex-direction:column;gap:12px}
+form.active{display:flex}
+.input-group{position:relative}
+.input-group input{
+  width:100%;padding:12px 40px 12px 12px;border-radius:8px;
+  border:1px solid rgba(255,255,255,0.09);
+  background:rgba(255,255,255,0.03);
+  color:#fff;font-size:.92rem;
+}
+.toggle{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:12px;
+  color:var(--gold2);
+}
+button.primary{
+  width:100%;
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  border:none;border-radius:8px;padding:11px;
+  font-weight:700;color:#021127;cursor:pointer
+}
+.small-link{
+  text-align:right;
+  font-size:12px;
+  cursor:pointer;
+  color:var(--gold2);
+}
+.footer{margin-top:18px;text-align:center;font-size:.78rem;color:var(--muted)}
+.google-wrap{margin-top:10px;display:flex;justify-content:center}
 
-/* small helper outputs */
-.debug-note{font-size:12px;color:var(--muted);margin-top:6px}
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(4px);
+  align-items:center;
+  justify-content:center;
+}
+.modal-content{
+  background:#0b0f14;
+  padding:20px;
+  border-radius:10px;
+  width:90%;
+  max-width:360px;
+}
+.modal-content input{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#111;
+  color:#fff;
+}
+.modal-content button{
+  margin-top:10px;
+  width:100%;
+}
 </style>
 </head>
 <body>
@@ -81,35 +120,39 @@ button.primary{ width:100%; background:linear-gradient(90deg,var(--gold1),var(--
   </div>
 
   <!-- SIGN IN -->
-  <form id="formSignIn" class="active" novalidate>
+  <form id="formSignIn" class="active">
     <div class="input-group">
       <input id="signinEmail" type="email" placeholder="Email address" required />
     </div>
+
     <div class="input-group">
       <input id="signinPass" type="password" placeholder="Password" required />
-      <svg class="toggle-pass" id="toggleSignin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
+      <span class="toggle" onclick="togglePassword('signinPass')">Show</span>
     </div>
 
-    <div class="actions">
-      <label><input id="rememberMe" type="checkbox" /> Remember me</label>
-      <a href="#" id="forgotLink" class="small">Forgot password?</a>
-    </div>
+    <div class="small-link" id="forgotLink">Forgot Password?</div>
 
     <button type="button" id="btnSignIn" class="primary">Sign In</button>
 
-    <div class="social">
-      <button type="button" id="googleBtn"><img src="https://www.svgrepo.com/show/475656/google-color.svg" /> Continue with Google</button>
-      <button type="button" id="walletBtn">🔗 Connect Wallet</button>
+    <!-- GOOGLE -->
+    <div id="g_id_onload"
+         data-client_id="640965757686-pui9qjp5ne1ne7tuuttpnm7prfcd5l2b.apps.googleusercontent.com"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
     </div>
 
-    <div id="signinNote" class="debug-note" aria-live="polite"></div>
+    <div class="google-wrap">
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="outline"
+           data-text="sign_in_with">
+      </div>
+    </div>
   </form>
 
   <!-- SIGN UP -->
-  <form id="formSignUp" novalidate>
+  <form id="formSignUp">
     <div class="input-group">
       <input id="signupName" type="text" placeholder="Full Name" required />
     </div>
@@ -120,42 +163,27 @@ button.primary{ width:100%; background:linear-gradient(90deg,var(--gold1),var(--
 
     <div class="input-group">
       <input id="signupPass" type="password" placeholder="Create Password" required />
-      <svg class="toggle-pass" id="toggleSignup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
+      <span class="toggle" onclick="togglePassword('signupPass')">Show</span>
     </div>
 
     <div class="input-group">
       <input id="signupConfirm" type="password" placeholder="Confirm Password" required />
-      <svg class="toggle-pass" id="toggleSignupConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
+      <span class="toggle" onclick="togglePassword('signupConfirm')">Show</span>
     </div>
 
     <button type="button" id="btnSignUp" class="primary">Create Account</button>
-
-    <div class="social">
-      <button type="button" id="googleBtn2"><img src="https://www.svgrepo.com/show/475656/google-color.svg" /> Sign Up with Google</button>
-      <button type="button" id="walletBtn2">🔗 Connect Wallet</button>
-    </div>
-
-    <div id="signupNote" class="debug-note" aria-live="polite"></div>
   </form>
 
-  <div class="footer">© 2025 CryptoDigitalPro. Secure login portal.</div>
+  <div class="footer">© 2025 CryptoDigitalPro</div>
 </div>
 
-<!-- Forgot Password Modal -->
-<div id="forgotModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:50;">
-  <div id="forgotBox" style="background:#0b0f14;padding:18px;border-radius:10px;width:92%;max-width:360px;border:1px solid rgba(255,255,255,.06);">
-    <h3 style="color:var(--gold2);margin:0 0 10px;text-align:center;">Forgot Password</h3>
-    <input id="forgotEmail" type="email" placeholder="Enter your email" />
-    <div style="display:flex;gap:8px;margin-top:10px;">
-      <button id="forgotSend" style="flex:1;background:linear-gradient(90deg,var(--gold1),var(--gold2));color:#021127;border:none;border-radius:8px;padding:10px;font-weight:700;">Send Reset</button>
-      <button id="forgotClose" style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:var(--muted);border-radius:8px;padding:10px;font-weight:700;">Close</button>
-    </div>
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal" id="forgotModal">
+  <div class="modal-content">
+    <h3>Reset Password</h3>
+    <input type="email" id="forgotEmail" placeholder="Enter your email" />
+    <button class="primary" onclick="sendReset()">Send Reset Link</button>
+    <button onclick="closeModal()">Cancel</button>
   </div>
 </div>
 
@@ -163,207 +191,135 @@ button.primary{ width:100%; background:linear-gradient(90deg,var(--gold1),var(--
 const API = "https://cryptodigitalpro-api.onrender.com";
 const $ = id => document.getElementById(id);
 
-const tabSignIn  = $("tabSignIn");
-const tabSignUp  = $("tabSignUp");
-const formSignIn = $("formSignIn");
-const formSignUp = $("formSignUp");
-
-const btnSignIn  = $("btnSignIn");
-const btnSignUp  = $("btnSignUp");
-
-const signinEmail = $("signinEmail");
-const signinPass  = $("signinPass");
-const signinNote  = $("signinNote");
-
-const signupName     = $("signupName");
-const signupEmail    = $("signupEmail");
-const signupPass     = $("signupPass");
-const signupConfirm  = $("signupConfirm");
-
 /* TAB SWITCH */
-tabSignIn.onclick = () => {
-  tabSignIn.classList.add("active");
-  tabSignUp.classList.remove("active");
-  formSignIn.classList.add("active");
-  formSignUp.classList.remove("active");
+$("tabSignIn").onclick = () => {
+  $("tabSignIn").classList.add("active");
+  $("tabSignUp").classList.remove("active");
+  $("formSignIn").classList.add("active");
+  $("formSignUp").classList.remove("active");
 };
-tabSignUp.onclick = () => {
-  tabSignUp.classList.add("active");
-  tabSignIn.classList.remove("active");
-  formSignUp.classList.add("active");
-  formSignIn.classList.remove("active");
+$("tabSignUp").onclick = () => {
+  $("tabSignUp").classList.add("active");
+  $("tabSignIn").classList.remove("active");
+  $("formSignUp").classList.add("active");
+  $("formSignIn").classList.remove("active");
 };
+
+/* PASSWORD TOGGLE */
+function togglePassword(id){
+  const input = document.getElementById(id);
+  const toggle = input.nextElementSibling;
+  if(input.type === "password"){
+    input.type = "text";
+    toggle.textContent = "Hide";
+  } else {
+    input.type = "password";
+    toggle.textContent = "Show";
+  }
+}
 
 /* LOGIN */
-btnSignIn.onclick = async () => {
-
-  const email = signinEmail.value.trim();
-  const password = signinPass.value.trim();
-
-  if(!email || !password)
-    return signinNote.textContent = "Missing credentials";
+$("btnSignIn").onclick = async () => {
+  const email = $("signinEmail").value.trim();
+  const password = $("signinPass").value.trim();
+  if(!email || !password) return alert("Missing credentials");
 
   try {
-
     const res = await fetch(API + "/api/auth/login", {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ email, password })
     });
-
     const data = await res.json();
-
-    if(!res.ok){
-      console.log(data);
-      return alert(data.error || "Login failed");
-    }
+    if(!res.ok) return alert(data.error || "Login failed");
 
     localStorage.setItem("token", data.token);
-
     location.href = data.is_admin
       ? "loan-admin-dashboard.html"
       : "loan-user-dashboard.html";
 
   } catch(err){
-    console.error(err);
-    alert("Server unreachable");
+    alert("Server not reachable");
   }
 };
 
 /* SIGNUP */
-btnSignUp.onclick = async () => {
+$("btnSignUp").onclick = async () => {
+  const name = $("signupName").value.trim();
+  const email = $("signupEmail").value.trim();
+  const pass = $("signupPass").value.trim();
+  const confirm = $("signupConfirm").value.trim();
 
-  if(!signupName.value || !signupEmail.value || !signupPass.value)
-    return alert("All fields required");
-
-  if(signupPass.value !== signupConfirm.value)
-    return alert("Passwords do not match");
+  if(!name || !email || !pass) return alert("All fields required");
+  if(pass !== confirm) return alert("Passwords do not match");
 
   try {
     const res = await fetch(API + "/api/auth/register", {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({
-        full_name: signupName.value.trim(),
-        email: signupEmail.value.trim(),
-        password: signupPass.value.trim()
-      })
+      body: JSON.stringify({ full_name:name, email, password:pass })
     });
-
     const data = await res.json();
-
-    if(!res.ok){
-      console.log("SERVER ERROR:", data);
-      return alert(data.error || "Signup failed");
-    }
+    if(!res.ok) return alert(data.error || "Signup failed");
 
     alert("Account created successfully");
-    tabSignIn.click();
+    $("tabSignIn").click();
 
   } catch(err){
-    console.error(err);
     alert("Server not reachable");
   }
 };
-router.post("/forgot-password", async (req, res) => {
+
+/* GOOGLE LOGIN */
+async function handleGoogleLogin(response) {
   try {
-    const { email } = req.body;
+    const res = await fetch(API + "/api/auth/google", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ token: response.credential })
+    });
+    const data = await res.json();
+    if(!res.ok) return alert(data.error || "Google login failed");
 
-    const result = await pool.query(
-      "SELECT id FROM users WHERE email = $1",
-      [email]
-    );
+    localStorage.setItem("token", data.token);
+    location.href = data.is_admin
+      ? "dashboard.html"
+      : "dashboard.html";
 
-    if (result.rows.length === 0)
-      return res.json({ message: "If account exists, reset link sent" });
+  } catch(err){
+    alert("Server unreachable");
+  }
+}
 
-    const user = result.rows[0];
+/* FORGOT PASSWORD */
+$("forgotLink").onclick = () => {
+  $("forgotModal").style.display = "flex";
+};
 
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
+function closeModal(){
+  $("forgotModal").style.display = "none";
+}
 
-    const expiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+async function sendReset(){
+  const email = $("forgotEmail").value.trim();
+  if(!email) return alert("Enter your email");
 
-    await pool.query(
-      "UPDATE users SET reset_token=$1, reset_token_expiry=$2 WHERE id=$3",
-      [hashedToken, expiry, user.id]
-    );
-
-    const resetURL = `https://cryptodigitalpro.netlify.app/reset-password.html?token=${resetToken}`;
-
-    // EMAIL CONFIG (Use your SMTP credentials)
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
+  try{
+    const res = await fetch(API + "/api/auth/forgot-password", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ email })
     });
 
-    await transporter.sendMail({
-      to: email,
-      subject: "Password Reset",
-      html: `
-        <h3>Password Reset</h3>
-        <p>Click link below to reset password:</p>
-        <a href="${resetURL}">${resetURL}</a>
-        <p>This link expires in 15 minutes.</p>
-      `
-    });
+    const data = await res.json();
+    alert(data.message || "If account exists, reset link sent");
+    closeModal();
 
-    res.json({ message: "If account exists, reset link sent" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+  }catch(err){
+    alert("Server error");
   }
-});
-
-router.post("/reset-password", async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
-
-    const result = await pool.query(
-      `SELECT id FROM users
-       WHERE reset_token=$1
-       AND reset_token_expiry > NOW()`,
-      [hashedToken]
-    );
-
-    if (result.rows.length === 0)
-      return res.status(400).json({ error: "Invalid or expired token" });
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    await pool.query(
-      `UPDATE users
-       SET password=$1,
-           reset_token=NULL,
-           reset_token_expiry=NULL
-       WHERE id=$2`,
-      [hashedPassword, result.rows[0].id]
-    );
-
-    res.json({ message: "Password updated successfully" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
+}
 </script>
 
-<script src="dark-lock.js"></script>
 </body>
 </html>
