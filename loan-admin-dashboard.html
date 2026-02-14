@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Admin Dashboard | CryptoDigitalPro</title>
 
+<script src="auth-check.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -79,18 +81,9 @@ h2,h3{color:#d4af37;margin-bottom:14px}
 .toast.show{opacity:1;transform:translateY(0)}
 </style>
 
-<script>
-/* 🔐 ADMIN GUARD */
-const token = localStorage.getItem("token");
-const user = JSON.parse(localStorage.getItem("cdpUser"));
-
-if(!token || !user || !user.is_admin){
-  window.location.href="signin.html";
-}
-</script>
 </head>
 
-<body>
+<body class="admin-page">
 
 <div class="container">
 
@@ -122,5 +115,6 @@ if(!token || !user || !user.is_admin){
 
 <script type="module" src="admin-dashboard.js"></script>
 <script src="dark-lock.js"></script>
+
 </body>
 </html>
