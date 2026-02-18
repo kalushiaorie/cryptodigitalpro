@@ -1,194 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sign In | CryptoDigitalPro</title>
-<link rel="icon" href="assets/logo.png" />
-
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
-
-<style>
-/* --- YOUR ORIGINAL STYLES (UNCHANGED) --- */
-:root{--gold1:#d4af37;--gold2:#f8e5a8;--muted:#bbb;--text:#fff}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto;
-  background:#000 url('assets/images/signin-bg.jpg') center/cover no-repeat fixed;
-  color:var(--text);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:100vh;
-  padding:20px;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(6px);
-  z-index:-1;
-}
-.container{
-  width:100%;
-  max-width:380px;
-  padding:22px;
-  border-radius:14px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 8px 40px rgba(0,0,0,0.6);
-}
-.logo{text-align:center;margin-bottom:14px;font-weight:700;font-size:1.35rem;color:var(--gold2)}
-.tabs{display:flex;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.tab{flex:1;text-align:center;padding:8px;cursor:pointer;color:var(--muted);font-weight:600}
-.tab.active{color:var(--gold2);border-bottom:2px solid var(--gold2)}
-form{display:none;flex-direction:column;gap:12px}
-form.active{display:flex}
-.input-group{position:relative}
-.input-group input{
-  width:100%;padding:12px 40px 12px 12px;border-radius:8px;
-  border:1px solid rgba(255,255,255,0.09);
-  background:rgba(255,255,255,0.03);
-  color:#fff;font-size:.92rem;
-}
-.toggle{
-  position:absolute;
-  right:10px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:12px;
-  color:var(--gold2);
-}
-button.primary{
-  width:100%;
-  background:linear-gradient(90deg,var(--gold1),var(--gold2));
-  border:none;border-radius:8px;padding:11px;
-  font-weight:700;color:#021127;cursor:pointer
-}
-.small-link{
-  text-align:right;
-  font-size:12px;
-  cursor:pointer;
-  color:var(--gold2);
-}
-.footer{margin-top:18px;text-align:center;font-size:.78rem;color:var(--muted)}
-.google-wrap{margin-top:10px;display:flex;justify-content:center}
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);
-  align-items:center;
-  justify-content:center;
-}
-.modal-content{
-  background:#0b0f14;
-  padding:20px;
-  border-radius:10px;
-  width:90%;
-  max-width:360px;
-}
-.modal-content input{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:6px;
-  border:1px solid rgba(255,255,255,.1);
-  background:#111;
-  color:#fff;
-}
-.modal-content button{
-  margin-top:10px;
-  width:100%;
-}
-</style>
-</head>
-<body>
-
-<div class="container">
-  <div class="logo">Crypto<span style="color:var(--gold1)">DigitalPro</span></div>
-
-  <div class="tabs">
-    <div id="tabSignIn" class="tab active">Sign In</div>
-    <div id="tabSignUp" class="tab">Sign Up</div>
-  </div>
-
-  <!-- SIGN IN -->
-  <form id="formSignIn" class="active">
-    <div class="input-group">
-      <input id="signinEmail" type="email" placeholder="Email address" required />
-    </div>
-
-    <div class="input-group">
-      <input id="signinPass" type="password" placeholder="Password" required />
-      <span class="toggle" onclick="togglePassword('signinPass')">Show</span>
-    </div>
-
-    <div class="small-link" id="forgotLink">Forgot Password?</div>
-
-    <button type="button" id="btnSignIn" class="primary">Sign In</button>
-
-    <!-- GOOGLE SIGN IN -->
-    <div id="g_id_onload"
-         data-client_id="640965757686-pui9qjp5ne1ne7tuuttpnm7prfcd5l2b.apps.googleusercontent.com"
-         data-callback="handleGoogleLogin"
-         data-auto_prompt="false">
-    </div>
-
-    <div class="google-wrap">
-      <div class="g_id_signin"
-           data-type="standard"
-           data-size="large"
-           data-theme="outline"
-           data-text="sign_in_with">
-      </div>
-    </div>
-  </form>
-
-  <!-- SIGN UP -->
-  <form id="formSignUp">
-    <div class="input-group">
-      <input id="signupName" type="text" placeholder="Full Name" required />
-    </div>
-
-    <div class="input-group">
-      <input id="signupEmail" type="email" placeholder="Email address" required />
-    </div>
-
-    <div class="input-group">
-      <input id="signupPass" type="password" placeholder="Create Password" required />
-      <span class="toggle" onclick="togglePassword('signupPass')">Show</span>
-    </div>
-
-    <div class="input-group">
-      <input id="signupConfirm" type="password" placeholder="Confirm Password" required />
-      <span class="toggle" onclick="togglePassword('signupConfirm')">Show</span>
-    </div>
-
-    <button type="button" id="btnSignUp" class="primary">Create Account</button>
-  </form>
-
-  <div class="footer">© 2025 CryptoDigitalPro</div>
-</div>
-
-<!-- FORGOT PASSWORD MODAL -->
-<div class="modal" id="forgotModal">
-  <div class="modal-content">
-    <h3>Reset Password</h3>
-    <input type="email" id="forgotEmail" placeholder="Enter your email" />
-    <button class="primary" onclick="sendReset()">Send Reset Link</button>
-    <button onclick="closeModal()">Cancel</button>
-  </div>
-</div>
-
 <script>
 
-/* ✅ ONLY CHANGE: Updated Production API */
 const API =
   window.location.hostname === "localhost"
     ? "http://127.0.0.1:5000"
@@ -203,6 +14,7 @@ $("tabSignIn").onclick = () => {
   $("formSignIn").classList.add("active");
   $("formSignUp").classList.remove("active");
 };
+
 $("tabSignUp").onclick = () => {
   $("tabSignUp").classList.add("active");
   $("tabSignIn").classList.remove("active");
@@ -239,8 +51,19 @@ $("btnSignIn").onclick = async () => {
     const data = await res.json();
     if(!res.ok) return alert(data.error || "Login failed");
 
-    localStorage.setItem("token", data.token);
-    location.href = "dashboard.html";
+    localStorage.setItem("token", data.accessToken);
+localStorage.setItem("refreshToken", data.refreshToken);
+
+
+    // ✅ CORRECTED REDIRECT LOGIC
+    const redirect = localStorage.getItem("redirectAfterLogin");
+
+    if (redirect) {
+      localStorage.removeItem("redirectAfterLogin");
+      location.href = redirect;
+    } else {
+      location.href = "dashboard.html";
+    }
 
   } catch(err){
     alert("Server not reachable");
@@ -267,8 +90,17 @@ $("btnSignUp").onclick = async () => {
     const data = await res.json();
     if(!res.ok) return alert(data.error || "Signup failed");
 
-    alert("Account created successfully");
-    $("tabSignIn").click();
+    localStorage.setItem("token", data.token);
+
+    // ✅ Same redirect logic after signup
+    const redirect = localStorage.getItem("redirectAfterLogin");
+
+    if (redirect) {
+      localStorage.removeItem("redirectAfterLogin");
+      location.href = redirect;
+    } else {
+      location.href = "dashboard.html";
+    }
 
   } catch(err){
     alert("Server not reachable");
@@ -288,7 +120,15 @@ async function handleGoogleLogin(response) {
     if(!res.ok) return alert(data.error || "Google login failed");
 
     localStorage.setItem("token", data.token);
-    location.href = "dashboard.html";
+
+    const redirect = localStorage.getItem("redirectAfterLogin");
+
+    if (redirect) {
+      localStorage.removeItem("redirectAfterLogin");
+      location.href = redirect;
+    } else {
+      location.href = "dashboard.html";
+    }
 
   } catch(err){
     alert("Server unreachable");
@@ -325,6 +165,3 @@ async function sendReset(){
 }
 
 </script>
-
-</body>
-</html>

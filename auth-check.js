@@ -1,34 +1,46 @@
+// auth-check.js
 (function () {
-  const API = "https://cryptodigitalpro-api.onrender.com";
-  const token = localStorage.getItem("token");
 
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  const hasAppliedLoan = localStorage.getItem("hasAppliedLoan");
+
+  const currentPath = window.location.pathname.toLowerCase();
+
+  const isAdminPage = currentPath.includes("admin");
+  const isDashboardPage = currentPath.includes("dashboard");
+
+  // 🔒 1️⃣ Not logged in
   if (!token) {
-    window.location.href = "signin.html";
+    localStorage.setItem("redirectAfterLogin", window.location.href);
+
+    if (isAdminPage) {
+      window.location.href = "admin-signin.html";
+    } else {
+      window.location.href = "signin.html";
+    }
     return;
   }
 
-  fetch(API + "/api/auth/verify", {
-    method: "GET",
-    headers: {
-      "Authorization": "Bearer " + token
+  // 👑 2️⃣ Admin pages protection
+  if (isAdminPage) {
+    if (role !== "admin") {
+      window.location.href = "dashboard.html";
+      return;
     }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (!data.valid) {
-      localStorage.removeItem("token");
-      window.location.href = "signin.html";
+  }
+
+  // 👤 3️⃣ User dashboard protection
+  if (isDashboardPage && !isAdminPage) {
+    if (role !== "user") {
+      window.location.href = "admin-dashboard.html";
       return;
     }
 
-    // 🔐 Admin page protection
-    if (document.body.classList.contains("admin-page")) {
-      if (!data.user || !data.user.is_admin) {
-        window.location.href = "dashboard.html";
-      }
+    if (!hasAppliedLoan) {
+      window.location.href = "Busines-loan-form.html";
+      return;
     }
-  })
-  .catch(() => {
-    window.location.href = "signin.html";
-  });
+  }
+
 })();

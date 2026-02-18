@@ -43,7 +43,7 @@
 
       if (field.type === "checkbox") {
         if (!field.checked) valid = false;
-      } else if (!field.value || !field.value.trim()) {
+      } else if (!field.value || !field.value.toString().trim()) {
         field.classList.add("invalid");
         valid = false;
       }
@@ -135,10 +135,19 @@
       return;
     }
 
-    // Let Netlify handle the submission
+    // ✅ MARK USER AS APPLIED
+    localStorage.setItem("hasAppliedLoan", "true");
+
+    // ✅ SAVE LOAN AMOUNT FOR DASHBOARD
+    const amountField = form.querySelector("input[name='amount']");
+    if (amountField) {
+      localStorage.setItem("lastLoanAmount", amountField.value);
+    }
+
+    // Let Netlify handle submission
     form.submit();
 
-    // Show success modal (optional)
+    // Show success modal
     thankModal.style.display = "flex";
   });
 

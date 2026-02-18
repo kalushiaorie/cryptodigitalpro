@@ -4,13 +4,50 @@
   <meta charset="UTF-8" />
   <title>CryptoDigitalPro – Loan Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <script src="auth-check.js"></script>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="assets/dashboard.css" />
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
+  <style>
+    /* ===== Added Enhancements Only ===== */
+
+    #withdrawProgress {
+      transition: width 0.6s ease-in-out;
+      font-weight: 600;
+    }
+
+    .progress-pulse {
+      animation: pulseGlow 1.5s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 1; }
+      50% { opacity: .6; }
+      100% { opacity: 1; }
+    }
+
+    .rejection-box {
+      margin-top: 12px;
+      padding: 12px;
+      background: #7f1d1d;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    /* Chat styling */
+    .chat-container {
+      max-height: 250px;
+      overflow-y: auto;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .chat-user { color: #4ade80; }
+    .chat-admin { color: #fbbf24; }
+  </style>
 </head>
 
 <body>
@@ -46,32 +83,31 @@
   <!-- ================= BALANCES ================= -->
   <section class="balance-wrap premium">
 
-  <div class="balance-box premium-card">
-    <div class="label">Outstanding</div>
-    <div class="value" id="outstandingBox">$0.00</div>
-  </div>
+    <div class="balance-box premium-card">
+      <div class="label">Outstanding</div>
+      <div class="value" id="outstandingBox">$0.00</div>
+    </div>
 
-  <div class="balance-box premium-card">
-    <div class="label">Deposited</div>
-    <div class="value" id="depositedBox">$0.00</div>
-  </div>
+    <div class="balance-box premium-card">
+      <div class="label">Deposited</div>
+      <div class="value" id="depositedBox">$0.00</div>
+    </div>
 
-  <div class="balance-box premium-card">
-    <div class="label">Withdrawn</div>
-    <div class="value" id="withdrawnBox">$0.00</div>
-  </div>
+    <div class="balance-box premium-card">
+      <div class="label">Withdrawn</div>
+      <div class="value" id="withdrawnBox">$0.00</div>
+    </div>
 
-  <div class="balance-box premium-card highlight">
-    <div class="label">Available to Withdraw</div>
-    <div class="value" id="availableBox">$0.00</div>
-  </div>
+    <div class="balance-box premium-card highlight">
+      <div class="label">Available to Withdraw</div>
+      <div class="value" id="availableBox">$0.00</div>
+    </div>
 
-</section>
+  </section>
 
   <!-- ================= MAIN GRID ================= -->
   <section class="grid">
 
-    <!-- LOANS -->
     <div class="card">
       <h3>My Loan Applications</h3>
       <div id="loanList" class="small">
@@ -79,14 +115,28 @@
       </div>
     </div>
 
-    <!-- ACTIONS -->
     <div>
       <div class="card">
         <h3>Select a loan</h3>
+
         <div class="actions">
           <button class="btn" id="withdrawBtn">Withdraw</button>
           <button class="btn dark">Repay</button>
         </div>
+
+        <!-- Progress Bar -->
+        <div id="withdrawProgressWrap" style="margin-top:15px; display:none;">
+          <div style="background:#1e293b; border-radius:10px; overflow:hidden;">
+            <div id="withdrawProgress"
+                 style="width:0%; background:#d4af37; color:#000; text-align:center; padding:6px 0;">
+              0%
+            </div>
+          </div>
+        </div>
+
+        <!-- ADDED: Rejection reason container -->
+        <div id="withdrawRejectionContainer"></div>
+
       </div>
 
       <div class="card">
@@ -99,7 +149,6 @@
 
   </section>
 
-  <!-- ================= FOOTER ================= -->
   <footer class="footer">
     <span>© CryptoDigitalPro</span>
     <span>Privacy · Terms · Support</span>
@@ -107,13 +156,35 @@
 
 </div>
 
-<!-- ================= MODALS ================= -->
-
-<div id="dashboardModal">
-  <div></div>
+<!-- ================= WITHDRAW MODAL ================= -->
+<div id="withdrawModal" class="modal hidden">
+  <div class="card">
+    <h3 id="modalTitle"></h3>
+    <p id="modalMessage"></p>
+    <div id="modalActions"></div>
+  </div>
 </div>
 
-<!-- ADMIN MESSAGES -->
+<!-- MESSAGE ADMIN MODAL (UPGRADED TO CHAT SYSTEM) -->
+<div id="messageModal" class="modal hidden">
+  <div class="card">
+    <h3>Admin Support Chat</h3>
+
+    <!-- ADDED: chat history -->
+    <div id="chatMessages" class="chat-container"></div>
+
+    <textarea id="adminMessageText"
+      style="width:100%;height:80px;margin-bottom:10px;"
+      placeholder="Type your message..."></textarea>
+
+    <button class="btn" id="sendAdminMessage">Send Message</button>
+    <button class="btn dark closeMessageModal">Cancel</button>
+  </div>
+</div>
+
+<!-- Existing Modals Kept -->
+<div id="dashboardModal"><div></div></div>
+
 <div id="adminModal" class="modal hidden">
   <div class="card">
     <h3>Admin Messages</h3>
@@ -122,7 +193,6 @@
   </div>
 </div>
 
-<!-- VERIFY -->
 <div id="verifyModal" class="modal hidden">
   <div class="card">
     <h3>Verify Identity</h3>
@@ -132,7 +202,6 @@
   </div>
 </div>
 
-<!-- UPLOAD -->
 <div id="uploadModal" class="modal hidden">
   <div class="card">
     <h3>Upload Documents</h3>
@@ -142,10 +211,10 @@
   </div>
 </div>
 
-<!-- LIVE CHAT -->
 <button class="live-chat-btn">Live Chat</button>
 
 <script src="dashboard.js"></script>
 <script src="dark-lock.js"></script>
+
 </body>
 </html>

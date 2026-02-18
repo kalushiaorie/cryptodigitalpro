@@ -573,3 +573,13 @@ input {
 .notify-item:hover {
   background: rgba(255,255,255,0.05);
 }
+
+.status-approved { border-left: 4px solid #16c784; }
+.status-pending { border-left: 4px solid #f5c96a; }
+.status-rejected { border-left: 4px solid #ff4d4f; }
+
+.status-approved span { color: #16c784; font-weight: bold; }
+.status-pending span { color: #f5c96a; font-weight: bold; }
+.status-rejected span { color: #ff4d4f; font-weight: bold; }
+
+.locked { opacity: 0.6; cursor: not-allowed; }
