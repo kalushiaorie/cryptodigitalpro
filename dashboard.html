@@ -6,10 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="assets/dashboard.css" />
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
   <style>
-    /* ===== Added Enhancements Only ===== */
+    /* ================= SAFETY ================= */
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    /* ================= PROGRESS ================= */
 
     #withdrawProgress {
       transition: width 0.6s ease-in-out;
@@ -34,7 +49,8 @@
       font-size: 13px;
     }
 
-    /* Chat styling */
+    /* ================= CHAT ================= */
+
     .chat-container {
       max-height: 250px;
       overflow-y: auto;
@@ -47,6 +63,17 @@
 
     .chat-user { color: #4ade80; }
     .chat-admin { color: #fbbf24; }
+
+    .notify-dropdown {
+      position: absolute;
+      background: #111827;
+      border-radius: 8px;
+      width: 260px;
+      padding: 10px;
+      right: 0;
+      top: 30px;
+    }
+
   </style>
 </head>
 
@@ -55,6 +82,7 @@
 <div class="container">
 
   <!-- ================= HEADER ================= -->
+
   <header class="header">
     <div class="brand">
       <strong>CryptoDigitalPro</strong>
@@ -62,25 +90,35 @@
     </div>
 
     <div class="header-actions">
-      <button id="adminBtn" class="btn">Admin Messages (0)</button>
-      <button id="verifyBtn" class="btn">Not Verified</button>
+
+      <button id="adminBtn" class="btn">Admin Messages</button>
+      <button id="verifyBtn" class="btn">Verify Account</button>
       <button id="uploadBtn" class="btn">Upload Documents</button>
 
-      <div class="notify-wrapper">
-        <span class="notify-bell">🔔 <span id="notifyCount" class="badge">0</span></span>
-        <div class="notify-dropdown">
+      <div class="notify-wrapper" style="position:relative;">
+        <span class="notify-bell">
+          🔔 <span id="notifyCount" class="badge">0</span>
+        </span>
+
+        <!-- Hidden by default -->
+        <div class="notify-dropdown hidden">
           <div class="notify-header">Notifications</div>
           <div class="notify-list"></div>
           <div class="notify-footer">
             <button class="notify-clear">Clear</button>
-            <button class="notify-close">Close</button>
+            <button class="notify-close"
+              onclick="this.closest('.notify-dropdown').classList.add('hidden')">
+              Close
+            </button>
           </div>
         </div>
       </div>
+
     </div>
   </header>
 
   <!-- ================= BALANCES ================= -->
+
   <section class="balance-wrap premium">
 
     <div class="balance-box premium-card">
@@ -105,7 +143,8 @@
 
   </section>
 
-  <!-- ================= MAIN GRID ================= -->
+  <!-- ================= MAIN ================= -->
+
   <section class="grid">
 
     <div class="card">
@@ -116,6 +155,7 @@
     </div>
 
     <div>
+
       <div class="card">
         <h3>Select a loan</h3>
 
@@ -124,17 +164,25 @@
           <button class="btn dark">Repay</button>
         </div>
 
-        <!-- Progress Bar -->
-        <div id="withdrawProgressWrap" style="margin-top:15px; display:none;">
-          <div style="background:#1e293b; border-radius:10px; overflow:hidden;">
+        <div id="withdrawProgressWrap"
+             style="margin-top:15px; display:none;">
+
+          <div style="background:#1e293b;
+                      border-radius:10px;
+                      overflow:hidden;">
+
             <div id="withdrawProgress"
-                 style="width:0%; background:#d4af37; color:#000; text-align:center; padding:6px 0;">
+                 style="width:0%;
+                        background:#d4af37;
+                        color:#000;
+                        text-align:center;
+                        padding:6px 0;">
               0%
             </div>
+
           </div>
         </div>
 
-        <!-- ADDED: Rejection reason container -->
         <div id="withdrawRejectionContainer"></div>
 
       </div>
@@ -145,6 +193,7 @@
           No transactions available.
         </div>
       </div>
+
     </div>
 
   </section>
@@ -156,40 +205,44 @@
 
 </div>
 
-<!-- ================= WITHDRAW MODAL ================= -->
+<!-- ================= MODALS ================= -->
+
 <div id="withdrawModal" class="modal hidden">
   <div class="card">
     <h3 id="modalTitle"></h3>
     <p id="modalMessage"></p>
-    <div id="modalActions"></div>
   </div>
 </div>
 
-<!-- MESSAGE ADMIN MODAL (UPGRADED TO CHAT SYSTEM) -->
 <div id="messageModal" class="modal hidden">
   <div class="card">
     <h3>Admin Support Chat</h3>
 
-    <!-- ADDED: chat history -->
     <div id="chatMessages" class="chat-container"></div>
 
     <textarea id="adminMessageText"
       style="width:100%;height:80px;margin-bottom:10px;"
       placeholder="Type your message..."></textarea>
 
-    <button class="btn" id="sendAdminMessage">Send Message</button>
-    <button class="btn dark closeMessageModal">Cancel</button>
+    <button class="btn" id="sendAdminMessage">
+      Send Message
+    </button>
+
+    <button class="btn dark"
+      onclick="document.getElementById('messageModal').classList.add('hidden')">
+      Cancel
+    </button>
   </div>
 </div>
-
-<!-- Existing Modals Kept -->
-<div id="dashboardModal"><div></div></div>
 
 <div id="adminModal" class="modal hidden">
   <div class="card">
     <h3>Admin Messages</h3>
     <div id="adminMessages">No messages.</div>
-    <button class="btn closeModal">Close</button>
+    <button class="btn"
+      onclick="document.getElementById('adminModal').classList.add('hidden')">
+      Close
+    </button>
   </div>
 </div>
 
@@ -198,7 +251,10 @@
     <h3>Verify Identity</h3>
     <input type="file" />
     <button class="btn">Submit</button>
-    <button class="btn dark closeModal">Cancel</button>
+    <button class="btn dark"
+      onclick="document.getElementById('verifyModal').classList.add('hidden')">
+      Cancel
+    </button>
   </div>
 </div>
 
@@ -207,11 +263,12 @@
     <h3>Upload Documents</h3>
     <input type="file" />
     <button class="btn">Upload</button>
-    <button class="btn dark closeModal">Cancel</button>
+    <button class="btn dark"
+      onclick="document.getElementById('uploadModal').classList.add('hidden')">
+      Cancel
+    </button>
   </div>
 </div>
-
-<button class="live-chat-btn">Live Chat</button>
 
 <script src="dashboard.js"></script>
 <script src="dark-lock.js"></script>
