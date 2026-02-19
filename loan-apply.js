@@ -152,7 +152,7 @@
 
     // Auto redirect after 2 seconds
     setTimeout(() => {
-      window.location.href = "/dashboard.html";
+      window.location.href = "dashboard.html";
     }, 2000);
   });
 
@@ -160,7 +160,7 @@
 
   if (thankNext) {
     thankNext.addEventListener("click", function () {
-      window.location.href = "/dashboard.html";
+      window.location.href = "dashboard.html";
     });
   }
 
