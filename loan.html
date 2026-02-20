@@ -2,14 +2,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- ✅ AUTH GUARD (ADDED – DOES NOT REMOVE ANYTHING) -->
+<script>
+(function(){
+  const token = localStorage.getItem("token");
+  if(!token){
+    localStorage.setItem("redirectAfterLogin", window.location.pathname);
+    window.location.href = "signin.html";
+  }
+})();
+</script>
+<!-- END AUTH GUARD -->
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Crypto Loan Marketplace | CryptoDigitalPro</title>
 <link rel="icon" href="assets/logo.png" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{--bg:#050505;--panel:#0f0f17;--text:#f5f5f7;--muted:#9aa4b2;--gold1:#caa64a;--gold2:#f0d78a;--border:rgba(255,255,255,0.06);--radius:14px;--shadow:0 10px 40px rgba(0,0,0,0.55)}
 *{box-sizing:border-box}
@@ -156,9 +169,20 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
 <!-- End common web3 includes -->
 </head>
 <body>
+
 <header>
-  <div class="brand"><img src="assets/logo.png" alt="logo"/>CryptoDigitalPro</div>
-  <a class="btn-primary" href="index.html">Home</a>
+  <div class="brand">
+    <img src="assets/logo.png" alt="logo"/>
+    CryptoDigitalPro
+  </div>
+
+  <!-- ✅ Home + Logout added -->
+  <div style="display:flex;gap:12px;align-items:center;">
+    <a class="btn-primary" href="index.html">Home</a>
+    <button onclick="logout()" class="btn-primary" style="background:#7f1d1d;color:#fff;">
+      Sign Out
+    </button>
+  </div>
 </header>
 
 <main>
@@ -593,11 +617,15 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
       }
 
       try {
-        const resp = await fetch('https://cryptodigitalpro-api.onrender.com/api/loans', {
-          method: 'POST',
-          body: fd,
-          credentials: 'include'
-        });
+        const token = localStorage.getItem("token");
+
+const resp = await fetch('https://cryptodigitalpro-api.onrender.com/api/loans', {
+  method: 'POST',
+  body: fd,
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+});
         if(!resp.ok){
           const text = await resp.text();
           throw new Error('Server error: ' + resp.status + ' ' + text);
@@ -624,5 +652,12 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
 <!-- End unified snippet -->
 
 <script src="dark-lock.js"></script>
+<script>
+function logout(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  window.location.href = "signin.html";
+}
+</script>
 </body>
 </html>

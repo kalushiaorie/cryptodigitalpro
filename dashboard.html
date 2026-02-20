@@ -1,207 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>CryptoDigitalPro – Loan Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>CryptoDigitalPro – Loan Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="assets/dashboard.css" />
+<link rel="stylesheet" href="assets/dashboard.css" />
 
-  <style>
-    /* ================= SAFETY ================= */
+<script>
+/* ================= AUTH PROTECTION ================= */
+(function(){
+  const token = localStorage.getItem("token");
+  if(!token){
+    localStorage.setItem("redirectAfterLogin", "dashboard.html");
+    window.location.href = "signin.html";
+  }
+})();
+</script>
 
-    .hidden {
-      display: none !important;
-    }
+<style>
 
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
+/* ================= SAFETY ================= */
 
-    /* ================= PROGRESS ================= */
+.hidden { display:none !important; }
 
-    #withdrawProgress {
-      transition: width 0.6s ease-in-out;
-      font-weight: 600;
-    }
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
-    .progress-pulse {
-      animation: pulseGlow 1.5s infinite;
-    }
+/* ================= PROGRESS ================= */
 
-    @keyframes pulseGlow {
-      0% { opacity: 1; }
-      50% { opacity: .6; }
-      100% { opacity: 1; }
-    }
+#withdrawProgress {
+  transition: width 0.6s ease-in-out;
+  font-weight: 600;
+}
 
-    .rejection-box {
-      margin-top: 12px;
-      padding: 12px;
-      background: #7f1d1d;
-      border-radius: 8px;
-      font-size: 13px;
-    }
+.progress-pulse {
+  animation: pulseGlow 1.5s infinite;
+}
 
-    /* ================= CHAT ================= */
+@keyframes pulseGlow {
+  0% { opacity: 1; }
+  50% { opacity: .6; }
+  100% { opacity: 1; }
+}
 
-    .chat-container {
-      max-height: 250px;
-      overflow-y: auto;
-      background: #0f172a;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      font-size: 13px;
-    }
+.rejection-box {
+  margin-top: 12px;
+  padding: 12px;
+  background: #7f1d1d;
+  border-radius: 8px;
+  font-size: 13px;
+}
 
-    .chat-user { color: #4ade80; }
-    .chat-admin { color: #fbbf24; }
+/* ================= CHAT ================= */
 
-    .notify-dropdown {
-      position: absolute;
-      background: #111827;
-      border-radius: 8px;
-      width: 260px;
-      padding: 10px;
-      right: 0;
-      top: 30px;
-    }
+.chat-container {
+  max-height: 250px;
+  overflow-y: auto;
+  background: #0f172a;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
 
-  </style>
+.chat-user { color: #4ade80; }
+.chat-admin { color: #fbbf24; }
+
+.notify-dropdown {
+  position: absolute;
+  background: #111827;
+  border-radius: 8px;
+  width: 260px;
+  padding: 10px;
+  right: 0;
+  top: 30px;
+}
+
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <!-- ================= HEADER ================= -->
+<!-- ================= HEADER ================= -->
 
-  <header class="header">
-    <div class="brand">
-      <strong>CryptoDigitalPro</strong>
-      <span class="small">Loan Dashboard</span>
-    </div>
+<header class="header">
+  <div class="brand">
+    <strong>CryptoDigitalPro</strong>
+    <span class="small">Loan Dashboard</span>
+  </div>
+  
+  <div class="header-actions">
 
-    <div class="header-actions">
+    <button type="button" id="logoutBtn" class="btn" style="background:#7f1d1d;">
+      Sign Out
+    </button>
 
-      <button id="adminBtn" class="btn">Admin Messages</button>
-      <button id="verifyBtn" class="btn">Verify Account</button>
-      <button id="uploadBtn" class="btn">Upload Documents</button>
+    <button type="button" id="adminBtn" class="btn">Admin Messages</button>
+    <button type="button" id="verifyBtn" class="btn">Verify Account</button>
+    <button type="button" id="uploadBtn" class="btn">Upload Documents</button>
 
-      <div class="notify-wrapper" style="position:relative;">
-        <span class="notify-bell">
-          🔔 <span id="notifyCount" class="badge">0</span>
-        </span>
+    <div class="notify-wrapper" style="position:relative;">
+      <span class="notify-bell">
+        🔔 <span id="notifyCount" class="badge">0</span>
+      </span>
 
-        <!-- Hidden by default -->
-        <div class="notify-dropdown hidden">
-          <div class="notify-header">Notifications</div>
-          <div class="notify-list"></div>
-          <div class="notify-footer">
-            <button class="notify-clear">Clear</button>
-            <button class="notify-close"
-              onclick="this.closest('.notify-dropdown').classList.add('hidden')">
-              Close
-            </button>
-          </div>
+      <div class="notify-dropdown hidden">
+        <div class="notify-header">Notifications</div>
+        <div class="notify-list"></div>
+        <div class="notify-footer">
+          <button type="button" class="notify-clear">Clear</button>
+          <button type="button" class="notify-close"
+            onclick="this.closest('.notify-dropdown').classList.add('hidden')">
+            Close
+          </button>
         </div>
       </div>
-
-    </div>
-  </header>
-
-  <!-- ================= BALANCES ================= -->
-
-  <section class="balance-wrap premium">
-
-    <div class="balance-box premium-card">
-      <div class="label">Outstanding</div>
-      <div class="value" id="outstandingBox">$0.00</div>
     </div>
 
-    <div class="balance-box premium-card">
-      <div class="label">Deposited</div>
-      <div class="value" id="depositedBox">$0.00</div>
+  </div>
+</header>
+
+<!-- ================= BALANCES ================= -->
+
+<section class="balance-wrap premium">
+
+  <div class="balance-box premium-card">
+    <div class="label">Outstanding</div>
+    <div class="value" id="outstandingBox">$0.00</div>
+  </div>
+
+  <div class="balance-box premium-card">
+    <div class="label">Deposited</div>
+    <div class="value" id="depositedBox">$0.00</div>
+  </div>
+
+  <div class="balance-box premium-card">
+    <div class="label">Withdrawn</div>
+    <div class="value" id="withdrawnBox">$0.00</div>
+  </div>
+
+  <div class="balance-box premium-card highlight">
+    <div class="label">Available to Withdraw</div>
+    <div class="value" id="availableBox">$0.00</div>
+  </div>
+  
+  <!-- PRIMARY LOAN DISPLAY -->
+  <div class="loan-section">
+    <h2>Your Loan Applications</h2>
+    <div id="loanContainer"></div>
+  </div>
+
+</section>
+
+<!-- ================= MAIN ================= -->
+
+<section class="grid">
+
+  <!-- SECOND LOAN SECTION (UNCHANGED, NOT REMOVED) -->
+  <div class="card">
+    <h3>My Loan Applications</h3>
+    <div id="loanList" class="small">
+      No loan applications yet.
     </div>
+  </div>
 
-    <div class="balance-box premium-card">
-      <div class="label">Withdrawn</div>
-      <div class="value" id="withdrawnBox">$0.00</div>
-    </div>
-
-    <div class="balance-box premium-card highlight">
-      <div class="label">Available to Withdraw</div>
-      <div class="value" id="availableBox">$0.00</div>
-    </div>
-
-  </section>
-
-  <!-- ================= MAIN ================= -->
-
-  <section class="grid">
+  <div>
 
     <div class="card">
-      <h3>My Loan Applications</h3>
-      <div id="loanList" class="small">
-        No loan applications yet.
+      <h3>Select a loan</h3>
+
+      <div class="actions">
+        <button type="button" class="btn" id="withdrawBtn">Withdraw</button>
+        <button type="button" class="btn dark">Repay</button>
       </div>
-    </div>
 
-    <div>
-
-      <div class="card">
-        <h3>Select a loan</h3>
-
-        <div class="actions">
-          <button class="btn" id="withdrawBtn">Withdraw</button>
-          <button class="btn dark">Repay</button>
-        </div>
-
-        <div id="withdrawProgressWrap"
-             style="margin-top:15px; display:none;">
-
-          <div style="background:#1e293b;
-                      border-radius:10px;
-                      overflow:hidden;">
-
-            <div id="withdrawProgress"
-                 style="width:0%;
-                        background:#d4af37;
-                        color:#000;
-                        text-align:center;
-                        padding:6px 0;">
-              0%
-            </div>
-
+      <div id="withdrawProgressWrap" style="margin-top:15px; display:none;">
+        <div style="background:#1e293b;border-radius:10px;overflow:hidden;">
+          <div id="withdrawProgress"
+            style="width:0%;background:#d4af37;color:#000;text-align:center;padding:6px 0;">
+            0%
           </div>
         </div>
-
-        <div id="withdrawRejectionContainer"></div>
-
       </div>
 
-      <div class="card">
-        <h3>Transaction History</h3>
-        <div id="txList" class="small">
-          No transactions available.
-        </div>
-      </div>
-
+      <div id="withdrawRejectionContainer"></div>
     </div>
 
-  </section>
+    <div class="card">
+      <h3>Transaction History</h3>
+      <div id="txList" class="small">
+        No transactions available.
+      </div>
+    </div>
 
-  <footer class="footer">
-    <span>© CryptoDigitalPro</span>
-    <span>Privacy · Terms · Support</span>
-  </footer>
+  </div>
+
+</section>
+
+<footer class="footer">
+  <span>© CryptoDigitalPro</span>
+  <span>Privacy · Terms · Support</span>
+</footer>
 
 </div>
 
@@ -217,18 +226,14 @@
 <div id="messageModal" class="modal hidden">
   <div class="card">
     <h3>Admin Support Chat</h3>
-
     <div id="chatMessages" class="chat-container"></div>
 
     <textarea id="adminMessageText"
       style="width:100%;height:80px;margin-bottom:10px;"
       placeholder="Type your message..."></textarea>
 
-    <button class="btn" id="sendAdminMessage">
-      Send Message
-    </button>
-
-    <button class="btn dark"
+    <button type="button" class="btn" id="sendAdminMessage">Send Message</button>
+    <button type="button" class="btn dark"
       onclick="document.getElementById('messageModal').classList.add('hidden')">
       Cancel
     </button>
@@ -239,7 +244,7 @@
   <div class="card">
     <h3>Admin Messages</h3>
     <div id="adminMessages">No messages.</div>
-    <button class="btn"
+    <button type="button" class="btn"
       onclick="document.getElementById('adminModal').classList.add('hidden')">
       Close
     </button>
@@ -250,8 +255,8 @@
   <div class="card">
     <h3>Verify Identity</h3>
     <input type="file" />
-    <button class="btn">Submit</button>
-    <button class="btn dark"
+    <button type="button" class="btn">Submit</button>
+    <button type="button" class="btn dark"
       onclick="document.getElementById('verifyModal').classList.add('hidden')">
       Cancel
     </button>
@@ -262,16 +267,37 @@
   <div class="card">
     <h3>Upload Documents</h3>
     <input type="file" />
-    <button class="btn">Upload</button>
-    <button class="btn dark"
+    <button type="button" class="btn">Upload</button>
+    <button type="button" class="btn dark"
       onclick="document.getElementById('uploadModal').classList.add('hidden')">
       Cancel
     </button>
   </div>
 </div>
 
+<!-- LOAN DETAILS MODAL -->
+<div id="loanDetailsModal" class="modal hidden">
+  <div style="background:#0f172a;width:500px;max-width:95%;padding:25px;border-radius:12px;color:#fff;">
+    <h2 id="loanModalTitle">Loan Details</h2>
+    <div id="loanTimeline" style="margin:20px 0;"></div>
+    <div id="loanAdminNotes"
+      style="background:#1e293b;padding:12px;border-radius:8px;margin-top:15px;"></div>
+    <button type="button" onclick="closeLoanModal()" class="btn" style="margin-top:20px;">
+      Close
+    </button>
+  </div>
+</div>
+
 <script src="dashboard.js"></script>
 <script src="dark-lock.js"></script>
+
+<script>
+document.getElementById("logoutBtn").addEventListener("click", function(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  window.location.href = "signin.html";
+});
+</script>
 
 </body>
 </html>

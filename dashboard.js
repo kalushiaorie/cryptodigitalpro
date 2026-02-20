@@ -2,21 +2,11 @@
 
 /* ================= CONFIG ================= */
 
-// ✅ USE YOUR LIVE BACKEND
 const API = "https://api.cryptodigitalpro.com";
-
 const token = localStorage.getItem("token");
-const hasAppliedLoan = localStorage.getItem("hasAppliedLoan");
 
-// 🔒 Block if not logged in
 if (!token) {
   window.location.href = "signin.html";
-  return;
-}
-
-// 🔒 Block if loan not submitted
-if (!hasAppliedLoan) {
-  window.location.href = "loan-form.html";
   return;
 }
 
@@ -38,7 +28,7 @@ const sendChatBtn = document.getElementById("sendAdminMessage");
 let currentWithdrawal = null;
 let pollingInterval = null;
 
-/* ================= API ================= */
+/* ================= SAFE API ================= */
 
 async function api(url, options = {}) {
   try {
@@ -50,17 +40,18 @@ async function api(url, options = {}) {
       ...options
     });
 
-    // 🔒 Auto logout if token invalid
-    if (res.status === 401 || res.status === 403) {
+    if (res.status === 401) {
+      alert("Session expired. Please login again.");
       localStorage.removeItem("token");
       window.location.href = "signin.html";
-      return {};
+      return null;
     }
 
     return await res.json();
+
   } catch (err) {
     console.error("API Error:", err);
-    return {};
+    return null;
   }
 }
 
@@ -71,13 +62,11 @@ if (withdrawBtn) {
 
     const data = await api("/api/withdraw", {
       method: "POST",
-      body: JSON.stringify({
-        amount: 1000
-      })
+      body: JSON.stringify({ amount: 1000 })
     });
 
     if (!data || !data.withdrawal) {
-      alert(data.message || "Withdrawal failed.");
+      alert(data?.message || "Withdrawal failed.");
       return;
     }
 
@@ -95,18 +84,15 @@ if (withdrawBtn) {
   });
 }
 
-/* ================= AUTO POLLING ================= */
+/* ================= POLLING ================= */
 
-function startPolling() {
+function startPolling(){
 
   if (pollingInterval) clearInterval(pollingInterval);
 
   pollingInterval = setInterval(async () => {
 
-    if (!currentWithdrawal) return;
-
     const data = await api("/api/withdraw");
-
     if (!data || !data.withdrawal) return;
 
     const status = data.withdrawal.status;
@@ -117,10 +103,7 @@ function startPolling() {
 
     if (status === "completed") {
       animateProgress(100);
-      showModal(
-        "Withdrawal Completed",
-        "Funds released successfully."
-      );
+      showModal("Withdrawal Completed", "Funds released successfully.");
       clearInterval(pollingInterval);
     }
 
@@ -135,17 +118,13 @@ function startPolling() {
 /* ================= PROGRESS ================= */
 
 function animateProgress(target){
-
   if (!progressBar) return;
-
-  progressBar.classList.add("progress-pulse");
 
   let current = parseInt(progressBar.style.width) || 0;
 
   const interval = setInterval(()=>{
     if(current >= target){
       clearInterval(interval);
-      progressBar.classList.remove("progress-pulse");
     } else {
       current++;
       progressBar.style.width = current + "%";
@@ -167,7 +146,6 @@ function showModal(title, msg){
 /* ================= REJECTION ================= */
 
 function showRejection(reason){
-
   rejectionBox.innerHTML = `
     <div class="rejection-box">
       <strong>Withdrawal Rejected:</strong><br/>
@@ -183,7 +161,7 @@ function showRejection(reason){
     .addEventListener("click", openChat);
 }
 
-/* ================= CHAT SYSTEM ================= */
+/* ================= CHAT ================= */
 
 function openChat(){
   if (!chatModal) return;
@@ -193,7 +171,6 @@ function openChat(){
 
 async function loadChat(){
   const messages = await api("/api/support-messages");
-
   if(!messages || !Array.isArray(messages)) return;
 
   chatMessages.innerHTML = messages.map(m=>`
@@ -207,7 +184,6 @@ async function loadChat(){
 
 if (sendChatBtn) {
   sendChatBtn.addEventListener("click", async ()=>{
-
     const msg = chatInput.value.trim();
     if(!msg) return;
 
@@ -224,26 +200,140 @@ if (sendChatBtn) {
   });
 }
 
-/* ================= LOAD DASHBOARD ================= */
+/* ================= INIT ================= */
 
 (async function init(){
 
   const data = await api("/api/dashboard");
+  if (!data) return;
 
-  if (!data || !data.balances) return;
+  /* ===== BALANCES ===== */
+  if (data.balances) {
+    document.getElementById("availableBox").innerText =
+      "$" + (data.balances.available || 0);
 
-  document.getElementById("availableBox")
-    .innerText = "$" + (data.balances.available || 0);
+    document.getElementById("depositedBox").innerText =
+      "$" + (data.balances.deposited || 0);
 
-  document.getElementById("depositedBox")
-    .innerText = "$" + (data.balances.deposited || 0);
+    document.getElementById("outstandingBox").innerText =
+      "$" + (data.balances.outstanding || 0);
 
-  document.getElementById("outstandingBox")
-    .innerText = "$" + (data.balances.outstanding || 0);
+    document.getElementById("withdrawnBox").innerText =
+      "$" + (data.balances.withdrawn || 0);
+  }
 
-  document.getElementById("withdrawnBox")
-    .innerText = "$" + (data.balances.withdrawn || 0);
+  /* ===== LOANS ===== */
+  const loanContainer = document.getElementById("loanContainer");
+
+  if (loanContainer && data.loans && data.loans.length > 0) {
+
+    loanContainer.innerHTML = data.loans.map(loan => {
+
+      const statusColor =
+        loan.status === "approved" ? "#16a34a" :
+        loan.status === "rejected" ? "#dc2626" :
+        loan.status === "pending" ? "#f59e0b" :
+        "#3b82f6";
+
+      return `
+        <div class="loan-card" style="
+          background:#0f172a;
+          padding:20px;
+          border-radius:10px;
+          margin-bottom:15px;
+          border-left:5px solid ${statusColor};
+        ">
+
+          <h3 style="margin-bottom:8px;">
+            ${loan.loanType || "Loan Application"}
+          </h3>
+
+          <p><strong>Amount:</strong> $${loan.amount}</p>
+
+          <p><strong>Status:</strong>
+            <span style="color:${statusColor}; font-weight:bold;">
+              ${loan.status.toUpperCase()}
+            </span>
+          </p>
+
+          <button 
+            class="btn"
+            onclick='window.openLoanDetails(${JSON.stringify(loan)})'
+            style="margin-top:10px;"
+          >
+            View Details
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+  } else if (loanContainer) {
+
+    loanContainer.innerHTML = `
+      <div style="padding:15px;background:#1e293b;border-radius:8px;">
+        No loan applications found.
+      </div>
+    `;
+  }
 
 })();
+
+/* ================= LOAN DETAILS ================= */
+
+window.openLoanDetails = function(loan){
+
+  const modal = document.getElementById("loanDetailsModal");
+  const timeline = document.getElementById("loanTimeline");
+  const notes = document.getElementById("loanAdminNotes");
+  const title = document.getElementById("loanModalTitle");
+
+  title.innerText = (loan.loanType || "Loan") + " - $" + loan.amount;
+
+  const steps = ["pending","review","approved"];
+  const rejectedSteps = ["pending","review","rejected"];
+  const activeSteps =
+    loan.status === "rejected" ? rejectedSteps : steps;
+
+  timeline.innerHTML = activeSteps.map(step => {
+
+    const isActive =
+      activeSteps.indexOf(step) <= activeSteps.indexOf(loan.status);
+
+    const color = step === "rejected" ? "#dc2626" : "#16a34a";
+
+    return `
+      <div style="margin-bottom:10px;">
+        <span style="
+          display:inline-block;
+          width:12px;
+          height:12px;
+          border-radius:50%;
+          margin-right:8px;
+          background:${isActive ? color : "#334155"};
+        "></span>
+
+        <strong style="
+          color:${isActive ? color : "#94a3b8"};
+        ">
+          ${step.toUpperCase()}
+        </strong>
+      </div>
+    `;
+  }).join("");
+
+  notes.innerHTML = `
+    <strong>Admin Notes:</strong><br/>
+    ${loan.adminNotes || "No notes provided yet."}
+  `;
+
+  modal.classList.remove("hidden");
+};
+
+window.closeLoanModal = function(){
+  document.getElementById("loanDetailsModal")
+    .classList.add("hidden");
+};
 
 })();
