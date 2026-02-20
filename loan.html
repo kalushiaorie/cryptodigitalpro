@@ -176,12 +176,39 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
     CryptoDigitalPro
   </div>
 
-  <!-- ✅ Home + Logout added -->
-  <div style="display:flex;gap:12px;align-items:center;">
+  <!-- Home + Dashboard + Logout -->
+  <div style="display:flex;gap:12px;align-items:center;position:relative;">
+    
     <a class="btn-primary" href="index.html">Home</a>
+
+    <!-- ✅ DASHBOARD WITH BADGE -->
+    <div style="position:relative;">
+      <a class="btn-primary" href="dashboard.html" id="dashboardBtn">
+        Dashboard
+      </a>
+      <span id="dashboardBadge"
+            style="
+              display:none;
+              position:absolute;
+              top:-6px;
+              right:-6px;
+              background:#ff3b3b;
+              color:#fff;
+              font-size:11px;
+              font-weight:700;
+              padding:3px 6px;
+              border-radius:50px;
+              min-width:18px;
+              text-align:center;
+              box-shadow:0 0 8px rgba(255,0,0,0.6);
+            ">
+      </span>
+    </div>
+
     <button onclick="logout()" class="btn-primary" style="background:#7f1d1d;color:#fff;">
       Sign Out
     </button>
+
   </div>
 </header>
 
@@ -632,7 +659,7 @@ const resp = await fetch('https://cryptodigitalpro-api.onrender.com/api/loans', 
         }
         const body = await resp.json();
         alert('Application submitted — ID: ' + (body.id || 'unknown'));
-        window.location.href = '/loan-user-dashboard.html';
+        window.location.href = 'dashboard.html';
       } catch(err) {
         console.error('submit failed', err);
         alert('Submission failed: ' + (err.message || err));
@@ -658,6 +685,44 @@ function logout(){
   localStorage.removeItem("refreshToken");
   window.location.href = "signin.html";
 }
+</script>
+<script>
+async function loadNotificationBadge(){
+  try{
+    const token = localStorage.getItem("token");
+    if(!token) return;
+
+    const res = await fetch("https://cryptodigitalpro-api.onrender.com/api/dashboard",{
+      headers:{
+        "Authorization":"Bearer " + token
+      }
+    });
+
+    if(!res.ok) return;
+
+    const data = await res.json();
+
+    if(!data.notifications) return;
+
+    // Count unread notifications
+    const unread = data.notifications.filter(n => !n.read).length;
+
+    const badge = document.getElementById("dashboardBadge");
+
+    if(unread > 0){
+      badge.style.display = "inline-block";
+      badge.textContent = unread > 9 ? "9+" : unread;
+    }else{
+      badge.style.display = "none";
+    }
+
+  }catch(err){
+    console.warn("Notification badge failed:", err);
+  }
+}
+
+// Load on page ready
+document.addEventListener("DOMContentLoaded", loadNotificationBadge);
 </script>
 </body>
 </html>
