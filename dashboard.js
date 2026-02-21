@@ -4,10 +4,33 @@
 
 const API = "https://api.cryptodigitalpro.com";
 const token = localStorage.getItem("token");
+const userId = localStorage.getItem("userId");
 
 if (!token) {
   window.location.href = "signin.html";
   return;
+}
+
+/* ================= REALTIME SOCKET ================= */
+
+let socket = null;
+
+if (window.io) {
+  socket = io(API, { transports:["websocket","polling"] });
+
+  socket.on("connect", ()=>{
+    if(userId) socket.emit("register", userId);
+  });
+
+  socket.on("loan_update", data=>{
+    addNotification(data.message || "Loan update received");
+    refreshDashboard();
+  });
+
+  socket.on("withdraw_update", data=>{
+    addNotification(data.message || "Withdrawal update received");
+    refreshDashboard();
+  });
 }
 
 /* ================= ELEMENTS ================= */
@@ -25,8 +48,48 @@ const chatMessages = document.getElementById("chatMessages");
 const chatInput = document.getElementById("adminMessageText");
 const sendChatBtn = document.getElementById("sendAdminMessage");
 
+const badge = document.getElementById("notifyCount");
+const notifyList = document.querySelector(".notify-list");
+const toastContainer = document.getElementById("toastContainer");
+
+let notifyCount = 0;
 let currentWithdrawal = null;
 let pollingInterval = null;
+
+/* ================= NOTIFICATIONS ================= */
+
+function addNotification(msg){
+
+  notifyCount++;
+  if(badge) badge.innerText = notifyCount;
+
+  if(notifyList){
+    const item=document.createElement("div");
+    item.style.padding="8px";
+    item.style.borderBottom="1px solid #1f2937";
+    item.innerText=msg;
+    notifyList.prepend(item);
+  }
+
+  if(toastContainer){
+    const toast=document.createElement("div");
+    toast.className="toast";
+    toast.innerText=msg;
+    toastContainer.appendChild(toast);
+    setTimeout(()=>toast.remove(),4000);
+  }
+}
+
+/* ================= LOGOUT ================= */
+
+const logoutBtn = document.getElementById("logoutBtn");
+if(logoutBtn){
+  logoutBtn.addEventListener("click",()=>{
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    window.location.href="signin.html";
+  });
+}
 
 /* ================= SAFE API ================= */
 
@@ -41,7 +104,6 @@ async function api(url, options = {}) {
       ...options
     });
 
-    // ✅ HANDLE SESSION EXPIRED
     if (res.status === 401) {
       alert("Session expired. Please login again.");
       localStorage.removeItem("token");
@@ -49,7 +111,6 @@ async function api(url, options = {}) {
       return null;
     }
 
-    // ✅ HANDLE NON JSON RESPONSES
     const contentType = res.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       console.error("API returned non JSON:", await res.text());
@@ -106,13 +167,11 @@ function startPolling(){
 
     const status = data.withdrawal.status;
 
-    if (status === "processing") {
-      animateProgress(70);
-    }
+    if (status === "processing") animateProgress(70);
 
     if (status === "completed") {
       animateProgress(100);
-      showModal("Withdrawal Completed", "Funds released successfully.");
+      showModal("Withdrawal Completed","Funds released successfully.");
       clearInterval(pollingInterval);
     }
 
@@ -144,7 +203,7 @@ function animateProgress(target){
 
 /* ================= MODAL ================= */
 
-function showModal(title, msg){
+function showModal(title,msg){
   if (!withdrawModal) return;
 
   modalTitle.innerText = title;
@@ -209,14 +268,13 @@ if (sendChatBtn) {
   });
 }
 
-/* ================= INIT ================= */
+/* ================= DASHBOARD LOAD ================= */
 
-(async function init(){
+async function loadDashboard(){
 
   const data = await api("/api/dashboard");
   if (!data) return;
 
-  /* ===== BALANCES ===== */
   if (data.balances) {
     document.getElementById("availableBox").innerText =
       "$" + (data.balances.available || 0);
@@ -231,7 +289,6 @@ if (sendChatBtn) {
       "$" + (data.balances.withdrawn || 0);
   }
 
-  /* ===== LOANS ===== */
   const loanContainer = document.getElementById("loanContainer");
 
   if (loanContainer && data.loans && data.loans.length > 0) {
@@ -252,42 +309,30 @@ if (sendChatBtn) {
           margin-bottom:15px;
           border-left:5px solid ${statusColor};
         ">
-
-          <h3 style="margin-bottom:8px;">
-            ${loan.loanType || "Loan Application"}
-          </h3>
-
+          <h3>${loan.loanType || "Loan Application"}</h3>
           <p><strong>Amount:</strong> $${loan.amount}</p>
-
           <p><strong>Status:</strong>
-            <span style="color:${statusColor}; font-weight:bold;">
+            <span style="color:${statusColor};font-weight:bold;">
               ${loan.status.toUpperCase()}
             </span>
           </p>
-
-          <button 
-            class="btn"
-            onclick='window.openLoanDetails(${JSON.stringify(loan)})'
-            style="margin-top:10px;"
-          >
+          <button class="btn"
+            onclick='window.openLoanDetails(${JSON.stringify(loan)})'>
             View Details
           </button>
-
         </div>
       `;
-
     }).join("");
 
   } else if (loanContainer) {
-
-    loanContainer.innerHTML = `
-      <div style="padding:15px;background:#1e293b;border-radius:8px;">
+    loanContainer.innerHTML =
+      `<div style="padding:15px;background:#1e293b;border-radius:8px;">
         No loan applications found.
-      </div>
-    `;
+      </div>`;
   }
+}
 
-})();
+window.refreshDashboard = loadDashboard;
 
 /* ================= LOAN DETAILS ================= */
 
@@ -323,9 +368,7 @@ window.openLoanDetails = function(loan){
           background:${isActive ? color : "#334155"};
         "></span>
 
-        <strong style="
-          color:${isActive ? color : "#94a3b8"};
-        ">
+        <strong style="color:${isActive ? color : "#94a3b8"};">
           ${step.toUpperCase()}
         </strong>
       </div>
@@ -344,5 +387,9 @@ window.closeLoanModal = function(){
   document.getElementById("loanDetailsModal")
     .classList.add("hidden");
 };
+
+/* ================= INIT ================= */
+
+loadDashboard();
 
 })();

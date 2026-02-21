@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+<style>
+body{font-family:sans-serif;background:#0b1320;color:white;padding:20px}
+.card{background:#121c2e;padding:15px;margin:10px;border-radius:10px}
+button{padding:6px 12px;margin:4px;border:none;border-radius:6px}
+.approve{background:#22c55e}
+.reject{background:#ef4444}
+</style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<h2>Users</h2>
+<div id="users"></div>
+
+<h2>Loans</h2>
+<div id="loans"></div>
+
+<h2>Withdrawals</h2>
+<div id="withdrawals"></div>
+
+<script>
+
+const API="https://api.cryptodigitalpro.com/api";
+const token=localStorage.getItem("token");
+
+async function api(url,method="GET",body){
+ const res=await fetch(API+url,{
+  method,
+  headers:{
+   "Content-Type":"application/json",
+   Authorization:"Bearer "+token
+  },
+  body:body?JSON.stringify(body):undefined
+ });
+ return res.json();
+}
+
+/* USERS */
+async function loadUsers(){
+ const users=await api("/admin/users");
+ document.getElementById("users").innerHTML=
+ users.map(u=>`
+ <div class="card">
+ ${u.email} — KYC: ${u.kyc_status}
+ <button class="approve" onclick="verify('${u._id}','approved')">Approve</button>
+ <button class="reject" onclick="verify('${u._id}','rejected')">Reject</button>
+ </div>
+ `).join("");
+}
+
+async function verify(id,status){
+ await api("/admin/verify/"+id,"PATCH",{status});
+ loadUsers();
+}
+
+/* LOANS */
+async function loadLoans(){
+ const list=await api("/admin/loans");
+ document.getElementById("loans").innerHTML=
+ list.map(l=>`
+ <div class="card">
+ ${l.userId.email} — $${l.amount} — ${l.status}
+ <button class="approve" onclick="loan('${l._id}','approved')">Approve</button>
+ <button class="reject" onclick="loan('${l._id}','rejected')">Reject</button>
+ </div>
+ `).join("");
+}
+
+async function loan(id,status){
+ await api("/admin/loan/"+id,"PATCH",{status});
+ loadLoans();
+}
+
+/* WITHDRAWALS */
+async function loadWithdrawals(){
+ const list=await api("/admin/withdrawals");
+ document.getElementById("withdrawals").innerHTML=
+ list.map(w=>`
+ <div class="card">
+ ${w.userId.email} — $${w.amount} — ${w.status}
+ <button class="approve" onclick="withdraw('${w._id}','approved')">Approve</button>
+ <button class="reject" onclick="withdraw('${w._id}','rejected')">Reject</button>
+ </div>
+ `).join("");
+}
+
+async function withdraw(id,status){
+ await api("/admin/withdraw/"+id,"PATCH",{status});
+ loadWithdrawals();
+}
+
+loadUsers();
+loadLoans();
+loadWithdrawals();
+
+</script>
+</body>
+</html>

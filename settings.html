@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Account Settings</title>
+<link rel="stylesheet" href="settings.css">
+</head>
+<body>
+
+<div class="settings-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>Settings</h2>
+    <button class="tab active" data-tab="profile">Profile</button>
+    <button class="tab" data-tab="security">Security</button>
+    <button class="tab" data-tab="verification">Verification</button>
+    <button class="tab" data-tab="documents">Documents</button>
+    <button class="tab" data-tab="support">Support</button>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- PROFILE -->
+    <section id="profile" class="panel active">
+      <h3>Profile</h3>
+
+      <input id="name" placeholder="Full Name">
+      <input id="email" placeholder="Email">
+      <input id="phone" placeholder="Phone">
+      <button onclick="saveProfile()">Save Profile</button>
+
+      <h4>Avatar</h4>
+      <input type="file" id="avatar">
+      <button onclick="uploadAvatar()">Upload Avatar</button>
+    </section>
+
+    <!-- SECURITY -->
+    <section id="security" class="panel">
+      <h3>Security</h3>
+
+      <input id="oldPass" type="password" placeholder="Old Password">
+      <input id="newPass" type="password" placeholder="New Password">
+      <button onclick="changePassword()">Change Password</button>
+
+      <hr>
+
+      <h4>Two-Factor Authentication</h4>
+      <button onclick="toggle2FA()">Enable / Disable 2FA</button>
+    </section>
+
+    <!-- VERIFICATION -->
+    <section id="verification" class="panel">
+      <h3>KYC Verification</h3>
+
+      <input type="file" id="idUpload">
+      <button onclick="uploadID()">Upload ID</button>
+
+      <input type="file" id="addressUpload">
+      <button onclick="uploadAddress()">Upload Proof of Address</button>
+    </section>
+
+    <!-- DOCUMENTS -->
+    <section id="documents" class="panel">
+      <h3>Your Documents</h3>
+      <div id="docList">Loading...</div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section id="support" class="panel">
+      <h3>Contact Support</h3>
+      <textarea id="supportMsg" placeholder="Type message..."></textarea>
+      <button onclick="sendSupport()">Send</button>
+    </section>
+
+  </main>
+</div>
+
+<script src="settings.js"></script>
+</body>
+</html>

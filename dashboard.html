@@ -84,6 +84,29 @@
   top: 30px;
 }
 
+/* toast notifications */
+.toast-container{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:9999;
+}
+
+.toast{
+  background:#111827;
+  color:#fff;
+  padding:12px 18px;
+  margin-top:10px;
+  border-radius:8px;
+  box-shadow:0 0 10px rgba(0,0,0,0.4);
+  animation:fadeIn .3s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
 </style>
 </head>
 
@@ -166,7 +189,6 @@
 
 <section class="grid">
 
-  <!-- SECOND LOAN SECTION (UNCHANGED, NOT REMOVED) -->
   <div class="card">
     <h3>My Loan Applications</h3>
     <div id="loanList" class="small">
@@ -288,16 +310,15 @@
   </div>
 </div>
 
+<!-- toast container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- SOCKET.IO -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<!-- MAIN LOGIC -->
 <script src="dashboard.js"></script>
 <script src="dark-lock.js"></script>
-
-<script>
-document.getElementById("logoutBtn").addEventListener("click", function(){
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
-  window.location.href = "signin.html";
-});
-</script>
 
 </body>
 </html>
