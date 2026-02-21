@@ -20,23 +20,16 @@
 <style>
 .hidden{display:none!important;}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000;}
-#withdrawProgress{transition:width .6s ease-in-out;font-weight:600;}
-.progress-pulse{animation:pulseGlow 1.5s infinite;}
-@keyframes pulseGlow{0%{opacity:1;}50%{opacity:.6;}100%{opacity:1;}}
-.rejection-box{margin-top:12px;padding:12px;background:#7f1d1d;border-radius:8px;font-size:13px;}
-.chat-container{max-height:250px;overflow-y:auto;background:#0f172a;padding:10px;border-radius:8px;margin-bottom:10px;font-size:13px;}
-.chat-user{color:#4ade80;}
-.chat-admin{color:#fbbf24;}
-.notify-dropdown{position:absolute;background:#111827;border-radius:8px;width:260px;padding:10px;right:0;top:30px;}
+.settings-box{background:#0f172a;padding:25px;border-radius:12px;width:600px;max-width:95%;color:#fff;max-height:90vh;overflow:auto;}
+.settings-box h3{margin-top:20px;margin-bottom:10px;border-bottom:1px solid #1e293b;padding-bottom:5px;}
+.settings-box input{width:100%;padding:10px;margin-top:8px;margin-bottom:10px;background:#020617;border:1px solid #1e293b;color:#fff;border-radius:6px;}
+.settings-box button{margin-top:8px}
 .toast-container{position:fixed;bottom:20px;right:20px;z-index:9999;}
-.toast{background:#111827;color:#fff;padding:12px 18px;margin-top:10px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.4);animation:fadeIn .3s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.toast{background:#111827;color:#fff;padding:12px 18px;margin-top:10px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.4);}
 </style>
 </head>
 
 <body>
-
-<h1 style="color:red">TEST VERSION</h1>
 
 <div class="container">
 
@@ -51,12 +44,10 @@
     <button id="adminBtn" class="btn">Admin Messages</button>
     <button id="verifyBtn" class="btn">Verify Account</button>
     <button id="uploadBtn" class="btn">Upload Documents</button>
+    <button id="settingsBtn" class="btn">Settings</button>
 
     <div class="notify-wrapper" style="position:relative;">
-      <span class="notify-bell">
-        🔔 <span id="notifyCount" class="badge">0</span>
-      </span>
-
+      <span class="notify-bell">🔔 <span id="notifyCount" class="badge">0</span></span>
       <div class="notify-dropdown hidden">
         <div class="notify-header">Notifications</div>
         <div class="notify-list"></div>
@@ -71,30 +62,15 @@
 
 <section class="balance-wrap premium">
 
-  <div class="balance-box premium-card">
-    <div class="label">Outstanding</div>
-    <div id="outstandingBox" class="value">$0.00</div>
-  </div>
+<div class="balance-box premium-card"><div class="label">Outstanding</div><div id="outstandingBox" class="value">$0.00</div></div>
+<div class="balance-box premium-card"><div class="label">Deposited</div><div id="depositedBox" class="value">$0.00</div></div>
+<div class="balance-box premium-card"><div class="label">Withdrawn</div><div id="withdrawnBox" class="value">$0.00</div></div>
+<div class="balance-box premium-card highlight"><div class="label">Available to Withdraw</div><div id="availableBox" class="value">$0.00</div></div>
 
-  <div class="balance-box premium-card">
-    <div class="label">Deposited</div>
-    <div id="depositedBox" class="value">$0.00</div>
-  </div>
-
-  <div class="balance-box premium-card">
-    <div class="label">Withdrawn</div>
-    <div id="withdrawnBox" class="value">$0.00</div>
-  </div>
-
-  <div class="balance-box premium-card highlight">
-    <div class="label">Available to Withdraw</div>
-    <div id="availableBox" class="value">$0.00</div>
-  </div>
-  
-  <div class="loan-section">
-    <h2>Your Loan Applications</h2>
-    <div id="loanContainer"></div>
-  </div>
+<div class="loan-section">
+<h2>Your Loan Applications</h2>
+<div id="loanContainer"></div>
+</div>
 
 </section>
 
@@ -109,7 +85,6 @@
 
 <div class="card">
 <h3>Select a loan</h3>
-
 <div class="actions">
 <button id="withdrawBtn" class="btn">Withdraw</button>
 <button class="btn dark">Repay</button>
@@ -139,58 +114,65 @@
 
 </div>
 
-<!-- MODALS -->
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal hidden">
+<div class="settings-box">
+
+<h2>Account Settings</h2>
+
+<h3>Profile</h3>
+<input id="profileName" placeholder="Full Name">
+<input id="profileEmail" placeholder="Email">
+<button id="saveProfileBtn" class="btn">Save Profile</button>
+
+<h3>Change Password</h3>
+<input id="oldPass" type="password" placeholder="Current Password">
+<input id="newPass" type="password" placeholder="New Password">
+<button id="changePassBtn" class="btn">Update Password</button>
+
+<h3>Avatar Upload</h3>
+<input type="file" id="avatarInput">
+<button id="uploadAvatarBtn" class="btn">Upload Avatar</button>
+
+<h3>Two-Factor Authentication</h3>
+<button id="toggle2faBtn" class="btn">Enable / Disable 2FA</button>
+
+<h3>Loan Documents</h3>
+<button id="loadDocsBtn" class="btn">View Documents</button>
+<div id="docsList"></div>
+
+<h3>Support Ticket</h3>
+<textarea id="ticketMsg" style="width:100%;height:80px;"></textarea>
+<button id="sendTicketBtn" class="btn">Send Ticket</button>
+
+<br><br>
+<button onclick="document.getElementById('settingsModal').classList.add('hidden')" class="btn dark">Close</button>
+
+</div>
+</div>
+
+
+<!-- EXISTING MODALS -->
 <div id="withdrawModal" class="modal hidden"><div class="card"><h3 id="modalTitle"></h3><p id="modalMessage"></p></div></div>
 
-<div id="messageModal" class="modal hidden">
-<div class="card">
-<h3>Admin Support Chat</h3>
-<div id="chatMessages" class="chat-container"></div>
-<textarea id="adminMessageText" style="width:100%;height:80px;margin-bottom:10px;"></textarea>
-<button id="sendAdminMessage" class="btn">Send Message</button>
-<button class="btn dark" onclick="document.getElementById('messageModal').classList.add('hidden')">Cancel</button>
-</div>
-</div>
+<div id="messageModal" class="modal hidden"><div class="card"><h3>Admin Support Chat</h3><div id="chatMessages" class="chat-container"></div><textarea id="adminMessageText" style="width:100%;height:80px;margin-bottom:10px;"></textarea><button id="sendAdminMessage" class="btn">Send Message</button><button class="btn dark" onclick="document.getElementById('messageModal').classList.add('hidden')">Cancel</button></div></div>
 
-<div id="adminModal" class="modal hidden">
-<div class="card">
-<h3>Admin Messages</h3>
-<div id="adminMessages">No messages.</div>
-<button class="btn" onclick="document.getElementById('adminModal').classList.add('hidden')">Close</button>
-</div>
-</div>
+<div id="adminModal" class="modal hidden"><div class="card"><h3>Admin Messages</h3><div id="adminMessages">No messages.</div><button class="btn" onclick="document.getElementById('adminModal').classList.add('hidden')">Close</button></div></div>
 
-<div id="verifyModal" class="modal hidden">
-<div class="card">
-<h3>Verify Identity</h3>
-<input type="file"/>
-<button class="btn">Submit</button>
-<button class="btn dark" onclick="document.getElementById('verifyModal').classList.add('hidden')">Cancel</button>
-</div>
-</div>
+<div id="verifyModal" class="modal hidden"><div class="card"><h3>Verify Identity</h3><input type="file"/><button class="btn">Submit</button><button class="btn dark" onclick="document.getElementById('verifyModal').classList.add('hidden')">Cancel</button></div></div>
 
-<div id="uploadModal" class="modal hidden">
-<div class="card">
-<h3>Upload Documents</h3>
-<input type="file"/>
-<button class="btn">Upload</button>
-<button class="btn dark" onclick="document.getElementById('uploadModal').classList.add('hidden')">Cancel</button>
-</div>
-</div>
+<div id="uploadModal" class="modal hidden"><div class="card"><h3>Upload Documents</h3><input type="file"/><button class="btn">Upload</button><button class="btn dark" onclick="document.getElementById('uploadModal').classList.add('hidden')">Cancel</button></div></div>
 
-<div id="loanDetailsModal" class="modal hidden">
-<div style="background:#0f172a;width:500px;max-width:95%;padding:25px;border-radius:12px;color:#fff;">
-<h2 id="loanModalTitle">Loan Details</h2>
-<div id="loanTimeline" style="margin:20px 0;"></div>
-<div id="loanAdminNotes" style="background:#1e293b;padding:12px;border-radius:8px;margin-top:15px;"></div>
-<button onclick="closeLoanModal()" class="btn" style="margin-top:20px;">Close</button>
-</div>
-</div>
+<div id="loanDetailsModal" class="modal hidden"><div style="background:#0f172a;width:500px;max-width:95%;padding:25px;border-radius:12px;color:#fff;"><h2 id="loanModalTitle">Loan Details</h2><div id="loanTimeline" style="margin:20px 0;"></div><div id="loanAdminNotes" style="background:#1e293b;padding:12px;border-radius:8px;margin-top:15px;"></div><button onclick="closeLoanModal()" class="btn" style="margin-top:20px;">Close</button></div></div>
 
 <div id="toastContainer" class="toast-container"></div>
 
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="dashboard.js"></script>
+<script>
+document.getElementById("settingsBtn").onclick=()=>document.getElementById("settingsModal").classList.remove("hidden");
+</script>
 <script src="dark-lock.js"></script>
 
 </body>
