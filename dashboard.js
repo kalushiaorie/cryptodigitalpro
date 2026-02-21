@@ -32,6 +32,7 @@ let pollingInterval = null;
 
 async function api(url, options = {}) {
   try {
+
     const res = await fetch(API + url, {
       headers: {
         "Authorization": "Bearer " + token,
@@ -40,10 +41,18 @@ async function api(url, options = {}) {
       ...options
     });
 
+    // ✅ HANDLE SESSION EXPIRED
     if (res.status === 401) {
       alert("Session expired. Please login again.");
       localStorage.removeItem("token");
       window.location.href = "signin.html";
+      return null;
+    }
+
+    // ✅ HANDLE NON JSON RESPONSES
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("API returned non JSON:", await res.text());
       return null;
     }
 
