@@ -1,8 +1,6 @@
-<!-- Upgraded Crypto Loan Marketplace Page with Professional Hero Section -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <!-- ✅ AUTH GUARD (ADDED – DOES NOT REMOVE ANYTHING) -->
 <script>
 (function(){
@@ -13,7 +11,6 @@
   }
 })();
 </script>
-<!-- END AUTH GUARD -->
 
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -23,6 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 :root{--bg:#050505;--panel:#0f0f17;--text:#f5f5f7;--muted:#9aa4b2;--gold1:#caa64a;--gold2:#f0d78a;--border:rgba(255,255,255,0.06);--radius:14px;--shadow:0 10px 40px rgba(0,0,0,0.55)}
 *{box-sizing:border-box}
@@ -160,14 +158,199 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
   transform:scale(1.03);
 }
 
+/* PRO NAV */
+.pro-nav{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.pro-nav a{
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  color:#ddd;
+  transition:.25s;
+  position:relative;
+}
+
+.pro-nav a::after{
+  content:"";
+  position:absolute;
+  bottom:-4px;
+  left:0;
+  width:0%;
+  height:2px;
+  background:linear-gradient(90deg,#caa64a,#f0d78a);
+  transition:.25s;
+}
+
+.pro-nav a:hover{
+  color:#fff;
+}
+
+.pro-nav a:hover::after{
+  width:100%;
+}
+
+/* mobile nav */
+@media(max-width:900px){
+  .pro-nav{
+    justify-content:center;
+    gap:14px;
+  }
+}
+
+/* =========================
+   PROFESSIONAL RESPONSIVE FIX
+   ========================= */
+
+/* Prevent horizontal scroll */
+html,body{
+  overflow-x:hidden;
+}
+
+/* Header mobile */
+@media(max-width:900px){
+  header{
+    flex-direction:column;
+    gap:12px;
+    text-align:center;
+  }
+
+  header .brand{
+    justify-content:center;
+  }
+}
+
+/* Hero responsive */
+@media(max-width:900px){
+  .hero > div{
+    flex-direction:column;
+    text-align:center;
+    padding:30px 18px !important;
+  }
+
+  .hero-content{
+    max-width:100%;
+  }
+
+  .hero h1{
+    font-size:30px !important;
+  }
+
+  .hero p{
+    font-size:15px;
+    margin:auto;
+  }
+}
+
+/* Hero image scaling */
+@media(max-width:600px){
+  .hero img{
+    max-width:260px !important;
+  }
+}
+
+/* Loan cards mobile */
+@media(max-width:640px){
+
+  .loan-grid{
+    gap:14px;
+  }
+
+  .loan-card{
+    border-radius:16px;
+  }
+
+  .loan-body{
+    padding:16px;
+  }
+
+  .loan-card h3{
+    font-size:16px;
+  }
+
+  .loan-meta{
+    font-size:12px;
+  }
+
+  .loan-actions .btn-primary{
+    width:100%;
+    text-align:center;
+  }
+}
+
+/* Tablet layout polish */
+@media(min-width:641px) and (max-width:1024px){
+
+  main{
+    padding:16px;
+  }
+
+  .hero h1{
+    font-size:36px;
+  }
+
+  .loan-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* Large screens */
+@media(min-width:1400px){
+  main{
+    max-width:1350px;
+  }
+}
+
+/* Footer mobile polish */
+@media(max-width:600px){
+
+  .cdp-footer{
+    padding:50px 16px 25px;
+  }
+
+  .cdp-footer-company h2{
+    font-size:22px;
+  }
+
+  .cdp-footer-company p{
+    font-size:13px;
+  }
+
+  .social-icons a{
+    font-size:20px;
+  }
+}
+
+/* Fix floating widget overlap */
+[data-cdp-user-widget]{
+  max-width:90vw;
+}
+
+/* Button tap optimization */
+button,
+.btn-primary,
+.hero-secondary{
+  touch-action:manipulation;
+}
+
+/* Improve tap spacing */
+a,button{
+  min-height:42px;
+}
+
+/* Smooth resize animation */
+.loan-card,
+.hero,
+.card{
+  transition:all .25s ease;
+}
 </style>
-<!-- Common web3 includes (added by assistant) -->
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.8.0/dist/ethers.umd.min.js"></script>
-<script src="https://unpkg.com/web3modal@1.9.8/dist/index.js"></script>
-<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-<script src="/js/web3-init.js"></script>
-<!-- End common web3 includes -->
 </head>
+
 <body>
 
 <header>
@@ -176,6 +359,15 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
     CryptoDigitalPro
   </div>
 
+<!-- PRO NAV MENU -->
+<nav class="pro-nav">
+  <a href="loan.html">Loans</a>
+  <a href="services.html">Services</a>
+  <a href="agreements.html">Agreements</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="policy.html">Policy</a>
+</nav>
   <!-- Home + Dashboard + Logout -->
   <div style="display:flex;gap:12px;align-items:center;position:relative;">
     
@@ -578,151 +770,12 @@ h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-backgr
       width: 90%;
     }
   }
+  
+  /* GLASS PANELS */
+.card,
+.loan-card{
+ backdrop-filter:blur(10px);
+}
 </style>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
-</main>
-
-<!-- Unified wallet + submit integration (added by assistant) -->
-<button id="connectWalletBtn" style="display:none">Connect wallet</button>
-<span id="connectedAddress" style="display:none"></span>
-
-<script>
-(async function () {
-  try { if(window.WalletEngine && WalletEngine.tryRestore) await WalletEngine.tryRestore(); } catch (e) { console.warn('wallet restore failed', e); }
-
-  const connectBtn = document.getElementById('connectWalletBtn');
-  const formEl = document.getElementById('loanForm') || document.querySelector('form');
-
-  function showConnected(address){
-    if(!address) return;
-    let el = document.getElementById('connectedAddress');
-    if(!el){
-      el = document.createElement('span'); el.id='connectedAddress';
-      document.body.appendChild(el);
-    }
-    el.textContent = address;
-  }
-
-  if(connectBtn){
-    connectBtn.addEventListener('click', async (ev) => {
-      ev.preventDefault();
-      try {
-        if(!window.WalletEngine) throw new Error('WalletEngine missing');
-        const res = await WalletEngine.connect();
-        showConnected(res && res.account ? res.account : WalletEngine.getAccount());
-      } catch (err) {
-        console.error('connect err', err);
-        alert('Wallet connect failed: ' + (err.message || err));
-      }
-    });
-  }
-
-  if(formEl){
-    formEl.addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      const fd = new FormData(formEl);
-
-      const amount = fd.get('amount') || fd.get('loan_amount') || '';
-      if(!amount || Number(amount) <= 0){
-        alert('Enter a valid amount.');
-        return;
-      }
-
-      const connected = (window.WalletEngine && WalletEngine.getAccount && WalletEngine.getAccount()) || null;
-      if(!connected){
-        const wants = confirm('Wallet not connected. Connect now?');
-        if(wants){
-          try { await WalletEngine.connect(); } catch(e){ alert('Could not connect wallet'); return; }
-        } else {
-          alert('Wallet required to proceed.');
-          return;
-        }
-      }
-
-      try {
-        const token = localStorage.getItem("token");
-
-const resp = await fetch('https://cryptodigitalpro-api.onrender.com/api/loans', {
-  method: 'POST',
-  body: fd,
-  headers: {
-    "Authorization": "Bearer " + token
-  }
-});
-        if(!resp.ok){
-          const text = await resp.text();
-          throw new Error('Server error: ' + resp.status + ' ' + text);
-        }
-        const body = await resp.json();
-        alert('Application submitted — ID: ' + (body.id || 'unknown'));
-        window.location.href = 'dashboard.html';
-      } catch(err) {
-        console.error('submit failed', err);
-        alert('Submission failed: ' + (err.message || err));
-      }
-    });
-  }
-
-  // Disable demo sync if exists
-  try {
-    if(window.autoSyncInterval) { clearInterval(window.autoSyncInterval); window.autoSyncInterval = null; }
-    if(window.autoSync) window.autoSync = undefined;
-    if(window.saveLocal) window.saveLocal = undefined;
-    if(window.connectWalletNative) window.connectWalletNative = undefined;
-  } catch(e){}
-})();
-</script>
-<!-- End unified snippet -->
-
-<script src="dark-lock.js"></script>
-<script>
-function logout(){
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
-  window.location.href = "signin.html";
-}
-</script>
-<script>
-async function loadNotificationBadge(){
-  try{
-    const token = localStorage.getItem("token");
-    if(!token) return;
-
-    const res = await fetch("https://cryptodigitalpro-api.onrender.com/api/dashboard",{
-      headers:{
-        "Authorization":"Bearer " + token
-      }
-    });
-
-    if(!res.ok) return;
-
-    const data = await res.json();
-
-    if(!data.notifications) return;
-
-    // Count unread notifications
-    const unread = data.notifications.filter(n => !n.read).length;
-
-    const badge = document.getElementById("dashboardBadge");
-
-    if(unread > 0){
-      badge.style.display = "inline-block";
-      badge.textContent = unread > 9 ? "9+" : unread;
-    }else{
-      badge.style.display = "none";
-    }
-
-  }catch(err){
-    console.warn("Notification badge failed:", err);
-  }
-}
-
-// Load on page ready
-document.addEventListener("DOMContentLoaded", loadNotificationBadge);
-</script>
 </body>
 </html>

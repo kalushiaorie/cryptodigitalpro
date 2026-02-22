@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat</title>
+  <style>
+    body { font-family: Arial; }
+    #chat { height: 300px; overflow-y: auto; border:1px solid #ccc; padding:10px; }
+    .me { text-align:right; }
+    .typing { color: gray; font-size: 12px; }
+    .online { color: green; }
+  </style>
+</head>
+<body>
+
+<h3>Simple WhatsApp Style Chat</h3>
+
+<div>
+  Your ID: <input id="myId" />
+  Chat With: <input id="targetId" />
+  <button onclick="joinChat()">Start Chat</button>
+</div>
+
+<p>Online Users: <span id="onlineUsers"></span></p>
+
+<div id="chat"></div>
+<div class="typing" id="typingIndicator" style="display:none;">
+  User is typing...
+</div>
+
+<input id="messageInput" placeholder="Type message..." />
+<input type="file" id="fileInput" />
+<button onclick="sendMessage()">Send</button>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+const socket = io();
+
+let currentUserId;
+let targetUserId;
+let typingTimeout;
+
+/* ========= JOIN ========= */
+function joinChat(){
+  currentUserId = document.getElementById("myId").value;
+  targetUserId = document.getElementById("targetId").value;
+
+  socket.emit("joinRoom", { userId: currentUserId });
+
+  socket.emit("loadHistory", {
+    sender: currentUserId,
+    receiver: targetUserId
+  });
+}
+
+/* ========= SEND MESSAGE ========= */
+async function sendMessage(){
+
+  const input = document.getElementById("messageInput");
+  const fileInput = document.getElementById("fileInput");
+
+  let fileUrl = null;
+
+  if(fileInput.files[0]){
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    const res = await fetch("/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    fileUrl = data.file;
+  }
+
+  socket.emit("privateMessage", {
+    sender: currentUserId,
+    receiver: targetUserId,
+    message: input.value,
+    file: fileUrl
+  });
+
+  input.value = "";
+  fileInput.value = "";
+}
+
+/* ========= RECEIVE MESSAGE ========= */
+socket.on("privateMessage", (msg) => {
+  displayMessage(msg);
+
+  if(msg.receiver === currentUserId && !msg.read){
+    socket.emit("mark_as_read", {
+      messageId: msg._id,
+      targetUserId: msg.sender
+    });
+  }
+});
+
+/* ========= DISPLAY ========= */
+function displayMessage(msg){
+  const chat = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = msg.sender === currentUserId ? "me" : "";
+
+  div.innerHTML = `
+    <div data-id="${msg._id}">
+      ${msg.message || ""}
+      ${msg.file ? `<br><a href="${msg.file}" target="_blank">📎 File</a>` : ""}
+      <span class="tick">${msg.read ? "✔✔" : "✔"}</span>
+    </div>
+  `;
+
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* ========= HISTORY ========= */
+socket.on("chatHistory", (messages) => {
+  document.getElementById("chat").innerHTML = "";
+  messages.forEach(displayMessage);
+});
+
+/* ========= TYPING ========= */
+document.getElementById("messageInput").addEventListener("input", () => {
+
+  socket.emit("typing", {
+    sender: currentUserId,
+    receiver: targetUserId
+  });
+
+  clearTimeout(typingTimeout);
+
+  typingTimeout = setTimeout(() => {
+    socket.emit("stop_typing", {
+      sender: currentUserId,
+      receiver: targetUserId
+    });
+  }, 1000);
+});
+
+socket.on("user_typing", () => {
+  document.getElementById("typingIndicator").style.display = "block";
+});
+
+socket.on("user_stop_typing", () => {
+  document.getElementById("typingIndicator").style.display = "none";
+});
+
+/* ========= READ RECEIPT ========= */
+socket.on("message_read", ({ messageId }) => {
+  const tick = document.querySelector(`[data-id="${messageId}"] .tick`);
+  if(tick){
+    tick.innerText = "✔✔";
+    tick.style.color = "blue";
+  }
+});
+
+/* ========= ONLINE USERS ========= */
+socket.on("onlineUsers", (users) => {
+  document.getElementById("onlineUsers").innerText = users.join(", ");
+});
+
+/* ========= ADMIN MESSAGE ========= */
+socket.on("admin_message", (msg) => {
+  displayMessage(msg);
+});
+</script>
+
+</body>
+</html>
