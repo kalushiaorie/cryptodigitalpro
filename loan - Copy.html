@@ -1,0 +1,1460 @@
+<!-- Upgraded Crypto Loan Marketplace Page with Professional Hero Section -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- ✅ AUTH GUARD (ADDED – DOES NOT REMOVE ANYTHING) -->
+<!-- END AUTH GUARD -->
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Crypto Loan Marketplace | CryptoDigitalPro</title>
+<link rel="icon" href="assets/logo.png" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#050505;--panel:#0f0f17;--text:#f5f5f7;--muted:#9aa4b2;--gold1:#caa64a;--gold2:#f0d78a;--border:rgba(255,255,255,0.06);--radius:14px;--shadow:0 10px 40px rgba(0,0,0,0.55)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,system-ui,Segoe UI,Arial;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;padding:14px 20px;background:rgba(0,0,0,0.72);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);z-index:99}
+header .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--gold1);font-size:18px}
+header .brand img{height:40px}
+.btn-primary{background:linear-gradient(90deg,var(--gold2),var(--gold1));padding:10px 18px;color:#021127;border-radius:10px;font-weight:700;text-decoration:none;display:inline-block}
+main{max-width:1200px;margin:auto;padding:20px}
+.card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;box-shadow:var(--shadow)}
+h1,h2{background:linear-gradient(90deg,var(--gold1),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:0}
+.loan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.loan-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.25) 100%);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  padding:0;
+  box-shadow:0 8px 28px rgba(0,0,0,0.55);
+  transition:.3s;
+  overflow:hidden;
+  backdrop-filter:blur(6px);
+}
+.loan-card:hover{
+  transform:translateY(-8px) scale(1.015);
+  box-shadow:0 20px 60px rgba(0,0,0,0.65);
+  border-color:var(--gold1);
+}
+.loan-banner{display:inline-block;background:linear-gradient(90deg,var(--gold1),var(--gold2));color:#021127;font-weight:700;font-size:12px;padding:6px 12px;border-radius:8px;margin:12px}
+.loan-img{width:100%;height:140px;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03)}
+.loan-body{
+  padding:20px;
+}
+.loan-icon{font-size:28px;margin-right:8px;color:var(--gold2)}
+.loan-card h3{display:flex;align-items:center;gap:8px;margin:8px 0}
+.loan-meta{color:var(--muted);font-size:13px;margin-bottom:12px}
+.loan-actions{display:flex;gap:8px}
+.footer{margin-top:40px;text-align:center;color:var(--muted);font-size:14px;padding:20px 10px;border-top:1px solid var(--border)}
+.fade-in{opacity:0;transform:translateY(20px);animation:fadeUp .6s forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.hero{
+  width:100%;
+  border-radius:var(--radius);
+  padding:80px 30px;
+  margin-bottom:30px;
+  background:url('assets/hero/classic-luxury-vault.jpg') center/cover no-repeat;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+}
+.hero-content{
+  position:relative;
+  z-index:3;
+  max-width:600px;
+}
+.hero h1{
+  font-size:46px;
+  line-height:1.2;
+  margin-bottom:16px;
+}
+.hero p{
+  font-size:17px;
+  color:#e5e5e5;
+  margin-bottom:24px;
+  max-width:520px;
+}
+.hero-buttons{display:flex;gap:14px;flex-wrap:wrap}
+.hero-secondary{
+  padding:10px 20px;
+  border-radius:10px;
+  font-weight:600;
+  background:#121212;
+  color:#f0d78a;
+  border:1px solid rgba(255,255,255,0.18);
+  text-decoration:none;
+}
+@media (max-width:640px){.loan-img{height:120px}.hero h1{font-size:32px}}
+/* Enhanced Loan Card Details */
+.loan-card h3 {
+  font-size:18px;
+  font-weight:700;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* Premium Icons */
+.loan-icon-premium {
+  width:26px;
+  height:26px;
+  filter:drop-shadow(0 0 4px rgba(240,215,138,0.45));
+}
+
+/* Banner Improvement */
+.loan-banner{
+  background:linear-gradient(90deg, var(--gold2), var(--gold1));
+  padding:7px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+  color:#021127;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* Apply Button Enhancement */
+.loan-actions .btn-primary{
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  padding:10px 22px;
+  border-radius:12px;
+  font-weight:700;
+  transition:.25s;
+}
+
+.loan-actions .btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(240,215,138,0.55);
+}
+
+/* Micro Hover Animation */
+.loan-img{
+  transition:0.35s ease;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.loan-card:hover .loan-img{
+  filter:brightness(1.08) saturate(1.1);
+  transform:scale(1.03);
+}
+
+/* PRO NAV */
+.pro-nav{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.pro-nav a{
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  color:#ddd;
+  transition:.25s;
+  position:relative;
+}
+
+.pro-nav a::after{
+  content:"";
+  position:absolute;
+  bottom:-4px;
+  left:0;
+  width:0%;
+  height:2px;
+  background:linear-gradient(90deg,#caa64a,#f0d78a);
+  transition:.25s;
+}
+
+.pro-nav a:hover{
+  color:#fff;
+}
+
+.pro-nav a:hover::after{
+  width:100%;
+}
+
+/* mobile nav */
+@media(max-width:900px){
+  .pro-nav{
+    justify-content:center;
+    gap:14px;
+  }
+}
+/* =========================
+   PROFESSIONAL RESPONSIVE FIX
+   ========================= */
+
+/* Prevent horizontal scroll */
+html,body{
+  overflow-x:hidden;
+}
+
+/* Header mobile */
+@media(max-width:900px){
+  header{
+    flex-direction:column;
+    gap:12px;
+    text-align:center;
+  }
+
+  header .brand{
+    justify-content:center;
+  }
+}
+
+/* Hero responsive */
+@media(max-width:900px){
+  .hero > div{
+    flex-direction:column;
+    text-align:center;
+    padding:30px 18px !important;
+  }
+
+  .hero-content{
+    max-width:100%;
+  }
+
+  .hero h1{
+    font-size:30px !important;
+  }
+
+  .hero p{
+    font-size:15px;
+    margin:auto;
+  }
+}
+
+/* Hero image scaling */
+@media(max-width:600px){
+  .hero img{
+    max-width:260px !important;
+  }
+}
+
+/* Loan cards mobile */
+@media(max-width:640px){
+
+  .loan-grid{
+    gap:14px;
+  }
+
+  .loan-card{
+    border-radius:16px;
+  }
+
+  .loan-body{
+    padding:16px;
+  }
+
+  .loan-card h3{
+    font-size:16px;
+  }
+
+  .loan-meta{
+    font-size:12px;
+  }
+
+  .loan-actions .btn-primary{
+    width:100%;
+    text-align:center;
+  }
+}
+
+/* Tablet layout polish */
+@media(min-width:641px) and (max-width:1024px){
+
+  main{
+    padding:16px;
+  }
+
+  .hero h1{
+    font-size:36px;
+  }
+
+  .loan-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* Large screens */
+@media(min-width:1400px){
+  main{
+    max-width:1350px;
+  }
+}
+
+/* Footer mobile polish */
+@media(max-width:600px){
+
+  .cdp-footer{
+    padding:50px 16px 25px;
+  }
+
+  .cdp-footer-company h2{
+    font-size:22px;
+  }
+
+  .cdp-footer-company p{
+    font-size:13px;
+  }
+
+  .social-icons a{
+    font-size:20px;
+  }
+}
+
+/* Fix floating widget overlap */
+[data-cdp-user-widget]{
+  max-width:90vw;
+}
+
+/* Button tap optimization */
+button,
+.btn-primary,
+.hero-secondary{
+  touch-action:manipulation;
+}
+
+/* Improve tap spacing */
+a,button{
+  min-height:42px;
+}
+
+/* Smooth resize animation */
+.loan-card,
+.hero,
+.card{
+  transition:all .25s ease;
+}
+</style>
+<!-- Common web3 includes (added by assistant) -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.8.0/dist/ethers.umd.min.js"></script>
+<script src="https://unpkg.com/web3modal@1.9.8/dist/index.js"></script>
+<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="/js/web3-init.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<!-- End common web3 includes -->
+</head>
+
+<!-- ================= LIVE CHAT WIDGET ================= -->
+<div id="liveChatWidget">
+
+  <div id="chatToggle">
+    💬
+    <span id="chatUnread">0</span>
+  </div>
+
+  <div id="chatBox">
+    <div id="chatHeader">
+      <span>Live Support</span>
+      <span id="chatClose">✖</span>
+    </div>
+
+    <div id="chatMessages"></div>
+
+    <div id="typingIndicator" style="display:none;">Admin typing...</div>
+
+    <div id="chatInputArea">
+      <input type="text" id="chatInput" placeholder="Type message..." />
+      <button id="sendMessage">➤</button>
+    </div>
+  </div>
+
+</div>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="assets/logo.png" alt="logo"/>
+    CryptoDigitalPro
+  </div>
+<!-- PRO NAV MENU -->
+<nav class="pro-nav">
+  <a href="loan.html">Loans</a>
+  <a href="services.html">Services</a>
+  <a href="agreements.html">Agreements</a>
+  <a href="terms.html">Terms</a>
+  <a href="privacy.html">Privacy</a>
+  <a href="policy.html">Policy</a>
+</nav>
+  <!-- Home + Dashboard + Logout -->
+  <div style="display:flex;gap:12px;align-items:center;position:relative;">
+    
+    <a class="btn-primary" href="index.html">Home</a>
+
+    <!-- ✅ DASHBOARD WITH BADGE -->
+    <div style="position:relative;">
+      <a class="btn-primary" href="dashboard.html" id="dashboardBtn">
+        Dashboard
+      </a>
+      <span id="dashboardBadge"
+            style="
+              display:none;
+              position:absolute;
+              top:-6px;
+              right:-6px;
+              background:#ff3b3b;
+              color:#fff;
+              font-size:11px;
+              font-weight:700;
+              padding:3px 6px;
+              border-radius:50px;
+              min-width:18px;
+              text-align:center;
+              box-shadow:0 0 8px rgba(255,0,0,0.6);
+            ">
+      </span>
+    </div>
+
+    <button onclick="logout()" class="btn-primary" style="background:#7f1d1d;color:#fff;">
+      Sign Out
+    </button>
+
+  </div>
+</header>
+
+<main>
+<!-- HERO SECTION ADDED -->
+<section class="hero fade-in" style="background:none;padding:40px 20px;margin-bottom:30px;">
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:30px;background:var(--panel);padding:40px;border-radius:var(--radius);box-shadow:var(--shadow);">
+
+    <!-- Left Content -->
+    <div class="hero-content" style="flex:1;min-width:260px;">
+
+      <h1 style="font-size:40px;margin-bottom:10px;">Premium Crypto Loans</h1>
+      <p style="font-size:16px;color:#ccc;max-width:460px;">
+        Compare secure loan options, get verified offers instantly, and access premium crypto-backed financial solutions.
+      </p>
+
+      <div style="display:flex;gap:14px;margin:20px 0;align-items:center;">
+        <img src="assets/crypto-icons/bitcoin-gold.png" alt="Bitcoin" style="height:42px;filter:drop-shadow(0 0 5px rgba(240,215,138,0.55));"/>
+        <img src="assets/crypto-icons/ethereum-gold.png" alt="Ethereum" style="height:38px;filter:drop-shadow(0 0 5px rgba(240,215,138,0.55));"/>
+        <img src="assets/crypto-icons/usdt-gold.png" alt="USDT" style="height:38px;filter:drop-shadow(0 0 5px rgba(240,215,138,0.55));"/>
+      </div>
+
+      <div class="hero-buttons" style="display:flex;gap:14px;flex-wrap:wrap;">
+        <a href="#loanTypes" class="btn-primary">Explore Loans</a>
+        	    <div id="userStatus"></div>
+<div data-cdp-user-widget style="position:absolute;top:16px;right:18px;z-index:999;"></div>
+    </div>
+    </div>
+
+    <!-- Right Hero Image -->
+    <div style="flex:1;min-width:260px;display:flex;justify-content:center;">
+      <img src="assets/hero/classic-loan-portrait.png" alt="Premium Loan Hero" style="width:100%;max-width:380px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.45);object-fit:cover;"/>
+    </div>
+
+  </div>
+</section>
+
+<section class="card" id="loanTypes">
+  <h2>Available Loan Types</h2>
+  <div class="loan-grid fade-in">
+
+      <!-- Instant -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/instant-loan.jpg" alt="Instant Crypto Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Instant Crypto Loan</h3>
+          <div class="loan-meta">Fast approval for verified users requiring immediate liquidity.</div>
+          <div class="loan-actions"><a class="btn-primary" href="instant-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+      <!-- Emergency -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/emergency-loan.jpg" alt="Emergency Bridge Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Emergency Bridge Loan</h3>
+          <div class="loan-meta">Short-term urgent funding to support users awaiting dispute outcomes or recovery processes.</div>
+          <div class="loan-actions"><a class="btn-primary" href="emergency-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+      <!-- Short-Term -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/shortterm-loan.jpg" alt="Short-Term Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Short-Term Loan</h3>
+          <div class="loan-meta">Flexible short-duration loans designed for quick settlement and minimal requirements.</div>
+          <div class="loan-actions"><a class="btn-primary" href="short-term-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+      <!-- Investigation -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/investigation-loan.jpg" alt="Investigation Waiting Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Investigation Waiting Loan</h3>
+          <div class="loan-meta">Helps clients during pending forensic investigations — ideal for long-case assessments.</div>
+          <div class="loan-actions"><a class="btn-primary" href="investigation-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+      <!-- Proof-of-Funds -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/business-loan.jpg" alt="Proof-of-Funds Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Business Loan</h3>
+          <div class="loan-meta">Verified proof-of-funds for exchanges, legal processes, and institutions.</div>
+          <div class="loan-actions"><a class="btn-primary" href="Business-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+      <!-- Staking Collateral -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/staking-loan.jpg" alt="Staking Collateral Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Staking Collateral Loan</h3>
+          <div class="loan-meta">Use staked or locked assets as backing for instant liquidity without unstaking.</div>
+          <div class="loan-actions"><a class="btn-primary" href="staking-collateral-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+      <!-- Long-Term -->
+      <div class="loan-card">
+        <img class="loan-img" src="assets/loans/longterm-loan.jpg" alt="Long-Term Support Loan" />
+        <div class="loan-body">
+          
+          <h3><span class="loan-icon"></span>Long-Term Support Loan</h3>
+          <div class="loan-meta">Extended repayment periods designed for ongoing cases requiring long-term support.</div>
+          <div class="loan-actions"><a class="btn-primary" href="long-term-support-loan-form.html">Apply</a></div>
+        </div>
+      </div>
+
+  </div>
+</section>
+
+<!-- 🔹 CryptoDigitalPro Footer -->
+<footer class="cdp-footer">
+  <div class="cdp-footer-top">
+    <div class="cdp-footer-company">
+      <h2>CryptoDigitalPro</h2>
+      <p>Since 2010 — Secure Crypto Recovery & Digital Finance Solutions</p>
+      <p>Contact: <a href="mailto:admin@cryptodigitalpro.com">admin@cryptodigitalpro.com</a> •
+        <a href="#">Privacy</a> • <a href="#">Terms</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <section class="cdp-newsletter">
+    <h3>Subscribe to our newsletter</h3>
+    <p>Get weekly updates on crypto recovery, loans, and airdrops directly to your inbox.</p>
+
+    <form id="newsletterForm" onsubmit="return false;">
+      <input type="email" placeholder="Your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+
+    <small>I have read the <a href="#">Privacy Policy</a> and understand that I can unsubscribe anytime.</small>
+  </section>
+
+  <!-- Main Footer Links -->
+  <div class="cdp-footer-main">
+    <div class="cdp-footer-logo">
+      <img src="assets/explorer_logod.png" alt="CryptoDigitalPro Logo" />
+      <p>The World’s Crypto Recovery & Airdrop Hub</p>
+      <div class="social-icons">
+        <a href="https://x.com/cryptodigitalpro" target="_blank">𝕏</a>
+        <a href="https://t.me/cryptodigitalpro25" target="_blank">💬</a>
+        <a href="#">📸</a>
+        <a href="#">▶️</a>
+      </div>
+    </div>
+
+    <div class="cdp-footer-col">
+      <h4>Products</h4>
+      <a href="airdrop.html">Airdrops</a>
+      <a href="loan.html">Crypto Loans</a>
+      <a href="crypto-storing-center.html">Recovery Services</a>
+      <a href="sub-dashboard.html">Success Stories</a>
+    </div>
+
+    <div class="cdp-footer-col">
+      <h4>Company</h4>
+      <a href="about.html">About us</a>
+      <a href="contact.html">Contact</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+    </div>
+
+    <div class="cdp-footer-col">
+      <h4>Resources</h4>
+      <a href="blog.html">Blog</a>
+      <a href="#">Reports</a>
+      <a href="#">FAQ</a>
+      <a href="#">Boosting</a>
+    </div>
+
+    <div class="cdp-footer-col">
+      <h4>Contributors</h4>
+      <a href="#">Submit a Case</a>
+      <a href="#">Advertise</a>
+    </div>
+  </div>
+
+  <div class="cdp-footer-bottom">
+    <p>© <span id="year"></span> CryptoDigitalPro — Secure Crypto Recovery</p>
+    <p>Powered by <a href="https://www.coingecko.com" target="_blank">CoinGecko</a> &amp; 
+       <a href="https://www.cryptocompare.com" target="_blank">CryptoCompare</a></p>
+  </div>
+</footer>
+
+<style>
+  .cdp-footer {
+    background: radial-gradient(ellipse at top, #0a0c10 0%, #05060a 100%);
+    color: #ccc;
+    padding: 60px 20px 30px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+  }
+
+  .cdp-footer-top {
+    margin-bottom: 40px;
+  }
+
+  .cdp-footer-company h2 {
+    color: #f0d78a;
+    margin: 0;
+  }
+
+  .cdp-footer-company p {
+    color: #aaa;
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  .cdp-footer-company a {
+    color: #82b7ff;
+    text-decoration: none;
+  }
+
+  /* Newsletter */
+  .cdp-newsletter {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    max-width: 700px;
+    margin: 0 auto 60px;
+    padding: 30px 20px;
+  }
+
+  .cdp-newsletter h3 {
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .cdp-newsletter p {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .cdp-newsletter form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .cdp-newsletter input {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: none;
+    background: #0f1116;
+    color: #fff;
+    width: 250px;
+    outline: none;
+  }
+
+  .cdp-newsletter button {
+    background: linear-gradient(90deg, #6b60ff, #9c6bff);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .cdp-newsletter button:hover {
+    opacity: 0.85;
+  }
+
+  .cdp-newsletter small {
+    display: block;
+    color: #888;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  /* Main Footer Columns */
+  .cdp-footer-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+  }
+
+  .cdp-footer-logo {
+    text-align: center;
+  }
+
+  .cdp-footer-logo img {
+    width: 80px;
+    margin-bottom: 10px;
+  }
+
+  .cdp-footer-logo p {
+    color: #9aa4b2;
+    font-size: 13px;
+  }
+
+  .social-icons a {
+    font-size: 18px;
+    margin: 0 6px;
+    color: #f0d78a;
+    text-decoration: none;
+  }
+
+  .cdp-footer-col h4 {
+    background: linear-gradient(90deg, #caa64a, #f0d78a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+
+  .cdp-footer-col a {
+    display: block;
+    color: #bbb;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .cdp-footer-col a:hover {
+    color: #f0d78a;
+  }
+
+  .cdp-footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 20px;
+    padding-top: 20px;
+    font-size: 13px;
+    color: #aaa;
+  }
+
+  .cdp-footer-bottom a {
+    color: #6b9eff;
+    text-decoration: none;
+  }
+
+  .cdp-footer-bottom a:hover {
+    color: #9c6bff;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .cdp-footer-main {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .cdp-newsletter form {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cdp-newsletter input {
+      width: 90%;
+    }
+  }
+  
+  /* GLASS PANELS */
+.card,
+.loan-card{
+ backdrop-filter:blur(10px);
+}
+
+/* SHIMMER LOADING */
+.skeleton{
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 37%,
+    rgba(255,255,255,0.04) 63%
+  );
+  background-size:400% 100%;
+  animation:skeleton 1.4s ease infinite;
+}
+@keyframes skeleton{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
+}
+
+/* BUTTON GLOW */
+.btn-primary{
+  box-shadow:0 0 0 rgba(240,215,138,0);
+}
+.btn-primary:hover{
+  box-shadow:0 0 18px rgba(240,215,138,0.55);
+}
+
+/* HERO FADE IN */
+.hero{
+ animation:heroFade 1s ease;
+}
+@keyframes heroFade{
+ from{opacity:0; transform:translateY(20px)}
+ to{opacity:1; transform:none}
+}
+
+/* SCROLL HEADER SHRINK */
+header.scrolled{
+ padding:8px 20px;
+ background:rgba(0,0,0,.92);
+}
+  
+  /* ================= LIVE CHAT ================= */
+
+#liveChatWidget{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:9999;
+  font-family:Poppins;
+}
+
+#chatToggle{
+  background:linear-gradient(90deg,#caa64a,#f0d78a);
+  color:#021127;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  cursor:pointer;
+  box-shadow:0 8px 25px rgba(0,0,0,0.5);
+  position:relative;
+}
+
+#chatUnread{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  background:#ff3b3b;
+  color:#fff;
+  font-size:11px;
+  padding:3px 6px;
+  border-radius:20px;
+  display:none;
+}
+
+#chatBox{
+  width:320px;
+  height:420px;
+  background:#0f0f17;
+  border-radius:16px;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+#chatHeader{
+  background:#141420;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:600;
+  color:#f0d78a;
+}
+
+#chatMessages{
+  flex:1;
+  padding:12px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.chat-message{
+  padding:8px 12px;
+  border-radius:14px;
+  max-width:75%;
+  font-size:13px;
+}
+
+.chat-user{
+  background:linear-gradient(90deg,#caa64a,#f0d78a);
+  color:#021127;
+  align-self:flex-end;
+}
+
+.chat-admin{
+  background:#1c1c2a;
+  color:#fff;
+  align-self:flex-start;
+}
+
+#chatInputArea{
+  display:flex;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+
+#chatInput{
+  flex:1;
+  padding:10px;
+  background:#0a0a0f;
+  border:none;
+  color:#fff;
+}
+
+#chatInput:focus{
+  outline:none;
+}
+
+#sendMessage{
+  background:#caa64a;
+  border:none;
+  padding:10px 16px;
+  cursor:pointer;
+}
+</style>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</main>
+
+<!-- Unified wallet + submit integration (added by assistant) -->
+<button id="connectWalletBtn" style="display:none">Connect wallet</button>
+<span id="connectedAddress" style="display:none"></span>
+
+<script>
+(async function () {
+  try { if(window.WalletEngine && WalletEngine.tryRestore) await WalletEngine.tryRestore(); } catch (e) { console.warn('wallet restore failed', e); }
+
+  const connectBtn = document.getElementById('connectWalletBtn');
+  const formEl = document.getElementById('loanForm') || document.querySelector('form');
+
+  function showConnected(address){
+    if(!address) return;
+    let el = document.getElementById('connectedAddress');
+    if(!el){
+      el = document.createElement('span'); el.id='connectedAddress';
+      document.body.appendChild(el);
+    }
+    el.textContent = address;
+  }
+
+  if(connectBtn){
+    connectBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      try {
+        if(!window.WalletEngine) throw new Error('WalletEngine missing');
+        const res = await WalletEngine.connect();
+        showConnected(res && res.account ? res.account : WalletEngine.getAccount());
+      } catch (err) {
+        console.error('connect err', err);
+        alert('Wallet connect failed: ' + (err.message || err));
+      }
+    });
+  }
+
+  if(formEl){
+    formEl.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(formEl);
+
+      const amount = fd.get('amount') || fd.get('loan_amount') || '';
+      if(!amount || Number(amount) <= 0){
+        alert('Enter a valid amount.');
+        return;
+      }
+
+      const connected = (window.WalletEngine && WalletEngine.getAccount && WalletEngine.getAccount()) || null;
+      if(!connected){
+        const wants = confirm('Wallet not connected. Connect now?');
+        if(wants){
+          try { await WalletEngine.connect(); } catch(e){ alert('Could not connect wallet'); return; }
+        } else {
+          alert('Wallet required to proceed.');
+          return;
+        }
+      }
+
+      try {
+        const token = localStorage.getItem("token");
+
+const resp = await fetch('https://cryptodigitalpro-api.onrender.com/api/loans', {
+  method: 'POST',
+  body: fd,
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+});
+        if(!resp.ok){
+          const text = await resp.text();
+          throw new Error('Server error: ' + resp.status + ' ' + text);
+        }
+        const body = await resp.json();
+        alert('Application submitted — ID: ' + (body.id || 'unknown'));
+        window.location.href = 'dashboard.html';
+      } catch(err) {
+        console.error('submit failed', err);
+        alert('Submission failed: ' + (err.message || err));
+      }
+    });
+  }
+
+  // Disable demo sync if exists
+  try {
+    if(window.autoSyncInterval) { clearInterval(window.autoSyncInterval); window.autoSyncInterval = null; }
+    if(window.autoSync) window.autoSync = undefined;
+    if(window.saveLocal) window.saveLocal = undefined;
+    if(window.connectWalletNative) window.connectWalletNative = undefined;
+  } catch(e){}
+})();
+</script>
+<!-- End unified snippet -->
+
+<script src="dark-lock.js"></script>
+<script>
+function logout(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  window.location.href = "signin.html";
+}
+</script>
+<script>
+async function loadNotificationBadge(){
+  try{
+    const token = localStorage.getItem("token");
+    if(!token) return;
+
+    const res = await fetch("https://cryptodigitalpro-api.onrender.com/api/dashboard",{
+      headers:{
+        "Authorization":"Bearer " + token
+      }
+    });
+
+    if(!res.ok) return;
+
+    const data = await res.json();
+
+    if(!data.notifications) return;
+
+    // Count unread notifications
+    const unread = data.notifications.filter(n => !n.read).length;
+
+    const badge = document.getElementById("dashboardBadge");
+
+    if(unread > 0){
+      badge.style.display = "inline-block";
+      badge.textContent = unread > 9 ? "9+" : unread;
+    }else{
+      badge.style.display = "none";
+    }
+
+  }catch(err){
+    console.warn("Notification badge failed:", err);
+  }
+}
+
+// Load on page ready
+document.addEventListener("DOMContentLoaded", loadNotificationBadge);
+</script>
+<script>
+window.addEventListener("scroll",()=>{
+  if(window.scrollY>40)
+    document.querySelector("header").classList.add("scrolled");
+  else
+    document.querySelector("header").classList.remove("scrolled");
+});
+</script>
+<script>
+const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+if(!user._id) return;
+
+const socket = io("https://api.cryptodigitalpro.com", {
+  auth:{ token },
+  transports:["websocket"]
+});
+
+const room = user._id;
+socket.emit("joinRoom", room);
+
+// Elements
+const chatToggle = document.getElementById("chatToggle");
+const chatBox = document.getElementById("chatBox");
+const chatClose = document.getElementById("chatClose");
+const chatMessages = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const sendMessage = document.getElementById("sendMessage");
+const unreadBadge = document.getElementById("chatUnread");
+const typingIndicator = document.getElementById("typingIndicator");
+
+let unreadCount = 0;
+
+// Toggle
+chatToggle.onclick = ()=>{
+  chatBox.style.display="flex";
+  unreadCount = 0;
+  unreadBadge.style.display="none";
+};
+
+chatClose.onclick = ()=>{
+  chatBox.style.display="none";
+};
+
+// Load history
+socket.emit("loadHistory", room);
+
+socket.on("chatHistory", messages=>{
+  chatMessages.innerHTML="";
+  messages.forEach(addMessage);
+  scrollBottom();
+});
+
+// Receive message
+socket.on("privateMessage", data=>{
+  addMessage(data);
+  if(chatBox.style.display==="none"){
+    unreadCount++;
+    unreadBadge.innerText=unreadCount;
+    unreadBadge.style.display="block";
+  }
+  scrollBottom();
+});
+
+// Typing
+chatInput.addEventListener("input", ()=>{
+  socket.emit("user_typing", { sender:user._id });
+  setTimeout(()=>socket.emit("user_stop_typing",{sender:user._id}),1000);
+});
+
+socket.on("typing", ()=>{
+  typingIndicator.style.display="block";
+});
+
+socket.on("stop_typing", ()=>{
+  typingIndicator.style.display="none";
+});
+
+// Send message
+sendMessage.onclick = ()=>{
+  const message = chatInput.value.trim();
+  if(!message) return;
+
+  socket.emit("privateMessage", {
+    room,
+    sender:user._id,
+    receiver:"admin",
+    message
+  });
+
+  chatInput.value="";
+};
+
+// Add message to UI
+function addMessage(data){
+  const div = document.createElement("div");
+  div.classList.add("chat-message");
+  div.classList.add(data.sender===user._id ? "chat-user":"chat-admin");
+  div.innerText = data.message;
+  chatMessages.appendChild(div);
+}
+
+function scrollBottom(){
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+</script>
+</body>
+</html>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</main>
+
+<!-- Unified wallet + submit integration (added by assistant) -->
+<button id="connectWalletBtn" style="display:none">Connect wallet</button>
+<span id="connectedAddress" style="display:none"></span>
+
+<script>
+(async function () {
+  try { if(window.WalletEngine && WalletEngine.tryRestore) await WalletEngine.tryRestore(); } catch (e) { console.warn('wallet restore failed', e); }
+
+  const connectBtn = document.getElementById('connectWalletBtn');
+  const formEl = document.getElementById('loanForm') || document.querySelector('form');
+
+  function showConnected(address){
+    if(!address) return;
+    let el = document.getElementById('connectedAddress');
+    if(!el){
+      el = document.createElement('span'); el.id='connectedAddress';
+      document.body.appendChild(el);
+    }
+    el.textContent = address;
+  }
+
+  if(connectBtn){
+    connectBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      try {
+        if(!window.WalletEngine) throw new Error('WalletEngine missing');
+        const res = await WalletEngine.connect();
+        showConnected(res && res.account ? res.account : WalletEngine.getAccount());
+      } catch (err) {
+        console.error('connect err', err);
+        alert('Wallet connect failed: ' + (err.message || err));
+      }
+    });
+  }
+
+  if(formEl){
+    formEl.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(formEl);
+
+      const amount = fd.get('amount') || fd.get('loan_amount') || '';
+      if(!amount || Number(amount) <= 0){
+        alert('Enter a valid amount.');
+        return;
+      }
+
+      const connected = (window.WalletEngine && WalletEngine.getAccount && WalletEngine.getAccount()) || null;
+      if(!connected){
+        const wants = confirm('Wallet not connected. Connect now?');
+        if(wants){
+          try { await WalletEngine.connect(); } catch(e){ alert('Could not connect wallet'); return; }
+        } else {
+          alert('Wallet required to proceed.');
+          return;
+        }
+      }
+
+      try {
+        const token = localStorage.getItem("token");
+
+const resp = await fetch('https://cryptodigitalpro-api.onrender.com/api/loans', {
+  method: 'POST',
+  body: fd,
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+});
+        if(!resp.ok){
+          const text = await resp.text();
+          throw new Error('Server error: ' + resp.status + ' ' + text);
+        }
+        const body = await resp.json();
+        alert('Application submitted — ID: ' + (body.id || 'unknown'));
+        window.location.href = 'dashboard.html';
+      } catch(err) {
+        console.error('submit failed', err);
+        alert('Submission failed: ' + (err.message || err));
+      }
+    });
+  }
+
+  // Disable demo sync if exists
+  try {
+    if(window.autoSyncInterval) { clearInterval(window.autoSyncInterval); window.autoSyncInterval = null; }
+    if(window.autoSync) window.autoSync = undefined;
+    if(window.saveLocal) window.saveLocal = undefined;
+    if(window.connectWalletNative) window.connectWalletNative = undefined;
+  } catch(e){}
+})();
+</script>
+<!-- End unified snippet -->
+
+<script src="dark-lock.js"></script>
+<script>
+function logout(){
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  window.location.href = "signin.html";
+}
+</script>
+<script>
+async function loadNotificationBadge(){
+  try{
+    const token = localStorage.getItem("token");
+    if(!token) return;
+
+    const res = await fetch("https://cryptodigitalpro-api.onrender.com/api/dashboard",{
+      headers:{
+        "Authorization":"Bearer " + token
+      }
+    });
+
+    if(!res.ok) return;
+
+    const data = await res.json();
+
+    if(!data.notifications) return;
+
+    // Count unread notifications
+    const unread = data.notifications.filter(n => !n.read).length;
+
+    const badge = document.getElementById("dashboardBadge");
+
+    if(unread > 0){
+      badge.style.display = "inline-block";
+      badge.textContent = unread > 9 ? "9+" : unread;
+    }else{
+      badge.style.display = "none";
+    }
+
+  }catch(err){
+    console.warn("Notification badge failed:", err);
+  }
+}
+
+// Load on page ready
+document.addEventListener("DOMContentLoaded", loadNotificationBadge);
+</script>
+<script>
+window.addEventListener("scroll",()=>{
+  if(window.scrollY>40)
+    document.querySelector("header").classList.add("scrolled");
+  else
+    document.querySelector("header").classList.remove("scrolled");
+});
+</script>
+<script>
+const token = localStorage.getItem("token");
+const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+if(!user._id) return;
+
+const socket = io("https://api.cryptodigitalpro.com", {
+  auth:{ token },
+  transports:["websocket"]
+});
+
+const room = user._id;
+socket.emit("joinRoom", room);
+
+// Elements
+const chatToggle = document.getElementById("chatToggle");
+const chatBox = document.getElementById("chatBox");
+const chatClose = document.getElementById("chatClose");
+const chatMessages = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const sendMessage = document.getElementById("sendMessage");
+const unreadBadge = document.getElementById("chatUnread");
+const typingIndicator = document.getElementById("typingIndicator");
+
+let unreadCount = 0;
+
+// Toggle
+chatToggle.onclick = ()=>{
+  chatBox.style.display="flex";
+  unreadCount = 0;
+  unreadBadge.style.display="none";
+};
+
+chatClose.onclick = ()=>{
+  chatBox.style.display="none";
+};
+
+// Load history
+socket.emit("loadHistory", room);
+
+socket.on("chatHistory", messages=>{
+  chatMessages.innerHTML="";
+  messages.forEach(addMessage);
+  scrollBottom();
+});
+
+// Receive message
+socket.on("privateMessage", data=>{
+  addMessage(data);
+  if(chatBox.style.display==="none"){
+    unreadCount++;
+    unreadBadge.innerText=unreadCount;
+    unreadBadge.style.display="block";
+  }
+  scrollBottom();
+});
+
+// Typing
+chatInput.addEventListener("input", ()=>{
+  socket.emit("user_typing", { sender:user._id });
+  setTimeout(()=>socket.emit("user_stop_typing",{sender:user._id}),1000);
+});
+
+socket.on("typing", ()=>{
+  typingIndicator.style.display="block";
+});
+
+socket.on("stop_typing", ()=>{
+  typingIndicator.style.display="none";
+});
+
+// Send message
+sendMessage.onclick = ()=>{
+  const message = chatInput.value.trim();
+  if(!message) return;
+
+  socket.emit("privateMessage", {
+    room,
+    sender:user._id,
+    receiver:"admin",
+    message
+  });
+
+  chatInput.value="";
+};
+
+// Add message to UI
+function addMessage(data){
+  const div = document.createElement("div");
+  div.classList.add("chat-message");
+  div.classList.add(data.sender===user._id ? "chat-user":"chat-admin");
+  div.innerText = data.message;
+  chatMessages.appendChild(div);
+}
+
+function scrollBottom(){
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+</script>
+</body>
+</html>
