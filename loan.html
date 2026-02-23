@@ -1238,6 +1238,67 @@ header.scrolled{
     font-size:15px;
   }
 }
+
+.nav-wrapper {
+  position: relative;
+}
+
+/* Left fade */
+.nav-wrapper::before,
+.nav-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Left gradient */
+.nav-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #0b1220 0%, transparent 100%);
+}
+
+/* Right gradient */
+.nav-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #0b1220 0%, transparent 100%);
+}
+
+@media (min-width: 769px) {
+  .nav-wrapper::before,
+  .nav-wrapper::after {
+    display: none;
+  }
+}
+/* Mobile horizontal scroll nav */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none; /* Firefox */
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Prevent shrinking */
+.nav-links a {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    overflow-x: auto;
+  }
+}
+.nav-links {
+  scroll-behavior: smooth;
+}
 </style>
 </head>
 
@@ -1276,13 +1337,18 @@ header.scrolled{
     CryptoDigitalPro
   </div>
 <!-- PRO NAV MENU -->
-<nav class="pro-nav">
-  <a href="services.html">Services</a>
-  <a href="agreements.html">Agreements</a>
-  <a href="terms.html">Terms</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="policy.html">Policy</a>
-</nav>
+<div class="nav-wrapper">
+  <div class="nav-links">
+    <a href="#">Services</a>
+    <a href="#">Agreements</a>
+    <a href="#">Terms</a>
+    <a href="#">Privacy</a>
+    <a href="#">Policy</a>
+    <a href="#">Security</a>
+    <a href="#">Support</a>
+    <a href="#">FAQ</a>
+  </div>
+</div>
   <!-- Home + Dashboard + Logout -->
   <div style="display:flex;gap:12px;align-items:center;position:relative;">
     

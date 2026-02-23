@@ -178,25 +178,22 @@ function startPolling(){
 
 function animateProgress(target){
 
- if(!progressBar) return;
+if(!progressBar) return;
 
- let current=parseInt(progressBar.style.width)||0;
+let current=parseInt(progressBar.style.width)||0;
 
- const interval=setInterval(()=>{
+const step=()=>{
+if(current>=target) return;
 
-  if(current>=target){
-   clearInterval(interval);
-   return;
-  }
+current+=1;
+progressBar.style.width=current+"%";
+progressBar.innerText=current+"%";
 
-  current++;
+requestAnimationFrame(step);
+};
 
-  progressBar.style.width=current+"%";
-  progressBar.innerText=current+"%";
-
- },20);
+requestAnimationFrame(step);
 }
-
 /* ================= MODAL ================= */
 
 function showModal(title,msg){
@@ -519,3 +516,4 @@ label.style.transform="scale(1)";
 
 },i*400);
 });
+}
