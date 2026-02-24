@@ -1,303 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>CryptoDigitalPro – Loan Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>CryptoDigitalPro – Premium Loan Dashboard</title>
-
-<!-- 🔐 PRODUCTION CSP (NO unsafe-eval) -->
-<meta http-equiv="Content-Security-Policy"
-content="
-default-src 'self';
-script-src 'self' https://cdn.socket.io;
-connect-src 'self' https://cryptodigitalpro.com https://api.cryptodigitalpro.com wss://cryptodigitalpro.com;
-style-src 'self' 'unsafe-inline';
-img-src 'self' data:;
-font-src 'self';
-object-src 'none';
-base-uri 'self';
-form-action 'self';
-">
-
-<style>
-
-/* ================= BASE ================= */
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Inter,system-ui,Arial;
-}
-
-body{
-  background:linear-gradient(135deg,#020617,#0f172a);
-  color:#fff;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:30px 20px;
-}
-
-/* ================= GLASS EFFECT ================= */
-
-.glass{
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:16px;
-}
-
-/* ================= HEADER ================= */
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px;
-  margin-bottom:30px;
-  animation:fadeDown .8s ease;
-}
-
-.brand strong{
-  font-size:22px;
-  letter-spacing:.5px;
-}
-
-.brand span{
-  font-size:12px;
-  color:#94a3b8;
-}
-
-.btn{
-  background:linear-gradient(45deg,#d4af37,#facc15);
-  color:#000;
-  padding:8px 16px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-  transition:.3s;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 25px rgba(212,175,55,.3);
-}
-
-/* ================= BALANCES ================= */
-
-.balance-wrap{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-  margin-bottom:40px;
-}
-
-.balance-box{
-  padding:25px;
-  text-align:center;
-  animation:fadeUp .8s ease;
-}
-
-.balance-box .label{
-  color:#94a3b8;
-  font-size:13px;
-}
-
-.balance-box .value{
-  font-size:22px;
-  font-weight:700;
-  margin-top:8px;
-}
-
-/* ================= LOANS ================= */
-
-.loan-card{
-  padding:20px;
-  margin-bottom:15px;
-  animation:fadeUp 1s ease;
-}
-
-/* ================= PROGRESS BAR ================= */
-
-.progress-wrap{
-  margin-top:15px;
-  background:rgba(255,255,255,.08);
-  border-radius:12px;
-  overflow:hidden;
-  display:none;
-}
-
-.progress-bar{
-  width:0%;
-  height:35px;
-  background:linear-gradient(90deg,#22c55e,#16a34a);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:600;
-  transition:width .4s ease;
-}
-
-/* ================= WHATSAPP CHAT ================= */
-
-.chat-toggle{
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  background:#d4af37;
-  border:none;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  font-size:22px;
-  cursor:pointer;
-  box-shadow:0 0 25px rgba(212,175,55,.4);
-}
-
-.chat-box{
-  position:fixed;
-  bottom:100px;
-  right:25px;
-  width:350px;
-  max-width:95%;
-  height:480px;
-  display:none;
-  flex-direction:column;
-  overflow:hidden;
-  animation:fadeUp .4s ease;
-}
-
-.chat-header{
-  padding:15px;
-  background:rgba(0,0,0,.4);
-  font-weight:600;
-}
-
-.chat-body{
-  flex:1;
-  padding:15px;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.chat-msg{
-  padding:8px 12px;
-  border-radius:15px;
-  max-width:75%;
-  font-size:14px;
-}
-
-.chat-user{
-  background:#d4af37;
-  color:#000;
-  align-self:flex-end;
-}
-
-.chat-admin{
-  background:#1e293b;
-  align-self:flex-start;
-}
-
-.chat-footer{
-  display:flex;
-  padding:10px;
-  gap:5px;
-}
-
-.chat-footer input{
-  flex:1;
-  padding:8px;
-  border-radius:20px;
-  border:none;
-  outline:none;
-}
-
-/* ================= ANIMATIONS ================= */
-
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes fadeDown{
-  from{opacity:0;transform:translateY(-20px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-</style>
+<link rel="stylesheet" href="assets/dashboard.css" />
 </head>
 
 <body>
 
 <div class="container">
 
-<header class="header glass">
+<!-- ================= HEADER ================= -->
+<header class="header">
+
   <div class="brand">
-    <strong>CryptoDigitalPro</strong><br>
-    <span>Premium Loan Dashboard</span>
+    <strong>CryptoDigitalPro</strong>
+    <span class="small">Loan Dashboard</span>
   </div>
-  <button id="logoutBtn" class="btn">Logout</button>
+
+  <div class="header-actions">
+
+    <button id="logoutBtn" class="btn red">Sign Out</button>
+    <button id="adminBtn" class="btn blue">Admin Messages</button>
+    <button id="verifyBtn" class="btn blue">Verify Account</button>
+    <button id="uploadBtn" class="btn blue">Upload Documents</button>
+    <button id="settingsBtn" class="btn settings">Settings</button>
+
+    <!-- Notifications -->
+    <div class="notify-wrapper">
+      <span class="notify-bell">
+        🔔 <span id="notifyCount" class="badge">0</span>
+      </span>
+
+      <div class="notify-dropdown hidden">
+        <div class="notify-header">Notifications</div>
+        <div class="notify-list"></div>
+        <div class="notify-footer">
+          <button class="notify-clear">Clear</button>
+          <button class="notify-close">Close</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </header>
 
-<section class="balance-wrap">
-  <div class="balance-box glass">
+<!-- ================= BALANCES ================= -->
+<section class="balance-wrap premium">
+
+  <div class="balance-box premium-card">
     <div class="label">Outstanding</div>
     <div id="outstandingBox" class="value">$0.00</div>
+    <div class="balance-arrow" id="outstandingArrow"></div>
   </div>
 
-  <div class="balance-box glass">
+  <div class="balance-box premium-card">
     <div class="label">Deposited</div>
     <div id="depositedBox" class="value">$0.00</div>
+    <div class="balance-arrow" id="depositedArrow"></div>
   </div>
 
-  <div class="balance-box glass">
+  <div class="balance-box premium-card">
     <div class="label">Withdrawn</div>
     <div id="withdrawnBox" class="value">$0.00</div>
+    <div class="balance-arrow" id="withdrawnArrow"></div>
   </div>
 
-  <div class="balance-box glass">
-    <div class="label">Available</div>
+  <div class="balance-box premium-card">
+    <div class="label">Available to Withdraw</div>
     <div id="availableBox" class="value">$0.00</div>
+    <div class="balance-arrow" id="availableArrow"></div>
   </div>
+
 </section>
 
-<section>
-  <button id="withdrawBtn" class="btn">Withdraw</button>
-  <div class="progress-wrap" id="progressWrap">
-    <div class="progress-bar" id="progressBar">0%</div>
-  </div>
-</section>
-
-<section style="margin-top:40px;">
-  <h2>Your Loans</h2>
+<!-- ================= LOAN SECTION ================= -->
+<section class="loan-section">
+  <h2>Your Loan Applications</h2>
   <div id="loanContainer"></div>
 </section>
 
+<!-- ================= MAIN GRID ================= -->
+<section class="grid">
+
+  <!-- LEFT -->
+  <div class="card">
+    <h3>My Loan Applications</h3>
+    <div id="loanList" class="small">
+      No loan applications yet.
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+
+    <div class="card">
+      <h3>Select a loan</h3>
+
+      <div class="actions">
+        <button id="withdrawBtn" class="btn gold">Withdraw</button>
+        <button class="btn dark">Repay</button>
+      </div>
+
+      <div id="withdrawProgressWrap" class="hidden" style="margin-top:15px;">
+        <div class="progress-bar">
+          <div id="withdrawProgress">0%</div>
+        </div>
+      </div>
+
+      <div id="withdrawRejectionContainer"></div>
+    </div>
+
+    <div class="card">
+      <h3>Transaction History</h3>
+      <div id="txList" class="small">
+        No transactions available.
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
 </div>
+<!-- END CONTAINER -->
 
-<!-- WhatsApp Chat -->
-<button class="chat-toggle" id="chatToggle">💬</button>
 
-<div class="chat-box glass" id="chatBox">
-  <div class="chat-header">Admin Support</div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="chat-footer">
-    <input type="text" id="chatInput" placeholder="Type message...">
-    <button id="chatSend" class="btn">➤</button>
+<!-- ================= SETTINGS MODAL ================= -->
+<div id="settingsModal" class="modal hidden">
+  <div class="settings-box">
+
+    <h2>Account Settings</h2>
+
+    <h3>Profile</h3>
+    <input id="profileName" placeholder="Full Name">
+    <input id="profileEmail" placeholder="Email">
+    <button id="saveProfileBtn" class="btn blue">Save Profile</button>
+
+    <h3>Password</h3>
+    <input id="oldPass" type="password" placeholder="Current Password">
+    <input id="newPass" type="password" placeholder="New Password">
+    <button id="changePassBtn" class="btn gold">Update Password</button>
+
+    <h3>Avatar</h3>
+    <input type="file" id="avatarInput">
+    <button id="uploadAvatarBtn" class="btn blue">Upload Avatar</button>
+
+    <h3>Two Factor Authentication</h3>
+    <button id="toggle2faBtn" class="btn dark">Enable / Disable 2FA</button>
+
+    <h3>Loan Documents</h3>
+    <button id="loadDocsBtn" class="btn blue">View Documents</button>
+    <div id="docsList"></div>
+
+    <h3>Support Ticket</h3>
+    <textarea id="ticketMsg"></textarea>
+    <button id="sendTicketBtn" class="btn gold">Send Ticket</button>
+
+    <br><br>
+    <button id="closeSettingsBtn" class="btn dark">Close</button>
+
   </div>
 </div>
 
+
+<!-- ================= GENERIC MODALS ================= -->
+<div id="withdrawModal" class="modal hidden">
+  <div class="card">
+    <h3 id="modalTitle"></h3>
+    <p id="modalMessage"></p>
+  </div>
+</div>
+
+<div id="messageModal" class="modal hidden">
+  <div class="card">
+    <h3>Admin Support Chat</h3>
+    <div id="chatMessages" class="chat-container"></div>
+    <textarea id="adminMessageText"></textarea>
+    <button id="sendAdminMessage" class="btn blue">Send Message</button>
+    <button class="btn dark closeModal">Cancel</button>
+  </div>
+</div>
+
+<div id="adminModal" class="modal hidden">
+  <div class="card">
+    <h3>Admin Messages</h3>
+    <div id="adminMessages">No messages.</div>
+    <button class="btn blue closeModal">Close</button>
+  </div>
+</div>
+
+<div id="verifyModal" class="modal hidden">
+  <div class="card">
+    <h3>Verify Identity</h3>
+    <input type="file"/>
+    <button class="btn gold">Submit</button>
+    <button class="btn dark closeModal">Cancel</button>
+  </div>
+</div>
+
+<div id="uploadModal" class="modal hidden">
+  <div class="card">
+    <h3>Upload Documents</h3>
+    <input type="file"/>
+    <button class="btn blue">Upload</button>
+    <button class="btn dark closeModal">Cancel</button>
+  </div>
+</div>
+
+<div id="loanDetailsModal" class="modal hidden">
+  <div class="card">
+    <h2 id="loanModalTitle">Loan Details</h2>
+    <div id="loanTimeline"></div>
+    <div id="loanAdminNotes"></div>
+    <button class="btn blue closeModal">Close</button>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+
+<!-- ================= FLOAT CHAT ================= -->
+<button id="chatToggle" class="chat-toggle">💬</button>
+
+<div id="whatsappChat" class="whatsapp-chat-box">
+  <div class="chat-header">
+    <span>Admin Support</span>
+    <span id="chatStatus" class="chat-status">🟢 Online</span>
+  </div>
+
+  <div id="chatBody" class="chat-body"></div>
+
+  <div class="chat-footer">
+    <input type="file" id="chatFile" hidden>
+    <button id="attachFileBtn">📎</button>
+    <input type="text" id="chatInput" placeholder="Type a message...">
+    <button id="chatSend">➤</button>
+  </div>
+</div>
+
+
+<!-- ================= MOBILE NAV ================= -->
+<nav class="mobile-nav">
+  <button id="mobileHome">🏠</button>
+  <button id="mobileLoans">💰</button>
+  <button id="mobileChat">💬</button>
+  <button id="mobileSettings">⚙️</button>
+</nav>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="pro-footer">
+
+  <div class="pro-footer-grid">
+
+    <div class="pro-footer-col brand">
+      <p>Secure Digital Finance & Loan Management Platform</p>
+      <div class="footer-status">
+        <span class="dot"></span> System Status: Operational
+      </div>
+    </div>
+
+    <div class="pro-footer-col">
+      <h4>Platform</h4>
+      <a href="#">Dashboard</a>
+      <a href="#">Loans</a>
+      <a href="#">Withdrawals</a>
+      <a href="#">Transactions</a>
+    </div>
+
+    <div class="pro-footer-col">
+      <h4>Account</h4>
+      <a href="#">Profile</a>
+      <a href="#">Security</a>
+      <a href="#">Verification</a>
+      <a href="#">Settings</a>
+    </div>
+
+    <div class="pro-footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Contact Admin</a>
+      <a href="#">Live Chat</a>
+      <a href="#">Submit Ticket</a>
+    </div>
+
+    <div class="pro-footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a>
+      <a href="#">Compliance</a>
+      <a href="#">Security</a>
+    </div>
+
+  </div>
+
+  <div class="pro-footer-bottom">
+    © <span id="footerYear"></span> CryptoDigitalPro. All rights reserved.
+  </div>
+
+<a href="#" onclick="document.getElementById('chatToggle')?.click(); return false;">
+Admin Live Chat
+</a>
+<a href="#" onclick="document.getElementById('messageModal')?.classList.remove('hidden'); return false;">
+Admin Live Chat
+</a>
+
+</footer>
+
+
+<!-- ================= SCRIPTS ================= -->
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="dashboard.js"></script>
+<script src="assets/dashboard.js"></script>
+<script src="dark-lock.js"></script>
+
 </body>
 </html>
