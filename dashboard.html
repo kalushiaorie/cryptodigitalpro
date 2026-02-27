@@ -301,9 +301,6 @@
     © <span id="footerYear"></span> CryptoDigitalPro. All rights reserved.
   </div>
 
-<a href="#" onclick="document.getElementById('chatToggle')?.click(); return false;">
-Admin Live Chat
-</a>
 <a href="#" onclick="document.getElementById('messageModal')?.classList.remove('hidden'); return false;">
 Admin Live Chat
 </a>
@@ -312,10 +309,12 @@ Admin Live Chat
 
 
 <!-- ================= SCRIPTS ================= -->
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
-<script src="dashboard.js"></script>
-<script src="dark-lock.js"></script>
+<script src="dashboard.js" defer></script>
+<script src="dark-lock.js" defer></script>
 
+<div id="globalLoader" class="global-loader hidden">
+  <div class="loader-spinner"></div>
+</div>
 </body>
 </html>

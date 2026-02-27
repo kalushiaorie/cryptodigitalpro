@@ -2,270 +2,238 @@
 
 /* ================= CONFIG ================= */
 
-const API="https://api.cryptodigitalpro.com";
-const token=localStorage.getItem("token");
+const API = "https://api.cryptodigitalpro.com";
 
-if(!token){
- location.href="signin.html";
- return;
+function getToken(){
+ const t = localStorage.getItem("token");
+ if(!t || t.length < 20){
+  secureLogout();
+  return null;
+ }
+ return t;
 }
 
-const offlineQueue=[];
-let pollingInterval=null;
-let currentWithdrawal=null;
-let socket=null;
+function secureLogout(){
+ localStorage.removeItem("token");
+ sessionStorage.clear();
+ window.location.href = "signin.html";
+}
+
+const token = getToken();
+if(!token) return;
+
+/* ================= GLOBAL STATE ================= */
+
+const offlineQueue = [];
+let currentWithdrawal = null;
+
+/* ================= GLOBAL LOADER ================= */
+
+const loader = document.getElementById("globalLoader");
+
+function showLoader(){
+ loader?.classList.remove("hidden");
+}
+
+function hideLoader(){
+ loader?.classList.add("hidden");
+}
+
+/* ================= GLOBAL ERROR MESSAGE ================= */
+
+function showError(message="Something went wrong. Please try again."){
+ let errorBox = document.getElementById("globalError");
+
+ if(!errorBox){
+  errorBox = document.createElement("div");
+  errorBox.id = "globalError";
+  errorBox.style.cssText = `
+   position:fixed;
+   top:20px;
+   right:20px;
+   background:#b91c1c;
+   color:white;
+   padding:15px 20px;
+   border-radius:8px;
+   z-index:9999;
+   box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  `;
+  document.body.appendChild(errorBox);
+ }
+
+ errorBox.innerText = message;
+ errorBox.classList.remove("hidden");
+
+ setTimeout(()=>{
+  errorBox.classList.add("hidden");
+ },4000);
+}
 
 /* ================= SAFE API ================= */
 
-async function api(url,options={}){
+async function api(url, options = {}){
  try{
 
-  const res=await fetch(API+url,{
+  showLoader();
+
+  const res = await fetch(API + url, {
    headers:{
-    Authorization:"Bearer "+token,
+    Authorization: "Bearer " + token,
     "Content-Type":"application/json"
    },
    ...options
   });
 
-  if(res.status===401){
-   localStorage.clear();
-   location.href="signin.html";
+  if(res.status === 401){
+   secureLogout();
    return null;
   }
 
-  const ct=res.headers.get("content-type");
-  if(!ct||!ct.includes("application/json")) return null;
+  if(!res.ok){
+   showError("Server error: " + res.status);
+   return null;
+  }
+
+  const ct = res.headers.get("content-type");
+  if(!ct || !ct.includes("application/json")){
+   showError("Invalid server response.");
+   return null;
+  }
 
   return await res.json();
 
  }catch(err){
-  console.error("API ERROR:",err);
-  offlineQueue.push({url,options});
+  console.error("API ERROR:", err);
+  offlineQueue.push({url, options});
+  showError("Network error. Trying again automatically.");
   return null;
+ }finally{
+  hideLoader();
  }
 }
 
-/* ================= OFFLINE QUEUE ================= */
+/* ================= OFFLINE RETRY ================= */
 
 setInterval(async()=>{
- if(!offlineQueue.length||!navigator.onLine) return;
+ if(!offlineQueue.length || !navigator.onLine) return;
 
- const job=offlineQueue.shift();
+ const job = offlineQueue.shift();
 
  try{
-  await fetch(API+job.url,{
+  await fetch(API + job.url, {
    headers:{
-    Authorization:"Bearer "+token,
+    Authorization:"Bearer " + token,
     "Content-Type":"application/json"
    },
    ...job.options
   });
  }catch{}
-},5000);
+}, 5000);
 
-/* ================= SAFE FALLBACK ================= */
+/* ================= MODAL MANAGER ================= */
 
-function animateTimelineStatus(){
- console.warn("animateTimelineStatus not implemented yet");
+const modals = document.querySelectorAll(".modal");
+
+function openModal(id){
+ modals.forEach(m => m.classList.add("hidden"));
+ const modal = document.getElementById(id);
+ modal?.classList.remove("hidden");
 }
 
-/* ================= DOM READY ================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-const withdrawBtn=document.getElementById("withdrawBtn");
-const progressBar=document.getElementById("withdrawProgress");
-const progressWrap=document.getElementById("withdrawProgressWrap");
-
-const withdrawModal=document.getElementById("withdrawModal");
-const modalTitle=document.getElementById("modalTitle");
-const modalMessage=document.getElementById("modalMessage");
-
-const rejectionBox=document.getElementById("withdrawRejectionContainer");
-
-const chatModal=document.getElementById("messageModal");
-const chatMessages=document.getElementById("chatMessages");
-const chatInput=document.getElementById("adminMessageText");
-const sendChatBtn=document.getElementById("sendAdminMessage");
-
-const outstandingBox=document.getElementById("outstandingBox");
-const depositedBox=document.getElementById("depositedBox");
-const withdrawnBox=document.getElementById("withdrawnBox");
-const availableBox=document.getElementById("availableBox");
-
-const adminBtn=document.getElementById("adminBtn");
-const verifyBtn=document.getElementById("verifyBtn");
-const uploadBtn=document.getElementById("uploadBtn");
-const logout=document.getElementById("logoutBtn");
-
-/* ================= HEADER BUTTONS ================= */
-
-if(adminBtn)
- adminBtn.onclick=()=>document.getElementById("adminModal")?.classList.remove("hidden");
-
-if(verifyBtn)
- verifyBtn.onclick=()=>document.getElementById("verifyModal")?.classList.remove("hidden");
-
-if(uploadBtn)
- uploadBtn.onclick=()=>document.getElementById("uploadModal")?.classList.remove("hidden");
-
-if(logout){
- logout.onclick=()=>{
-  localStorage.clear();
-  location.href="signin.html";
- };
+function closeAllModals(){
+ modals.forEach(m => m.classList.add("hidden"));
 }
 
-/* ================= PROGRESS ================= */
+document.addEventListener("keydown",(e)=>{
+ if(e.key === "Escape") closeAllModals();
+});
 
-function animateProgress(target){
- if(!progressBar) return;
- let current=parseInt(progressBar.style.width)||0;
+modals.forEach(modal=>{
+ modal.addEventListener("click",(e)=>{
+  if(e.target === modal) closeAllModals();
+ });
+});
 
- const step=()=>{
-  if(current>=target) return;
-  current+=1;
-  progressBar.style.width=current+"%";
-  progressBar.innerText=current+"%";
-  requestAnimationFrame(step);
- };
-
- requestAnimationFrame(step);
-}
-
-/* ================= MODAL ================= */
-
-function showModal(title,msg){
- if(!withdrawModal) return;
- modalTitle.innerText=title;
- modalMessage.innerText=msg;
- withdrawModal.classList.remove("hidden");
-}
-
-/* ================= REJECTION ================= */
-
-function showRejection(reason){
- if(!rejectionBox) return;
-
- rejectionBox.innerHTML=`
- <div class="rejection-box">
- <strong>Withdrawal Rejected:</strong><br/>
- ${reason||"Compliance requirements not met."}
- <br><br>
- <button class="btn" id="contactAdminBtn">Contact Admin</button>
- </div>`;
-
- document.getElementById("contactAdminBtn")
- ?.addEventListener("click",openChat);
-}
-
-/* ================= CHAT ================= */
-
-function openChat(){
- if(chatModal)
-  chatModal.classList.remove("hidden");
- loadChat();
-}
-
-async function loadChat(){
- const messages=await api("/api/support-messages");
- if(!messages||!Array.isArray(messages)||!chatMessages) return;
-
- chatMessages.innerHTML=messages.map(m=>`
- <div class="${m.sender==='admin'?'chat-admin':'chat-user'}">
- <strong>${m.sender}:</strong> ${m.message}
- </div>`).join("");
-
- chatMessages.scrollTop=chatMessages.scrollHeight;
-}
-
-if(sendChatBtn){
- sendChatBtn.onclick=async()=>{
-  const msg=chatInput.value.trim();
-  if(!msg) return;
-
-  await api("/api/support-message",{
-   method:"POST",
-   body:JSON.stringify({
-    withdrawalId:currentWithdrawal?._id,
-    message:msg
-   })
-  });
-
-  chatInput.value="";
-  loadChat();
- };
-}
+document.querySelectorAll(".closeModal").forEach(btn=>{
+ btn.addEventListener("click", closeAllModals);
+});
 
 /* ================= DASHBOARD ================= */
 
 async function refreshDashboard(){
 
- const data=await api("/api/dashboard");
+ const data = await api("/api/dashboard");
  if(!data) return;
 
- window.lastDashboardData=data;
+ const {
+  balances = {},
+  loans = []
+ } = data;
 
- if(data.balances){
-  outstandingBox && (outstandingBox.innerText="$"+data.balances.outstanding);
-  depositedBox && (depositedBox.innerText="$"+data.balances.deposited);
-  withdrawnBox && (withdrawnBox.innerText="$"+data.balances.withdrawn);
-  availableBox && (availableBox.innerText="$"+data.balances.available);
- }
+ const setText = (id,val)=>{
+  const el = document.getElementById(id);
+  if(el) el.innerText = "$" + (val || 0);
+ };
 
- const loanContainer=document.getElementById("loanContainer");
+ setText("outstandingBox", balances.outstanding);
+ setText("depositedBox", balances.deposited);
+ setText("withdrawnBox", balances.withdrawn);
+ setText("availableBox", balances.available);
+
+ const loanContainer = document.getElementById("loanContainer");
  if(!loanContainer) return;
 
- if(data.loans?.length){
-  loanContainer.innerHTML=data.loans.map(loan=>{
-   const safeLoan=encodeURIComponent(JSON.stringify(loan));
-   return`
-   <div class="loan-card" style="background:#0f172a;padding:20px;border-radius:10px;margin-bottom:15px;">
-   <h3>${loan.loanType||"Loan Application"}</h3>
-   <p><strong>Amount:</strong> $${loan.amount}</p>
-   <p><strong>Status:</strong> ${loan.status.toUpperCase()}</p>
-   <button class="btn loanViewBtn" data-loan="${safeLoan}">View Details</button>
-   </div>`;
+ if(loans.length){
+  loanContainer.innerHTML = loans.map(loan=>{
+   const safeLoan = encodeURIComponent(JSON.stringify(loan));
+   return `
+   <div class="loan-card">
+    <h3>${loan.loanType || "Loan Application"}</h3>
+    <p><strong>Amount:</strong> $${loan.amount}</p>
+    <p><strong>Status:</strong> ${loan.status.toUpperCase()}</p>
+    <button class="btn loanViewBtn" data-loan="${safeLoan}">
+     View Details
+    </button>
+   </div>
+   `;
   }).join("");
 
   document.querySelectorAll(".loanViewBtn").forEach(btn=>{
-   btn.addEventListener("click",()=>{
-    const loan=JSON.parse(decodeURIComponent(btn.dataset.loan));
+   btn.addEventListener("click", ()=>{
+    const loan = JSON.parse(decodeURIComponent(btn.dataset.loan));
     openLoanDetails(loan);
    });
   });
 
  }else{
-  loanContainer.innerHTML=`<div>No loan applications found.</div>`;
+  loanContainer.innerHTML = `<div>No loan applications found.</div>`;
  }
 }
 
-window.refreshDashboard=refreshDashboard;
+function openLoanDetails(loan){
 
-/* ================= SOCKET ================= */
+ document.getElementById("loanModalTitle").innerText =
+  loan.loanType || "Loan Details";
 
-if(typeof io!=="undefined"){
- socket=io(API,{
-  transports:["websocket","polling"],
-  reconnection:true,
-  reconnectionAttempts:Infinity,
-  reconnectionDelay:1500
- });
+ document.getElementById("loanTimeline").innerHTML = `
+  <p><strong>Amount:</strong> $${loan.amount}</p>
+  <p><strong>Status:</strong> ${loan.status}</p>
+  <p><strong>Date:</strong> ${loan.createdAt || "-"}</p>
+ `;
 
- socket.on("loan_update",data=>{
-  refreshDashboard();
- });
+ document.getElementById("loanAdminNotes").innerHTML =
+  loan.adminNotes
+   ? `<p><strong>Admin Notes:</strong><br>${loan.adminNotes}</p>`
+   : "";
 
- socket.on("withdraw_update",data=>{
-  refreshDashboard();
- });
+ openModal("loanDetailsModal");
 }
 
 /* ================= INIT ================= */
 
-refreshDashboard();
-
+document.addEventListener("DOMContentLoaded", ()=>{
+ refreshDashboard();
+ setInterval(refreshDashboard, 10000);
 });
 
 })();
