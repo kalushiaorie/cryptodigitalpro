@@ -191,10 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-const API =
-  window.location.hostname === "localhost"
-    ? "http://127.0.0.1:5000"
-    : "https://api.cryptodigitalpro.com";
+const API = "https://api.cryptodigitalpro.com";
 
 const $ = id => document.getElementById(id);
 
@@ -314,9 +311,14 @@ async function handleGoogleLogin(response) {
     const data = await res.json();
     if(!res.ok) return alert(data.error || "Google login failed");
 
-    if (!data.accessToken) return alert("Invalid server response");
+    const token = data.accessToken || data.token;
 
-    localStorage.setItem("token", data.accessToken);
+if (!token) {
+  return alert("Invalid server response");
+}
+
+localStorage.setItem("token", token);
+
     if (data.refreshToken) {
       localStorage.setItem("refreshToken", data.refreshToken);
     }
