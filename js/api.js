@@ -1,27 +1,20 @@
-export const API = "https://cryptodigitalpro-api.onrender.com";
+const API_BASE = "http://localhost:3000";
 
-export function getToken() {
-  return localStorage.getItem("token");
-}
+export async function apiRequest(endpoint, method = "GET", data = null, token = null) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
 
-export async function api(path, method = "GET", body) {
-  const token = getToken();
-  if (!token) location.href = "login.html";
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(API + path, {
+  const res = await fetch(`${API_BASE}${endpoint}`, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token
-    },
-    body: body ? JSON.stringify(body) : null
+    headers,
+    body: data ? JSON.stringify(data) : null,
   });
 
-  if (res.status === 401 || res.status === 403) {
-    localStorage.removeItem("token");
-    location.href = "login.html";
-    return;
-  }
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.message || "API error");
 
-  return res.json();
+  return result;
 }
