@@ -1,2 +1,9 @@
-# Local Netlify folder
-.netlify
+node_modules/
+backup_js/
+*.log
+.env
+debug.html
+test-*.cjs
+fix-js.sh
+.eslintrc.json
+eslint.config.js
