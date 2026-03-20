@@ -1,239 +1,205 @@
 (function(){
 
+try{
+
 /* ================= CONFIG ================= */
 
 const API = "https://api.cryptodigitalpro.com";
 
 function getToken(){
  const t = localStorage.getItem("token");
- if(!t || t.length < 20){
-  secureLogout();
+ if(!t || t.length < 5){
+  console.warn("No valid token, running in offline mode");
   return null;
  }
  return t;
 }
 
 function secureLogout(){
- localStorage.removeItem("token");
- sessionStorage.clear();
+ localStorage.clear();
  window.location.href = "signin.html";
 }
 
 const token = getToken();
-if(!token) return;
 
-/* ================= GLOBAL STATE ================= */
+/* ================= HELPERS ================= */
 
-const offlineQueue = [];
-let currentWithdrawal = null;
+function $(id){ return document.getElementById(id); }
 
-/* ================= GLOBAL LOADER ================= */
+/* ================= LOADER ================= */
 
-const loader = document.getElementById("globalLoader");
+function showLoader(){ $("globalLoader")?.classList.remove("hidden"); }
+function hideLoader(){ $("globalLoader")?.classList.add("hidden"); }
 
-function showLoader(){
- loader?.classList.remove("hidden");
-}
+/* ================= ERROR ================= */
 
-function hideLoader(){
- loader?.classList.add("hidden");
-}
+function showError(msg){
+ console.log(msg);
 
-/* ================= GLOBAL ERROR MESSAGE ================= */
-
-function showError(message="Something went wrong. Please try again."){
- let errorBox = document.getElementById("globalError");
-
- if(!errorBox){
-  errorBox = document.createElement("div");
-  errorBox.id = "globalError";
-  errorBox.style.cssText = `
-   position:fixed;
-   top:20px;
-   right:20px;
-   background:#b91c1c;
-   color:white;
-   padding:15px 20px;
-   border-radius:8px;
-   z-index:9999;
-   box-shadow:0 10px 25px rgba(0,0,0,0.3);
-  `;
-  document.body.appendChild(errorBox);
+ let box = $("globalError");
+ if(!box){
+  box = document.createElement("div");
+  box.id = "globalError";
+  box.style.cssText =
+    "position:fixed;top:20px;right:20px;background:#111;color:#fff;padding:10px;border-radius:6px;z-index:9999;";
+  document.body.appendChild(box);
  }
 
- errorBox.innerText = message;
- errorBox.classList.remove("hidden");
+ box.innerText = msg;
+ box.classList.remove("hidden");
 
- setTimeout(()=>{
-  errorBox.classList.add("hidden");
- },4000);
+ setTimeout(()=>box.classList.add("hidden"),3000);
 }
 
-/* ================= SAFE API ================= */
+/* ================= API ================= */
 
-async function api(url, options = {}){
+async function api(url, options={}){
+ if(!token) return null;
+
  try{
-
   showLoader();
 
-  const res = await fetch(API + url, {
+  const res = await fetch(API+url,{
    headers:{
-    Authorization: "Bearer " + token,
+    Authorization:"Bearer "+token,
     "Content-Type":"application/json"
    },
    ...options
   });
 
-  if(res.status === 401){
+  if(res.status===401){
    secureLogout();
    return null;
   }
 
   if(!res.ok){
-   showError("Server error: " + res.status);
-   return null;
-  }
-
-  const ct = res.headers.get("content-type");
-  if(!ct || !ct.includes("application/json")){
-   showError("Invalid server response.");
    return null;
   }
 
   return await res.json();
 
- }catch(err){
-  console.error("API ERROR:", err);
-  offlineQueue.push({url, options});
-  showError("Network error. Trying again automatically.");
+ }catch(e){
+  console.warn("API failed, using local data");
   return null;
  }finally{
   hideLoader();
  }
 }
 
-/* ================= OFFLINE RETRY ================= */
-
-setInterval(async()=>{
- if(!offlineQueue.length || !navigator.onLine) return;
-
- const job = offlineQueue.shift();
-
- try{
-  await fetch(API + job.url, {
-   headers:{
-    Authorization:"Bearer " + token,
-    "Content-Type":"application/json"
-   },
-   ...job.options
-  });
- }catch{}
-}, 5000);
-
-/* ================= MODAL MANAGER ================= */
-
-const modals = document.querySelectorAll(".modal");
+/* ================= MODALS ================= */
 
 function openModal(id){
- modals.forEach(m => m.classList.add("hidden"));
- const modal = document.getElementById(id);
- modal?.classList.remove("hidden");
+ document.querySelectorAll(".modal").forEach(m=>m.classList.add("hidden"));
+ $(id)?.classList.remove("hidden");
 }
 
-function closeAllModals(){
- modals.forEach(m => m.classList.add("hidden"));
+function closeModals(){
+ document.querySelectorAll(".modal").forEach(m=>m.classList.add("hidden"));
 }
 
-document.addEventListener("keydown",(e)=>{
- if(e.key === "Escape") closeAllModals();
+document.addEventListener("click", (e) => {
+  if (
+    e.target.classList.contains("closeModal") ||
+    e.target.id === "closeSettingsBtn" ||
+    e.target.innerText?.toLowerCase().includes("close") ||
+    e.target.innerText?.toLowerCase().includes("cancel")
+  ) {
+    closeModals();
+  }
 });
 
-modals.forEach(modal=>{
- modal.addEventListener("click",(e)=>{
-  if(e.target === modal) closeAllModals();
+/* ================= LOCAL STORAGE ================= */
+
+function loadLocalLoans(){
+ return JSON.parse(localStorage.getItem("loans") || "[]");
+}
+
+/* ================= RENDER ================= */
+
+function renderLoans(loans){
+
+ const container = $("loanContainer");
+ if(!container) return;
+
+ if(!loans.length){
+  container.innerHTML = "No loan applications yet.";
+  return;
+ }
+
+ container.innerHTML = loans.map(l => `
+   <div class="loan-card">
+     <h3>${l.loanType || "Loan"}</h3>
+     <p><strong>$${l.amount}</strong></p>
+     <p>Status: ${l.status || "Pending"}</p>
+     <button class="viewLoan" data-id='${JSON.stringify(l)}'>View</button>
+   </div>
+ `).join("");
+
+ document.querySelectorAll(".viewLoan").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   try{
+    const loan = JSON.parse(btn.dataset.id);
+    showLoan(loan);
+   }catch{}
+  });
  });
-});
-
-document.querySelectorAll(".closeModal").forEach(btn=>{
- btn.addEventListener("click", closeAllModals);
-});
+}
 
 /* ================= DASHBOARD ================= */
 
-async function refreshDashboard(){
+async function loadDashboard(){
 
- const data = await api("/api/dashboard");
- if(!data) return;
+ // 🔥 ALWAYS SHOW LOCAL FIRST (instant UI)
+ const localLoans = loadLocalLoans();
+ renderLoans(localLoans);
 
- const {
-  balances = {},
-  loans = []
- } = data;
+ // 🔁 TRY API (optional override)
+ const data = await api("/api/loans");
 
- const setText = (id,val)=>{
-  const el = document.getElementById(id);
-  if(el) el.innerText = "$" + (val || 0);
- };
-
- setText("outstandingBox", balances.outstanding);
- setText("depositedBox", balances.deposited);
- setText("withdrawnBox", balances.withdrawn);
- setText("availableBox", balances.available);
-
- const loanContainer = document.getElementById("loanContainer");
- if(!loanContainer) return;
-
- if(loans.length){
-  loanContainer.innerHTML = loans.map(loan=>{
-   const safeLoan = encodeURIComponent(JSON.stringify(loan));
-   return `
-   <div class="loan-card">
-    <h3>${loan.loanType || "Loan Application"}</h3>
-    <p><strong>Amount:</strong> $${loan.amount}</p>
-    <p><strong>Status:</strong> ${loan.status.toUpperCase()}</p>
-    <button class="btn loanViewBtn" data-loan="${safeLoan}">
-     View Details
-    </button>
-   </div>
-   `;
-  }).join("");
-
-  document.querySelectorAll(".loanViewBtn").forEach(btn=>{
-   btn.addEventListener("click", ()=>{
-    const loan = JSON.parse(decodeURIComponent(btn.dataset.loan));
-    openLoanDetails(loan);
-   });
-  });
-
- }else{
-  loanContainer.innerHTML = `<div>No loan applications found.</div>`;
+ if(data && Array.isArray(data)){
+  renderLoans(data);
  }
+
 }
 
-function openLoanDetails(loan){
+/* ================= LOAN DETAILS ================= */
 
- document.getElementById("loanModalTitle").innerText =
-  loan.loanType || "Loan Details";
+function showLoan(loan){
 
- document.getElementById("loanTimeline").innerHTML = `
+ $("loanModalTitle").innerText = loan.loanType || "Loan";
+ $("loanTimeline").innerHTML = `
   <p><strong>Amount:</strong> $${loan.amount}</p>
   <p><strong>Status:</strong> ${loan.status}</p>
-  <p><strong>Date:</strong> ${loan.createdAt || "-"}</p>
+  <p><strong>Date:</strong> ${loan.createdAt || loan.date || "-"}</p>
  `;
-
- document.getElementById("loanAdminNotes").innerHTML =
-  loan.adminNotes
-   ? `<p><strong>Admin Notes:</strong><br>${loan.adminNotes}</p>`
-   : "";
 
  openModal("loanDetailsModal");
 }
 
+/* ================= BUTTONS ================= */
+
+function bind(id, fn){
+ const el = $(id);
+ if(el) el.addEventListener("click", fn);
+}
+
+bind("settingsBtn", ()=>openModal("settingsModal"));
+bind("adminBtn", ()=>openModal("adminModal"));
+bind("verifyBtn", ()=>openModal("verifyModal"));
+bind("uploadBtn", ()=>openModal("uploadModal"));
+bind("logoutBtn", secureLogout);
+
 /* ================= INIT ================= */
 
-document.addEventListener("DOMContentLoaded", ()=>{
- refreshDashboard();
- setInterval(refreshDashboard, 10000);
+document.addEventListener("DOMContentLoaded",()=>{
+ console.log("✅ DASHBOARD READY");
+
+ loadDashboard();
+ setInterval(loadDashboard,10000);
 });
+
+}catch(e){
+ console.error("CRASH:",e);
+}
 
 })();

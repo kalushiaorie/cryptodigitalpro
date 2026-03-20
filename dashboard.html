@@ -1,4 +1,3 @@
-<script>if(!localStorage.getItem("token")){window.location.href="signin.html";}</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,29 +6,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <link rel="stylesheet" href="assets/dashboard.css" />
+
+<!-- ✅ AUTH CHECK (FIXED POSITION) -->
+<script>
+(function(){
+  const token = localStorage.getItem("token");
+  if(!token || token.length < 20){
+    window.location.href = "signin.html";
+  }
+})();
+</script>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- ================= HEADER ================= -->
 <header class="header">
-
   <div class="brand">
     <strong>CryptoDigitalPro</strong>
     <span class="small">Loan Dashboard</span>
   </div>
 
   <div class="header-actions">
-
     <button id="logoutBtn" class="btn red">Sign Out</button>
     <button id="adminBtn" class="btn blue">Admin Messages</button>
     <button id="verifyBtn" class="btn blue">Verify Account</button>
     <button id="uploadBtn" class="btn blue">Upload Documents</button>
     <button id="settingsBtn" class="btn settings">Settings</button>
 
-    <!-- Notifications -->
     <div class="notify-wrapper">
       <span class="notify-bell">
         🔔 <span id="notifyCount" class="badge">0</span>
@@ -44,57 +50,45 @@
         </div>
       </div>
     </div>
-
   </div>
 </header>
 
-<!-- ================= BALANCES ================= -->
 <section class="balance-wrap premium">
 
   <div class="balance-box premium-card">
     <div class="label">Outstanding</div>
     <div id="outstandingBox" class="value">$0.00</div>
-    <div class="balance-arrow" id="outstandingArrow"></div>
   </div>
 
   <div class="balance-box premium-card">
     <div class="label">Deposited</div>
     <div id="depositedBox" class="value">$0.00</div>
-    <div class="balance-arrow" id="depositedArrow"></div>
   </div>
 
   <div class="balance-box premium-card">
     <div class="label">Withdrawn</div>
     <div id="withdrawnBox" class="value">$0.00</div>
-    <div class="balance-arrow" id="withdrawnArrow"></div>
   </div>
 
   <div class="balance-box premium-card">
-    <div class="label">Available to Withdraw</div>
+    <div class="label">Available</div>
     <div id="availableBox" class="value">$0.00</div>
-    <div class="balance-arrow" id="availableArrow"></div>
   </div>
 
 </section>
 
-<!-- ================= LOAN SECTION ================= -->
 <section class="loan-section">
   <h2>Your Loan Applications</h2>
   <div id="loanContainer"></div>
 </section>
 
-<!-- ================= MAIN GRID ================= -->
 <section class="grid">
 
-  <!-- LEFT -->
   <div class="card">
     <h3>My Loan Applications</h3>
-    <div id="loanList" class="small">
-      No loan applications yet.
-    </div>
+    <div id="loanList">No loan applications yet.</div>
   </div>
 
-  <!-- RIGHT -->
   <div>
 
     <div class="card">
@@ -105,7 +99,7 @@
         <button class="btn dark">Repay</button>
       </div>
 
-      <div id="withdrawProgressWrap" class="hidden" style="margin-top:15px;">
+      <div id="withdrawProgressWrap" class="hidden">
         <div class="progress-bar">
           <div id="withdrawProgress">0%</div>
         </div>
@@ -116,9 +110,7 @@
 
     <div class="card">
       <h3>Transaction History</h3>
-      <div id="txList" class="small">
-        No transactions available.
-      </div>
+      <div id="txList">No transactions available.</div>
     </div>
 
   </div>
@@ -126,88 +118,17 @@
 </section>
 
 </div>
-<!-- END CONTAINER -->
 
+<!-- ================= MODALS ================= -->
 
-<!-- ================= SETTINGS MODAL ================= -->
 <div id="settingsModal" class="modal hidden">
   <div class="settings-box">
-
     <h2>Account Settings</h2>
 
-    <h3>Profile</h3>
     <input id="profileName" placeholder="Full Name">
     <input id="profileEmail" placeholder="Email">
-    <button id="saveProfileBtn" class="btn blue">Save Profile</button>
 
-    <h3>Password</h3>
-    <input id="oldPass" type="password" placeholder="Current Password">
-    <input id="newPass" type="password" placeholder="New Password">
-    <button id="changePassBtn" class="btn gold">Update Password</button>
-
-    <h3>Avatar</h3>
-    <input type="file" id="avatarInput">
-    <button id="uploadAvatarBtn" class="btn blue">Upload Avatar</button>
-
-    <h3>Two Factor Authentication</h3>
-    <button id="toggle2faBtn" class="btn dark">Enable / Disable 2FA</button>
-
-    <h3>Loan Documents</h3>
-    <button id="loadDocsBtn" class="btn blue">View Documents</button>
-    <div id="docsList"></div>
-
-    <h3>Support Ticket</h3>
-    <textarea id="ticketMsg"></textarea>
-    <button id="sendTicketBtn" class="btn gold">Send Ticket</button>
-
-    <br><br>
-    <button id="closeSettingsBtn" class="btn dark">Close</button>
-
-  </div>
-</div>
-
-
-<!-- ================= GENERIC MODALS ================= -->
-<div id="withdrawModal" class="modal hidden">
-  <div class="card">
-    <h3 id="modalTitle"></h3>
-    <p id="modalMessage"></p>
-  </div>
-</div>
-
-<div id="messageModal" class="modal hidden">
-  <div class="card">
-    <h3>Admin Support Chat</h3>
-    <div id="chatMessages" class="chat-container"></div>
-    <textarea id="adminMessageText"></textarea>
-    <button id="sendAdminMessage" class="btn blue">Send Message</button>
-    <button class="btn dark closeModal">Cancel</button>
-  </div>
-</div>
-
-<div id="adminModal" class="modal hidden">
-  <div class="card">
-    <h3>Admin Messages</h3>
-    <div id="adminMessages">No messages.</div>
-    <button class="btn blue closeModal">Close</button>
-  </div>
-</div>
-
-<div id="verifyModal" class="modal hidden">
-  <div class="card">
-    <h3>Verify Identity</h3>
-    <input type="file"/>
-    <button class="btn gold">Submit</button>
-    <button class="btn dark closeModal">Cancel</button>
-  </div>
-</div>
-
-<div id="uploadModal" class="modal hidden">
-  <div class="card">
-    <h3>Upload Documents</h3>
-    <input type="file"/>
-    <button class="btn blue">Upload</button>
-    <button class="btn dark closeModal">Cancel</button>
+    <button id="closeSettingsBtn" class="btn dark closeModal">Close</button>
   </div>
 </div>
 
@@ -215,107 +136,26 @@
   <div class="card">
     <h2 id="loanModalTitle">Loan Details</h2>
     <div id="loanTimeline"></div>
-    <div id="loanAdminNotes"></div>
     <button class="btn blue closeModal">Close</button>
   </div>
 </div>
 
-<div id="toastContainer" class="toast-container"></div>
-
-
-<!-- ================= FLOAT CHAT ================= -->
-<button id="chatToggle" class="chat-toggle">💬</button>
-
-<div id="whatsappChat" class="whatsapp-chat-box">
-  <div class="chat-header">
-    <span>Admin Support</span>
-    <span id="chatStatus" class="chat-status">🟢 Online</span>
-  </div>
-
-  <div id="chatBody" class="chat-body"></div>
-
-  <div class="chat-footer">
-    <input type="file" id="chatFile" hidden>
-    <button id="attachFileBtn">📎</button>
-    <input type="text" id="chatInput" placeholder="Type a message...">
-    <button id="chatSend">➤</button>
-  </div>
-</div>
-
-
-<!-- ================= MOBILE NAV ================= -->
-<nav class="mobile-nav">
-  <button id="mobileHome">🏠</button>
-  <button id="mobileLoans">💰</button>
-  <button id="mobileChat">💬</button>
-  <button id="mobileSettings">⚙️</button>
-</nav>
-
-
 <!-- ================= FOOTER ================= -->
+
 <footer class="pro-footer">
-
-  <div class="pro-footer-grid">
-
-    <div class="pro-footer-col brand">
-      <p>Secure Digital Finance & Loan Management Platform</p>
-      <div class="footer-status">
-        <span class="dot"></span> System Status: Operational
-      </div>
-    </div>
-
-    <div class="pro-footer-col">
-      <h4>Platform</h4>
-      <a href="#">Dashboard</a>
-      <a href="#">Loans</a>
-      <a href="#">Withdrawals</a>
-      <a href="#">Transactions</a>
-    </div>
-
-    <div class="pro-footer-col">
-      <h4>Account</h4>
-      <a href="#">Profile</a>
-      <a href="#">Security</a>
-      <a href="#">Verification</a>
-      <a href="#">Settings</a>
-    </div>
-
-    <div class="pro-footer-col">
-      <h4>Support</h4>
-      <a href="#">Help Center</a>
-      <a href="#">Contact Admin</a>
-      <a href="#">Live Chat</a>
-      <a href="#">Submit Ticket</a>
-    </div>
-
-    <div class="pro-footer-col">
-      <h4>Legal</h4>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms</a>
-      <a href="#">Compliance</a>
-      <a href="#">Security</a>
-    </div>
-
-  </div>
-
   <div class="pro-footer-bottom">
-    © <span id="footerYear"></span> CryptoDigitalPro. All rights reserved.
+    © <span id="footerYear"></span> CryptoDigitalPro
   </div>
-
-<a href="#" onclick="document.getElementById('messageModal')?.classList.remove('hidden'); return false;">
-Admin Live Chat
-</a>
-
 </footer>
 
-
-<!-- ================= SCRIPTS ================= -->
-
-<script src="dashboard.js" defer></script>
-<script src="dark-lock.js" defer></script>
-
+<!-- ================= LOADER ================= -->
 <div id="globalLoader" class="global-loader hidden">
   <div class="loader-spinner"></div>
 </div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="dark-lock.js"></script>
+<script src="dashboard.js"></script>
+
 </body>
 </html>
