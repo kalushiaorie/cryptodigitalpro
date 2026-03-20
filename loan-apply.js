@@ -13,7 +13,11 @@
   const thankModal = document.getElementById("loan_thank");
   const thankNext = document.getElementById("thank_next");
 
+  const API = "http://localhost:5000";
+
   let current = 0;
+
+  /* ================= STEP ================= */
 
   function showStep(index) {
     steps.forEach((step, i) => {
@@ -27,8 +31,10 @@
 
   function updateProgress() {
     const percent = Math.round(((current + 1) / steps.length) * 100);
-    progressFill.style.width = percent + "%";
-    progressText.textContent = `Step ${current + 1} of ${steps.length}`;
+    if (progressFill) progressFill.style.width = percent + "%";
+    if (progressText) {
+      progressText.textContent = `Step ${current + 1} of ${steps.length}`;
+    }
   }
 
   function validateStep(index) {
@@ -36,7 +42,12 @@
     let valid = true;
 
     requiredFields.forEach(field => {
-      if (!field.value) valid = false;
+      field.classList.remove("invalid");
+
+      if (!field.value || !field.value.toString().trim()) {
+        field.classList.add("invalid");
+        valid = false;
+      }
     });
 
     return valid;
@@ -48,9 +59,9 @@
     const data = new FormData(form);
 
     reviewBox.innerHTML = `
-      <p><strong>Name:</strong> ${data.get("fullName")}</p>
-      <p><strong>Amount:</strong> $${data.get("amount")}</p>
-      <p><strong>Duration:</strong> ${data.get("duration")} days</p>
+      <p><strong>Name:</strong> ${data.get("fullName") || "-"}</p>
+      <p><strong>Amount:</strong> $${data.get("amount") || 0}</p>
+      <p><strong>Duration:</strong> ${data.get("duration") || 0} days</p>
     `;
   }
 
@@ -59,7 +70,6 @@
   nextBtns.forEach(btn => {
     btn.addEventListener("click", () => {
 
-      // 🚀 SKIP FILE VALIDATION (important for puppeteer)
       if (current !== 3 && !validateStep(current)) return;
 
       if (current === steps.length - 2) {
@@ -78,31 +88,63 @@
     });
   });
 
-  /* ================= FINAL SUBMIT ================= */
+  /* ================= SUBMIT ================= */
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    if (!agreeCheckbox.checked) {
+    if (!agreeCheckbox || !agreeCheckbox.checked) {
       alert("Please confirm details");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      window.location.href = "signin.html";
       return;
     }
 
     const data = new FormData(form);
 
-    const loan = {
+    const payload = {
       loanType: "Instant Loan",
-      amount: Number(data.get("amount")),
-      duration: Number(data.get("duration")),
+      amount: Number(data.get("amount") || 0),
+      duration: Number(data.get("duration") || 0)
+    };
+
+    /* ===== LOCAL SAVE (FAST UI) ===== */
+    const localLoan = {
+      ...payload,
       status: "Pending",
       date: new Date().toLocaleString()
     };
 
-    // ✅ SAVE LOCALLY (THIS FIXES DASHBOARD)
     const existing = JSON.parse(localStorage.getItem("loans") || "[]");
-    existing.unshift(loan);
+    existing.unshift(localLoan);
     localStorage.setItem("loans", JSON.stringify(existing));
 
+    /* ===== BACKEND SEND (REAL DB) ===== */
+    try {
+      const res = await fetch(`${API}/api/loan`, {   // ✅ FIXED ROUTE
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token   // ✅ FIXED AUTH
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        console.warn("Backend rejected loan");
+      }
+
+    } catch (err) {
+      console.warn("Backend offline, using local only");
+    }
+
+    /* ===== SUCCESS UI ===== */
     if (thankModal) {
       thankModal.style.display = "flex";
     }
@@ -112,11 +154,15 @@
     }, 1500);
   });
 
+  /* ================= THANK BUTTON ================= */
+
   if (thankNext) {
     thankNext.addEventListener("click", () => {
       window.location.href = "dashboard.html";
     });
   }
+
+  /* ================= INIT ================= */
 
   showStep(0);
 

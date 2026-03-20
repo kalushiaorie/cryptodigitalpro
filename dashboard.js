@@ -4,23 +4,7 @@ try{
 
 /* ================= CONFIG ================= */
 
-const API = "https://api.cryptodigitalpro.com";
-
-function getToken(){
- const t = localStorage.getItem("token");
- if(!t || t.length < 5){
-  console.warn("No valid token, running in offline mode");
-  return null;
- }
- return t;
-}
-
-function secureLogout(){
- localStorage.clear();
- window.location.href = "signin.html";
-}
-
-const token = getToken();
+const API = "http://localhost:5000";
 
 /* ================= HELPERS ================= */
 
@@ -49,41 +33,6 @@ function showError(msg){
  box.classList.remove("hidden");
 
  setTimeout(()=>box.classList.add("hidden"),3000);
-}
-
-/* ================= API ================= */
-
-async function api(url, options={}){
- if(!token) return null;
-
- try{
-  showLoader();
-
-  const res = await fetch(API+url,{
-   headers:{
-    Authorization:"Bearer "+token,
-    "Content-Type":"application/json"
-   },
-   ...options
-  });
-
-  if(res.status===401){
-   secureLogout();
-   return null;
-  }
-
-  if(!res.ok){
-   return null;
-  }
-
-  return await res.json();
-
- }catch(e){
-  console.warn("API failed, using local data");
-  return null;
- }finally{
-  hideLoader();
- }
 }
 
 /* ================= MODALS ================= */
@@ -149,15 +98,20 @@ function renderLoans(loans){
 
 async function loadDashboard(){
 
- // 🔥 ALWAYS SHOW LOCAL FIRST (instant UI)
+ // 🔥 show local instantly
  const localLoans = loadLocalLoans();
  renderLoans(localLoans);
 
- // 🔁 TRY API (optional override)
- const data = await api("/api/loans");
+ // 🔁 backend override
+ try{
+   const res = await fetch(`${API}/api/dashboard`);
+   const data = await res.json();
 
- if(data && Array.isArray(data)){
-  renderLoans(data);
+   if(data && data.loans){
+     renderLoans(data.loans);
+   }
+ }catch(e){
+   console.warn("Backend not reachable, using local");
  }
 
 }
@@ -187,7 +141,11 @@ bind("settingsBtn", ()=>openModal("settingsModal"));
 bind("adminBtn", ()=>openModal("adminModal"));
 bind("verifyBtn", ()=>openModal("verifyModal"));
 bind("uploadBtn", ()=>openModal("uploadModal"));
-bind("logoutBtn", secureLogout);
+
+bind("logoutBtn", ()=>{
+ localStorage.clear();
+ window.location.href = "signin.html";
+});
 
 /* ================= INIT ================= */
 
@@ -195,6 +153,7 @@ document.addEventListener("DOMContentLoaded",()=>{
  console.log("✅ DASHBOARD READY");
 
  loadDashboard();
+
  setInterval(loadDashboard,10000);
 });
 
